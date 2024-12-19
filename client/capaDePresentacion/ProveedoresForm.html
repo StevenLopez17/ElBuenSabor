@@ -7,7 +7,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>El Buen Sabor </title>
+        <title>Mini Finance - Settings</title>
 
         <!-- CSS FILES -->      
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,8 +19,6 @@
         <link href="css/bootstrap.min.css" rel="stylesheet">
 
         <link href="css/bootstrap-icons.css" rel="stylesheet">
-
-        <link href="css/apexcharts.css" rel="stylesheet">
 
         <link href="css/tooplate-mini-finance.css" rel="stylesheet">
 <!--
@@ -222,66 +220,66 @@ Bootstrap 5 Dashboard Admin Template
                                     Pagina Principal
                                 </a>
                             </li>
-
+    
                             
                             <li class="nav-item">
-                                <a class="nav-link" href="Pedidos.html">
+                                <a class="nav-link"  href="Pedidos.html">
                                     <i class="bi-send me-2"></i>
                                     Pedidos
                                 </a>
                             </li>
-
-
+    
+    
                             <li class="nav-item">
                                 <a class="nav-link" href="Planilla.html">
                                     <i class="bi-folder me-2"></i>
                                     Planilla
                                 </a>
                             </li>
-
-
+    
+    
                             <li class="nav-item">
-                                <a class="nav-link active"  aria-current="page" href="clientes.html">
+                                <a class="nav-link" href="clientes.html">
                                     <i class="bi-person me-2"></i>
                                     Clientes
                                 </a>
                             </li>
-
+    
                             <li class="nav-item">
-                                <a class="nav-link" href="Proveedores.html">
+                                <a class="nav-link active"  aria-current="page" href="Proveedores.html">
                                     <i class="bi-person me-2"></i>
                                     Proveedores
                                 </a>
                             </li>
-
+    
                             <li class="nav-item">
                                 <a class="nav-link" href="distribuidores.html">
                                     <i class="bi-person me-2"></i>
                                     Distribuidores
                                 </a>
                             </li>
-
+    
                             <li class="nav-item">
                                 <a class="nav-link" href="inventario_productos.html">
                                     <i class="bi-box me-2"></i>
                                     Inventario
                                 </a>
                             </li>
-
+    
                             <li class="nav-item">
-                                <a class="nav-link" href="MateriasPrimas.html">
+                                <a class="nav-link"  href="MateriasPrimas.html">
                                     <i class="bi-box me-2"></i>
                                     Materias Primas
                                 </a>
                             </li>
-
+    
                             <li class="nav-item">
                                 <a class="nav-link" href="reportes.html">
                                     <i class="bi-question-circle me-2"></i>
                                     Reportes
                                 </a>
                             </li>
-
+    
                             <li class="nav-item border-top mt-auto pt-2">
                                 <a class="nav-link" href="#">
                                     <i class="bi-box-arrow-left me-2"></i>
@@ -294,144 +292,196 @@ Bootstrap 5 Dashboard Admin Template
 
                 <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
                     <div class="title-group mb-3">
-                        <h1 class="h2 mb-0">Clientes</h1>
+                        <h1 class="h2 mb-0">Pago Proveedores</h1>
                     </div>
-                
-                    <div class="row my-4">
+
+                    <!-- <div class="row my-4">
                         <div class="col-lg-12 col-12">
                             <div class="custom-block bg-white">
-                                
-                                <div class="row my-4">
-                                    <div class="col-lg-12 col-12">
-                                        <div class="custom-block bg-white">
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <h5 class="mb-5">Lista de Clientes</h5>
-                                                <ul class="d-flex list-unstyled mb-0">
-                                                    <li class="me-3">
-                                                        <a class="page-link active" href="PlanillaCRUD.html" aria-label="Next">
-                                                           + Agregar Cliente
-                                                        </a>
-                                                    </li>
-                                                </ul>
+                                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="true">Profile</button>
+                                    </li>
+
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="password-tab" data-bs-toggle="tab" data-bs-target="#password-tab-pane" type="button" role="tab" aria-controls="password-tab-pane" aria-selected="false">Password</button>
+                                    </li>
+
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="notification-tab" data-bs-toggle="tab" data-bs-target="#notification-tab-pane" type="button" role="tab" aria-controls="notification-tab-pane" aria-selected="false">Notification</button>
+                                    </li>
+                                </ul>
+
+                                <div class="tab-content" id="myTabContent">
+                                    <div class="tab-pane fade show active" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+                                        <h6 class="mb-4">User Profile</h6>
+
+                                        <form class="custom-form profile-form" action="#" method="post" role="form">
+                                            <input class="form-control" type="text" name="profile-name" id="profile-name" placeholder="John Doe">
+
+                                            <input class="form-control" type="email" name="profile-email" id="profile-email" placeholder="Johndoe@gmail.com">
+
+                                            <div class="input-group mb-1">
+                                                <img src="images/profile/senior-man-white-sweater-eyeglasses.jpg" class="profile-image img-fluid" alt="">
+
+                                                <input type="file" class="form-control" id="inputGroupFile02">
                                             </div>
-                                            <div>.</div>
-                
-                                            <div class="table-responsive">
-                                                <table class="account-table table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th scope="col">Nombre</th>
-                                                            <th scope="col">Distribuidor</th>
-                                                            <th scope="col">Dirección</th>
-                                                            <th scope="col">Número</th>
-                                                            <th scope="col">Correo</th>
-                                                        </tr>
-                                                    </thead>
-                
-                                                    <tbody>
-                                                        <tr>
-                                                            <td scope="row">Ana Castro</td>
-                                                            <td scope="row">Juan Pérez</td>
-                                                            <td scope="row">San José</td>
-                                                            <td scope="row">+506 2233-4455</td>
-                                                            <td scope="row">ana.castro@example.com</td>
-                                                        </tr>
-                
-                                                        <tr>
-                                                            <td scope="row">Jorge Méndez</td>
-                                                            <td scope="row">María González</td>
-                                                            <td scope="row">Alajuela</td>
-                                                            <td scope="row">+506 8700-1122</td>
-                                                            <td scope="row">jorge.mendez@example.com</td>
-                                                        </tr>
-                
-                                                        <tr>
-                                                            <td scope="row">Sofía Ramírez</td>
-                                                            <td scope="row">Luis Rodríguez</td>
-                                                            <td scope="row">Cartago</td>
-                                                            <td scope="row">+506 2544-9988</td>
-                                                            <td scope="row">sofia.ramirez@example.com</td>
-                                                        </tr>
-                
-                                                        <tr>
-                                                            <td scope="row">Mario Ruiz</td>
-                                                            <td scope="row">Carmen Herrera</td>
-                                                            <td scope="row">Heredia</td>
-                                                            <td scope="row">+506 6655-2233</td>
-                                                            <td scope="row">mario.ruiz@example.com</td>
-                                                        </tr>
-                
-                                                        <tr>
-                                                            <td scope="row">Elena Vásquez</td>
-                                                            <td scope="row">Francisco Araya</td>
-                                                            <td scope="row">Guanacaste</td>
-                                                            <td scope="row">+506 7000-3344</td>
-                                                            <td scope="row">elena.vasquez@example.com</td>
-                                                        </tr>
-                
-                                                        <tr>
-                                                            <td scope="row">Andrés Solís</td>
-                                                            <td scope="row">Lucía Ramírez</td>
-                                                            <td scope="row">Limón</td>
-                                                            <td scope="row">+506 8899-7766</td>
-                                                            <td scope="row">andres.solis@example.com</td>
-                                                        </tr>
-                
-                                                        <tr>
-                                                            <td scope="row">Carolina Mora</td>
-                                                            <td scope="row">Carlos Vargas</td>
-                                                            <td scope="row">Puntarenas</td>
-                                                            <td scope="row">+506 9000-1111</td>
-                                                            <td scope="row">carolina.mora@example.com</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
+
+                                            <div class="d-flex">
+                                                <button type="button" class="form-control me-3">
+                                                    Reset
+                                                </button>
+
+                                                <button type="submit" class="form-control ms-2">
+                                                    Update
+                                                </button>
                                             </div>
-                                        </div>
+                                        </form>
+                                    </div>
+
+                                    <div class="tab-pane fade" id="password-tab-pane" role="tabpanel" aria-labelledby="password-tab" tabindex="0">
+                                        <h6 class="mb-4">Password</h6>
+
+                                        <form class="custom-form password-form" action="#" method="post" role="form">
+                                            <input type="password" name="password" id="password" pattern="[0-9a-zA-Z]{4,10}" class="form-control" placeholder="Current Password" required="">
+
+                                            <input type="password" name="confirm_password" id="confirm_password" pattern="[0-9a-zA-Z]{4,10}" class="form-control" placeholder="New Password" required="">
+
+                                            <input type="password" name="confirm_password" id="confirm_password" pattern="[0-9a-zA-Z]{4,10}" class="form-control" placeholder="Confirm Password" required="">
+
+                                            <div class="d-flex">
+                                                <button type="button" class="form-control me-3">
+                                                    Reset
+                                                </button>
+
+                                                <button type="submit" class="form-control ms-2">
+                                                    Update Password
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                    <div class="tab-pane fade" id="notification-tab-pane" role="tabpanel" aria-labelledby="notification-tab" tabindex="0">
+                                        <h6 class="mb-4">Notification</h6>
+
+                                        <form class="custom-form notification-form" action="#" method="post" role="form">
+
+                                            <div class="form-check form-switch d-flex mb-3 ps-0">
+                                                <label class="form-check-label" for="flexSwitchCheckCheckedOne">Account activity</label>
+
+                                                <input class="form-check-input ms-auto" type="checkbox" name="form-check-input" role="switch" id="flexSwitchCheckCheckedOne" checked>
+                                            </div>
+
+                                            <div class="form-check form-switch d-flex mb-3 ps-0">
+                                                <label class="form-check-label" for="flexSwitchCheckCheckedTwo">Payment updated</label>
+
+                                                <input class="form-check-input ms-auto" type="checkbox" name="form-check-input" role="switch" id="flexSwitchCheckCheckedTwo" checked>
+                                            </div>
+
+                                            <div class="d-flex mt-4">
+                                                <button type="button" class="form-control me-3">
+                                                    Reset
+                                                </button>
+
+                                                <button type="submit" class="form-control ms-2">
+                                                    Update Password
+                                                </button>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                     </div>
-                </main>
-                
+
+                    </div> -->
+
+                    <div class="row my-4">
+                        <div class="col-lg-12 col-12">
+                            <div class="custom-block bg-white">
+                                <ul class="nav nav-tabs" id="paymentTab" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="payment-details-tab" data-bs-toggle="tab" data-bs-target="#payment-details-tab-pane" type="button" role="tab" aria-controls="payment-details-tab-pane" aria-selected="true">Detalles del Pago</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="payment-history-tab" data-bs-toggle="tab" data-bs-target="#payment-history-tab-pane" type="button" role="tab" aria-controls="payment-history-tab-pane" aria-selected="false">Historial de Pagos</button>
+                                    </li>
+                                </ul>
                     
-                                <nav aria-label="Page navigation example">
-                                        <ul class="pagination justify-content-center mb-0">
-                                            <li class="page-item">
-                                                <a class="page-link" href="#" aria-label="Previous">
-                                                    <span aria-hidden="true">Prev</span>
-                                                </a>
-                                            </li>
-
-                                            <li class="page-item active" aria-current="page">
-                                                <a class="page-link" href="#">1</a>
-                                            </li>
-                                            
-                                            <li class="page-item">
-                                                <a class="page-link" href="#">2</a>
-                                            </li>
-                                            
-                                            <li class="page-item">
-                                                <a class="page-link" href="#">3</a>
-                                            </li>
-
-                                            <li class="page-item">
-                                                <a class="page-link" href="#">4</a>
-                                            </li>
-                                            
-                                            <li class="page-item">
-                                                <a class="page-link" href="#" aria-label="Next">
-                                                    <span aria-hidden="true">Next</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </nav>
+                                <div class="tab-content" id="paymentTabContent">
+                                    <!-- Detalles del Pago -->
+                                    <div class="tab-pane fade show active" id="payment-details-tab-pane" role="tabpanel" aria-labelledby="payment-details-tab">
+                                        <h6 class="mb-4">Realizar Pago a Proveedor</h6>
+                                        <form class="custom-form payment-details-form" action="#" method="post" role="form">
+                                            <input class="form-control mb-3" type="text" name="supplier-name" id="supplier-name" placeholder="Nombre del Proveedor" required>
+                                            <input class="form-control mb-3" type="text" name="invoice-number" id="invoice-number" placeholder="Número de Factura" required>
+                                            <input class="form-control mb-3" type="number" name="payment-amount" id="payment-amount" placeholder="Monto del Pago" required>
+                                            <input class="form-control mb-3" type="date" name="payment-date" id="payment-date" placeholder="Fecha del Pago" required>
+                                            <select class="form-control mb-3" name="payment-method" id="payment-method">
+                                                <option value="transferencia">Transferencia Bancaria</option>
+                                                <option value="cheque">Cheque</option>
+                                                <option value="efectivo">Efectivo</option>
+                                            </select>
+                    
+                                            <textarea class="form-control mb-3" name="payment-notes" id="payment-notes" rows="3" placeholder="Notas sobre el Pago (opcional)"></textarea>
+                    
+                                            <div class="d-flex">
+                                                <button type="reset" class="form-control me-3">Restablecer</button>
+                                                <button type="submit" class="form-control ms-2">Realizar Pago</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                    
+                                    <!-- Historial de Pagos -->
+                                    <div class="tab-pane fade" id="payment-history-tab-pane" role="tabpanel" aria-labelledby="payment-history-tab">
+                                        <h6 class="mb-4">Historial de Pagos a Proveedores</h6>
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID del Pago</th>
+                                                    <th>Proveedor</th>
+                                                    <th>Factura</th>
+                                                    <th>Dirección</th>
+                                                    <th>Correo</th>
+                                                    <th>Teléfono</th>
+                                                    <th>Fecha</th>
+                                                    <th>Monto</th>
+                                                    <th>Método</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>001</td>
+                                                    <td>Distribuidora ABC</td>
+                                                    <td>FAC-12345</td>
+                                                    <td>Calle Principal 123</td>
+                                                    <td>abc@mail.com</td>
+                                                    <td>555-1234</td>
+                                                    <td>2024-12-01</td>
+                                                    <td>$5,000</td>
+                                                    <td>Transferencia</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>002</td>
+                                                    <td>Proveedor XYZ</td>
+                                                    <td>FAC-54321</td>
+                                                    <td>Avenida Central 456</td>
+                                                    <td>xyz@mail.com</td>
+                                                    <td>555-5678</td>
+                                                    <td>2024-11-15</td>
+                                                    <td>$3,200</td>
+                                                    <td>Cheque</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-
-                        
-
+                    </div>
+                    
+                    
+                    
+                    
                     <footer class="site-footer">
                         <div class="container">
                             <div class="row">
@@ -452,7 +502,7 @@ Bootstrap 5 Dashboard Admin Template
         <!-- JAVASCRIPT FILES -->
         <script src="js/jquery.min.js"></script>
         <script src="js/bootstrap.bundle.min.js"></script>
-        <script src="js/apexcharts.min.js"></script>
         <script src="js/custom.js"></script>
+
     </body>
 </html>

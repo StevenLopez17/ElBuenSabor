@@ -7,7 +7,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>El Buen Sabor </title>
+        <title>Mini Finance - Settings</title>
 
         <!-- CSS FILES -->      
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,8 +19,6 @@
         <link href="css/bootstrap.min.css" rel="stylesheet">
 
         <link href="css/bootstrap-icons.css" rel="stylesheet">
-
-        <link href="css/apexcharts.css" rel="stylesheet">
 
         <link href="css/tooplate-mini-finance.css" rel="stylesheet">
 <!--
@@ -174,6 +172,7 @@ Bootstrap 5 Dashboard Admin Template
                                     <div class="d-flex flex-column">
                                         <small>Thomas</small>
                                         <a href="#">thomas@site.com</a>
+                                        <small><strong>Administrador/Empleado/Cliente</strong></small>
                                     </div>
                                 </div>
                             </li>
@@ -222,66 +221,66 @@ Bootstrap 5 Dashboard Admin Template
                                     Pagina Principal
                                 </a>
                             </li>
-
+    
                             
                             <li class="nav-item">
-                                <a class="nav-link" href="Pedidos.html">
+                                <a class="nav-link"  href="Pedidos.html">
                                     <i class="bi-send me-2"></i>
                                     Pedidos
                                 </a>
                             </li>
-
-
+    
+    
                             <li class="nav-item">
                                 <a class="nav-link" href="Planilla.html">
                                     <i class="bi-folder me-2"></i>
                                     Planilla
                                 </a>
                             </li>
-
-
+    
+    
                             <li class="nav-item">
-                                <a class="nav-link active"  aria-current="page" href="clientes.html">
+                                <a class="nav-link" href="clientes.html">
                                     <i class="bi-person me-2"></i>
                                     Clientes
                                 </a>
                             </li>
-
+    
                             <li class="nav-item">
                                 <a class="nav-link" href="Proveedores.html">
                                     <i class="bi-person me-2"></i>
                                     Proveedores
                                 </a>
                             </li>
-
+    
                             <li class="nav-item">
                                 <a class="nav-link" href="distribuidores.html">
                                     <i class="bi-person me-2"></i>
                                     Distribuidores
                                 </a>
                             </li>
-
+    
                             <li class="nav-item">
-                                <a class="nav-link" href="inventario_productos.html">
+                                <a class="nav-link active"  aria-current="page" href="inventario_productos.html">
                                     <i class="bi-box me-2"></i>
                                     Inventario
                                 </a>
                             </li>
-
+    
                             <li class="nav-item">
-                                <a class="nav-link" href="MateriasPrimas.html">
+                                <a class="nav-link"  href="MateriasPrimas.html">
                                     <i class="bi-box me-2"></i>
                                     Materias Primas
                                 </a>
                             </li>
-
+    
                             <li class="nav-item">
                                 <a class="nav-link" href="reportes.html">
                                     <i class="bi-question-circle me-2"></i>
                                     Reportes
                                 </a>
                             </li>
-
+    
                             <li class="nav-item border-top mt-auto pt-2">
                                 <a class="nav-link" href="#">
                                     <i class="bi-box-arrow-left me-2"></i>
@@ -294,144 +293,70 @@ Bootstrap 5 Dashboard Admin Template
 
                 <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
                     <div class="title-group mb-3">
-                        <h1 class="h2 mb-0">Clientes</h1>
+                        <h1 class="h2 mb-0">Agregar Productos</h1>
                     </div>
-                
+
+                    
                     <div class="row my-4">
                         <div class="col-lg-12 col-12">
                             <div class="custom-block bg-white">
-                                
-                                <div class="row my-4">
-                                    <div class="col-lg-12 col-12">
-                                        <div class="custom-block bg-white">
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <h5 class="mb-5">Lista de Clientes</h5>
-                                                <ul class="d-flex list-unstyled mb-0">
-                                                    <li class="me-3">
-                                                        <a class="page-link active" href="PlanillaCRUD.html" aria-label="Next">
-                                                           + Agregar Cliente
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div>.</div>
-                
-                                            <div class="table-responsive">
-                                                <table class="account-table table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th scope="col">Nombre</th>
-                                                            <th scope="col">Distribuidor</th>
-                                                            <th scope="col">Dirección</th>
-                                                            <th scope="col">Número</th>
-                                                            <th scope="col">Correo</th>
-                                                        </tr>
-                                                    </thead>
-                
-                                                    <tbody>
-                                                        <tr>
-                                                            <td scope="row">Ana Castro</td>
-                                                            <td scope="row">Juan Pérez</td>
-                                                            <td scope="row">San José</td>
-                                                            <td scope="row">+506 2233-4455</td>
-                                                            <td scope="row">ana.castro@example.com</td>
-                                                        </tr>
-                
-                                                        <tr>
-                                                            <td scope="row">Jorge Méndez</td>
-                                                            <td scope="row">María González</td>
-                                                            <td scope="row">Alajuela</td>
-                                                            <td scope="row">+506 8700-1122</td>
-                                                            <td scope="row">jorge.mendez@example.com</td>
-                                                        </tr>
-                
-                                                        <tr>
-                                                            <td scope="row">Sofía Ramírez</td>
-                                                            <td scope="row">Luis Rodríguez</td>
-                                                            <td scope="row">Cartago</td>
-                                                            <td scope="row">+506 2544-9988</td>
-                                                            <td scope="row">sofia.ramirez@example.com</td>
-                                                        </tr>
-                
-                                                        <tr>
-                                                            <td scope="row">Mario Ruiz</td>
-                                                            <td scope="row">Carmen Herrera</td>
-                                                            <td scope="row">Heredia</td>
-                                                            <td scope="row">+506 6655-2233</td>
-                                                            <td scope="row">mario.ruiz@example.com</td>
-                                                        </tr>
-                
-                                                        <tr>
-                                                            <td scope="row">Elena Vásquez</td>
-                                                            <td scope="row">Francisco Araya</td>
-                                                            <td scope="row">Guanacaste</td>
-                                                            <td scope="row">+506 7000-3344</td>
-                                                            <td scope="row">elena.vasquez@example.com</td>
-                                                        </tr>
-                
-                                                        <tr>
-                                                            <td scope="row">Andrés Solís</td>
-                                                            <td scope="row">Lucía Ramírez</td>
-                                                            <td scope="row">Limón</td>
-                                                            <td scope="row">+506 8899-7766</td>
-                                                            <td scope="row">andres.solis@example.com</td>
-                                                        </tr>
-                
-                                                        <tr>
-                                                            <td scope="row">Carolina Mora</td>
-                                                            <td scope="row">Carlos Vargas</td>
-                                                            <td scope="row">Puntarenas</td>
-                                                            <td scope="row">+506 9000-1111</td>
-                                                            <td scope="row">carolina.mora@example.com</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
+                                <ul class="nav nav-tabs" id="formulaTab" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="employee-info-tab" data-bs-toggle="tab" data-bs-target="#employee-info-tab-pane" type="button" role="tab" aria-controls="employee-info-tab-pane" aria-selected="true">Agregar</button>
+                                    </li>
+                                    <!-- <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="raw-materials-tab" data-bs-toggle="tab" data-bs-target="#raw-materials-tab-pane" type="button" role="tab" aria-controls="raw-materials-tab-pane" aria-selected="false">Materias Primas</button>
+                                    </li> -->
+                                    <!-- <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="payment-details-tab" data-bs-toggle="tab" data-bs-target="#payment-details-tab-pane" type="button" role="tab" aria-controls="payment-details-tab-pane" aria-selected="false">Detalles del Pago</button>
+                                    </li> -->
+                                </ul>
+                    
+                                <div class="tab-content" id="formulaTabContent">
+                                    <!-- Información del Pedido -->
+                                    <div class="tab-pane fade show active" id="employee-info-tab-pane" role="tabpanel" aria-labelledby="employee-info-tab">
+                                        <h6 class="mb-4">Información </h6>
+                                        <form class="custom-form" action="#" method="post">
+                                            <input class="form-control mb-3" type="text" name="product" id="product" placeholder="Nombre" required>
+                                            <input class="form-control mb-3" type="text" name="distributor" id="distributor" placeholder="Descripción" required>
+                                            <input class="form-control mb-3" type="number" name="quantity" id="quantity" placeholder="Cantidad" required>
+                                            <input class="form-control mb-3" type="number" name="quantity" id="quantity" placeholder="Precio" required>
+                                            <input class="form-control mb-3" type="number" name="quantity" id="quantity" placeholder="Seleccione la Formula" required>
+                                            
+                                            <button type="submit" class="form-control btn btn-primary">Guardar</button>
+                                        </form>
                                     </div>
+                    
+                                    <!-- Materias Primas -->
+                                    <!-- <div class="tab-pane fade" id="raw-materials-tab-pane" role="tabpanel" aria-labelledby="raw-materials-tab">
+                                        <h6 class="mb-4">Materias Primas</h6>
+                                        <form class="custom-form" action="#" method="post">
+                                            <input class="form-control mb-3" type="text" name="material-name" placeholder="Nombre de la Materia Prima" required>
+                                            <input class="form-control mb-3" type="text" name="material-description" placeholder="Descripción" required>
+                                            <input class="form-control mb-3" type="number" name="material-quantity" placeholder="Cantidad" required>
+                                            <button type="submit" class="btn btn-primary">Guardar Materia Prima</button>
+                                        </form>
+                                    </div> -->
+                    
+                                    <!-- Detalles del Pago -->
+                                    <!-- <div class="tab-pane fade" id="payment-details-tab-pane" role="tabpanel" aria-labelledby="payment-details-tab">
+                                        <h6 class="mb-4">Detalles del Pago</h6>
+                                        <form class="custom-form" action="#" method="post">
+                                            <input class="form-control mb-3" type="number" name="payment-amount" placeholder="Monto del Pago" required>
+                                            <input class="form-control mb-3" type="date" name="payment-date" placeholder="Fecha del Pago" required>
+                                            <select class="form-control mb-3" name="payment-method">
+                                                <option value="transferencia">Transferencia Bancaria</option>
+                                                <option value="cheque">Cheque</option>
+                                                <option value="efectivo">Efectivo</option>
+                                            </select>
+                                            <button type="submit" class="btn btn-primary">Procesar Pago</button>
+                                        </form>
+                                    </div> -->
                                 </div>
                             </div>
                         </div>
-                     </div>
-                </main>
-                
+                    </div>
                     
-                                <nav aria-label="Page navigation example">
-                                        <ul class="pagination justify-content-center mb-0">
-                                            <li class="page-item">
-                                                <a class="page-link" href="#" aria-label="Previous">
-                                                    <span aria-hidden="true">Prev</span>
-                                                </a>
-                                            </li>
-
-                                            <li class="page-item active" aria-current="page">
-                                                <a class="page-link" href="#">1</a>
-                                            </li>
-                                            
-                                            <li class="page-item">
-                                                <a class="page-link" href="#">2</a>
-                                            </li>
-                                            
-                                            <li class="page-item">
-                                                <a class="page-link" href="#">3</a>
-                                            </li>
-
-                                            <li class="page-item">
-                                                <a class="page-link" href="#">4</a>
-                                            </li>
-                                            
-                                            <li class="page-item">
-                                                <a class="page-link" href="#" aria-label="Next">
-                                                    <span aria-hidden="true">Next</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </nav>
-                            </div>
-                        </div>
-
-                        
-
                     <footer class="site-footer">
                         <div class="container">
                             <div class="row">
@@ -452,7 +377,7 @@ Bootstrap 5 Dashboard Admin Template
         <!-- JAVASCRIPT FILES -->
         <script src="js/jquery.min.js"></script>
         <script src="js/bootstrap.bundle.min.js"></script>
-        <script src="js/apexcharts.min.js"></script>
         <script src="js/custom.js"></script>
+
     </body>
 </html>
