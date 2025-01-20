@@ -1,15 +1,31 @@
 {
-  "name": "server",
+  "name": "elbuensabor",
   "version": "1.0.0",
-  "main": "server.js",
+  "description": "Sistema Administativo y de Ventas para el Buen Sabor",
+  "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "server": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rjwrld/ElBuenSabor.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "bugs": {
+    "url": "https://github.com/rjwrld/ElBuenSabor/issues"
+  },
+  "homepage": "https://github.com/rjwrld/ElBuenSabor#readme",
   "dependencies": {
-    "server": "file:"
+    "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "express-ejs-layouts": "^2.5.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
   }
 }
