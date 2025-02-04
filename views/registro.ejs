@@ -8,9 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="Tooplate">
 
-    <title>Login - El Buen Sabor</title>
-
-    <!-- CSS FILES -->
+    <title>Register - El Buen Sabor</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;700&display=swap" rel="stylesheet">
@@ -22,45 +20,49 @@
 <body>
     <div class="container-fluid vh-100">
         <div class="row h-100">
+
             <div class="col-md-6 d-none d-md-block p-0">
                 <div class="h-100"
                     style="background-image: url('images/Logo-Rellenos-El-Buen-Sabor-Version-Naranja.png'); background-size: cover; background-position: center;">
                     <div class="d-flex justify-content-center align-items-start h-100">
-
                     </div>
                 </div>
             </div>
 
             <div class="col-md-6 d-flex justify-content-center align-items-center">
-                <div class="card shadow-lg" style="width: 400px;">
+                <div class="card shadow-lg" style="width: 500px;">
                     <div class="card-body">
-                        <h3 class="text-center mb-4">Inicio Sesión</h3>
-
-                        <form action="/login" method="POST"> <!-- Enviar datos al router -->
+                        <h3 class="text-center mb-4">Registrarse</h3>
+                        <form action="/registro" method="POST">
                             <div class="mb-3">
-                                <label for="email" class="form-label">Correo Electrónico</label>
-                                <input type="email" class="form-control" id="email" name="email"
-                                    placeholder="Ingrese su Correo Electrónico" required>
+                                <label for="nombre" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" id="nombre" name="nombre"
+                                    placeholder="Ingrese su Nombre " required>
                             </div>
                             <div class="mb-3">
-                                <label for="password" class="form-label">Contraseña</label>
-                                <input type="password" class="form-control" id="password" name="password"
-                                    placeholder="Ingrese su Contraseña" required>
+                                <label for="correo" class="form-label">Correo Electronico</label>
+                                <input type="email" class="form-control" id="correo" name="correo"
+                                    placeholder="Ingrese su Correo Electronico" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="contrasena" class="form-label">Contraseña</label>
+                                <input type="password" class="form-control" id="contrasena" name="contrasena"
+                                    placeholder="Ingrese una Contraseña" required>
                             </div>
                             <div class="d-grid">
-                                <button type="submit" class="btn custom-btn">Login</button> <!-- Botón de envío -->
+                                <button type="submit" class="btn custom-btn">Registrarse</button>
                             </div>
                         </form>
                     </div>
                     <div class="card-footer text-center">
-                        <small class="text-muted">¿No tiene una cuenta? <a href="/registro">Crear Cuenta!</a></small>
+                        <small class="text-muted">Ya tiene una cuenta? <a href="Login.html">Iniciar Sesion!</a></small>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 
+    <!-- JAVASCRIPT FILES -->
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
 </body>

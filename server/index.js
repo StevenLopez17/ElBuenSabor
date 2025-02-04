@@ -4,8 +4,6 @@ import path from 'path';
 import ejsLayouts from 'express-ejs-layouts';
 import { fileURLToPath } from 'url';
 import loginRoutes from './src/routes/loginRoutes.js';
-
-//IMPORT DE LA CONEXIÓN CON BASE DE DATOS
 import db from './src/models/main.js';
 
 const app = express();
@@ -25,6 +23,9 @@ app.set('layout', 'layouts/layout');
 
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 const PORT = process.env.PORT || 3000;
 
 //CONEXIÓN A LA BASE DE DATOS (SIN ALTERAR LAS TABLAS)
@@ -34,8 +35,15 @@ db.sequelize.authenticate()
 
 //Home
 app.get('/', (req, res) => {
-    res.render('index', { title: 'Mi página El Buen Sabor' });
+    res.render('index');
 });
+
+app.get('/login', (req, res) => {
+    res.render('login', { layout: false })
+});
+
+app.use('/', loginRoutes);
+
 
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);

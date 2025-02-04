@@ -22,6 +22,7 @@
 <body>
     <div class="container-fluid vh-100">
         <div class="row h-100">
+            <!-- Left Side with Image -->
             <div class="col-md-6 d-none d-md-block p-0">
                 <div class="h-100"
                     style="background-image: url('images/Logo-Rellenos-El-Buen-Sabor-Version-Naranja.png'); background-size: cover; background-position: center;">
@@ -36,19 +37,19 @@
                     <div class="card-body">
                         <h3 class="text-center mb-4">Inicio Sesión</h3>
 
-                        <form action="/login" method="POST"> <!-- Enviar datos al router -->
+                        <form action="/login" method="POST">
                             <div class="mb-3">
-                                <label for="email" class="form-label">Correo Electrónico</label>
-                                <input type="email" class="form-control" id="email" name="email"
-                                    placeholder="Ingrese su Correo Electrónico" required>
+                                <label for="correo" class="form-label">Correo Electrónico</label>
+                                <input type="email" class="form-control" id="correo" name="correo"
+                                    placeholder="Ingrese su Correo Electrónico">
                             </div>
                             <div class="mb-3">
-                                <label for="password" class="form-label">Contraseña</label>
-                                <input type="password" class="form-control" id="password" name="password"
-                                    placeholder="Ingrese su Contraseña" required>
+                                <label for="contrasena" class="form-label">Contraseña</label>
+                                <input type="password" class="form-control" id="contrasena" name="contrasena"
+                                    placeholder="Ingrese su Contraseña">
                             </div>
                             <div class="d-grid">
-                                <button type="submit" class="btn custom-btn">Login</button> <!-- Botón de envío -->
+                                <button type="submit" class="btn custom-btn">Iniciar Sesión</button>
                             </div>
                         </form>
                     </div>
@@ -60,7 +61,9 @@
 
         </div>
     </div>
+    </div>
 
+    <!-- JAVASCRIPT FILES -->
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
 </body>
