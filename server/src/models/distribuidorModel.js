@@ -31,10 +31,15 @@ const Distribuidores = sequelize.define('Distribuidores', {
         type: DataTypes.DATE,
         allowNull: true,
         defaultValue: DataTypes.NOW
+    },
+    estado: { 
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true 
     }
 }, {
-    tableName: 'distribuidores', // Asegurar que use el nombre correcto en la BD
-    timestamps: false // Si no usas `createdAt` y `updatedAt`, desactívalo
+    tableName: 'distribuidores', 
+    timestamps: false 
 });
 
 export default Distribuidores;

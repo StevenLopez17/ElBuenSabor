@@ -26,7 +26,7 @@ const db = {};
 
 
 // Importar modelos manualmente si es necesario
-import Distribuidores from './distribuidoresModel.js'; 
+import Distribuidores from './distribuidorModel.js'; 
 db.Distribuidores = Distribuidores;
 
 // Cargar automáticamente otros modelos en la carpeta models/
