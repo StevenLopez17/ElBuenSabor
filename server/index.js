@@ -5,6 +5,7 @@ import ejsLayouts from 'express-ejs-layouts';
 import { fileURLToPath } from 'url';
 import loginRoutes from './src/routes/loginRoutes.js';
 import distribuidorRoutes from './src/routes/distribuidorRoutes.js';
+import colaboradorRoutes from './src/routes/colaboradorRoutes.js'
 import db from './src/models/main.js';
 
 const app = express();
@@ -49,6 +50,19 @@ app.use('/', loginRoutes);
 //Rutas Distribuidores
 
 app.use('/', distribuidorRoutes);
+
+app.get('/distAgregar', (req, res) => {
+    res.render('distribuidoresAgregar', { layout: 'layouts/layout' });
+});
+
+app.get('/distEditar/:id', (req, res) => {
+    res.render('distribuidoresEditar', { layout: 'layouts/layout' });
+});
+
+
+
+//Rutas Colaboradores
+app.use('/', colaboradorRoutes);
 
 app.get('/distAgregar', (req, res) => {
     res.render('distribuidoresAgregar', { layout: 'layouts/layout' });

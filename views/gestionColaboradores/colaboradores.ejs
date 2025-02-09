@@ -1,8 +1,9 @@
 <div class="container-fluid">
 
+
     <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
         <div class="title-group mb-3">
-            <h1 class="h2 mb-0">Distribuidores</h1>
+            <h1 class="h2 mb-0">Colaboradores</h1>
         </div>
 
         <div class="row my-4">
@@ -13,11 +14,11 @@
                         <div class="col-lg-12 col-12">
                             <div class="custom-block bg-white ">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <h5 class="mb-5"> Lista de Distribuidores</h5>
+                                    <h5 class="mb-5"> Lista de Colaboradores</h5>
                                     <ul class="d-flex list-unstyled mb-0">
                                         <li class="me-3">
-                                            <a class="page-link active" href="distAgregar" aria-label="Next">
-                                                + Agregar Distribuidor
+                                            <a class="page-link active" href="colabAgregar" aria-label="Next">
+                                                + Agregar Colaborador
                                             </a>
                                         </li>
                                     </ul>
@@ -33,44 +34,47 @@
                                             <table class="table table-striped">
                                                 <thead>
                                                     <tr>
-                                                        <th>Nombre</th>
-                                                        <th>Dirección</th>
-                                                        <th>Telefono</th>
-                                                        <th>Pedidos Pendientes</th>
+                                                        <th>Identificación</th>
+                                                        <th>Cargo</th>
+                                                        <th>Horario</th>
+                                                        <th>Fecha_Ingreso</th>
                                                         <th>Estado</th>
                                                         <th>Acciones</th>
-                                                        <!-- <th>Zona de Cobertura</th> -->
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <% if (distribuidores.length> 0) { %>
-                                                        <% distribuidores.forEach(distribuidor=> { %>
+                                                    <% if (colaboradores.length> 0) { %>
+                                                        <% colaboradores.forEach(colaborador=> { %>
                                                             <tr>
                                                                 <td>
-                                                                    <%= distribuidor.empresa %>
+                                                                    <%= colaborador.usuario_id %>
                                                                 </td>
                                                                 <td>
-                                                                    <%= distribuidor.direccion %>
+                                                                    <%= colaborador.cargo %>
                                                                 </td>
                                                                 <td>
-                                                                    <%= distribuidor.telefono %>
+                                                                    <%= colaborador.Horario ?
+                                                                        colaborador.Horario.descripcion : 'Sin horario'
+                                                                        %>
                                                                 </td>
-                                                                <!-- <td><%= distribuidor.zona_cobertura %></td> -->
+                                                                <td>
+                                                                    <%= colaborador.fecha_ingreso %>
+                                                                </td>
                                                                 <td>Pedidos</td>
                                                                 <td>
-                                                                    <%= distribuidor.estado ? 'Activo' : 'Inactivo' %>
+                                                                    <%= colaborador.estado ? 'Activo' : 'Inactivo' %>
                                                                 </td>
                                                                 <td>
-                                                                    <a href="distEditar/<%= distribuidor.id %>"
+                                                                    <a href="colabEditar/<%= colaborador.id %>"
                                                                         class="btn btn-warning">
                                                                         Editar
                                                                     </a>
 
-                                                                    <form action="eliminar/<%= distribuidor.id %>"
+                                                                    <form action="eliminar/<%= colaborador.id %>"
                                                                         method="POST" style="display:inline;">
                                                                         <button type="submit"
-                                                                            class="btn <%= distribuidor.estado ? 'btn-danger' : 'btn-success' %>">
-                                                                            <%= distribuidor.estado ? 'Desactivar'
+                                                                            class="btn <%= colaborador.estado ? 'btn-danger' : 'btn-success' %>">
+                                                                            <%= colaborador.estado ? 'Desactivar'
                                                                                 : 'Activar' %>
                                                                         </button>
                                                                     </form>
@@ -83,7 +87,7 @@
                                                                 <% } else { %>
                                                                     <tr>
                                                                         <td colspan="4" class="text-center">No hay
-                                                                            distribuidores registrados.</td>
+                                                                            colaboradores registrados.</td>
                                                                     </tr>
                                                                     <% } %>
                                                 </tbody>
@@ -129,7 +133,7 @@
 
 
 
-            <!-- <footer class="site-footer">
+            {/* <!-- <footer class="site-footer">
                     <div class="container">
                         <div class="row">
                             
@@ -140,13 +144,12 @@
 
                         </div>
                     </div>
-                </footer> -->
+                </footer> --> */}
     </main>
 
 </div>
 </div>
 
-<!-- JAVASCRIPT FILES -->
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.bundle.min.js"></script>
 <script src="js/apexcharts.min.js"></script>

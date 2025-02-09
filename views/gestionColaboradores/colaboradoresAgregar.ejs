@@ -1,6 +1,6 @@
 <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
     <div class="title-group mb-3">
-        <h1 class="h2 mb-0">Distribuidores</h1>
+        <h1 class="h2 mb-0">Colaboradores</h1>
     </div>
 
 
@@ -11,7 +11,7 @@
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active" id="add-employee-tab" data-bs-toggle="tab"
                             data-bs-target="#add-employee-tab-pane" type="button" role="tab"
-                            aria-controls="add-employee-tab-pane" aria-selected="true">Agregar Distribuidor</button>
+                            aria-controls="add-employee-tab-pane" aria-selected="true">Agregar Colaborador</button>
                     </li>
 
                 </ul>
@@ -20,18 +20,22 @@
                     <!-- Agregar Empleado -->
                     <div class="tab-pane fade show active" id="add-employee-tab-pane" role="tabpanel"
                         aria-labelledby="add-employee-tab">
-                        <h6 class="mb-4">Agregar Distribuidor</h6>
-                        <form class="custom-form add-employee-form" action="agregar" method="POST" role="form">
+                        <h6 class="mb-4">Agregar Colaborador</h6>
+                        <form class="custom-form add-employee-form" action="insertColaborador" method="POST" role="form">
                             <input class="form-control mb-3" type="number" name="usuario_id" id="usuario_id"
-                                placeholder="ID del Usuario" required>
-                            <input class="form-control mb-3" type="text" name="empresa" id="empresa"
-                                placeholder="Empresa" required>
-                            <input class="form-control mb-3" type="text" name="telefono" id="telefono"
-                                placeholder="Telefono" required>
-                            <input class="form-control mb-3" type="text" name="direccion" id="direccion"
-                                placeholder="Direccion" required>
-                            <input class="form-control mb-3" type="text" name="zona_cobertura" id="zona_cobertura"
-                                placeholder="Zona de Cobertura" required>
+                                placeholder="ID del Colaborador" required>
+                            <input class="form-control mb-3" type="text" name="cargo" id="cargo" placeholder="Cargo"
+                                required>
+                            <select class="form-control mb-3" name="horario_id" id="horario" required>
+                                <option value="" disabled selected>Seleccione un horario</option>
+                                <% horarios.forEach(horario=> { %>
+                                    <option value="<%= horario.id %>">
+                                        <%= horario.descripcion %>
+                                    </option>
+                                    <% }); %>
+                            </select>
+                            <input class="form-control mb-3" type="date" name="fecha_ingreso" id="fecha_ingreso"
+                                required>
 
                             <div class="d-flex">
                                 <!-- <button type="reset" class="form-control me-3">Restablecer</button> -->

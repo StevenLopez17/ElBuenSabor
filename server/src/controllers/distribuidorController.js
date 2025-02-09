@@ -20,7 +20,7 @@ const insertDistribuidor = async (req, res) => {
         });
 
         console.log('Distribuidor creado con éxito');
-        res.redirect('/distribuidor'); 
+        res.redirect('/distribuidor');
 
     } catch (error) {
         console.error('Error al crear el distribuidor:', error);
@@ -39,22 +39,19 @@ const getDistribuidor = async (req, res) => {
         if (distribuidores.length > 0) {
             console.log(`Se encontraron ${distribuidores.length} distribuidores.`);
             res.render('distribuidores', {
-                layout: 'layouts/layout', 
                 distribuidores: distribuidores,
                 mensaje: null
             });
         } else {
             console.log(`No se encontraron distribuidores.`);
             res.render('distribuidores', {
-                layout: 'layouts/layout',
-                distribuidores: [], 
+                distribuidores: [],
                 mensaje: "No hay distribuidores registrados."
             });
         }
     } catch (error) {
         console.error('Error al obtener los distribuidores:', error);
         res.render('distribuidores', {
-            layout: 'layouts/layout',
             distribuidores: [],
             mensaje: "Error al cargar los distribuidores."
         });
@@ -66,7 +63,7 @@ const getDistribuidor = async (req, res) => {
 const updateDistribuidor = async (req, res) => {
     try {
         const { usuario_id, empresa, telefono, direccion, zona_cobertura } = req.body;
-        const { id } = req.params; 
+        const { id } = req.params;
 
         if (!id || !usuario_id || !empresa) {
             return res.status(400).json({ message: "ID, Usuario ID y Empresa son obligatorios" });
@@ -86,7 +83,7 @@ const updateDistribuidor = async (req, res) => {
         });
 
         console.log('Distribuidor actualizado con éxito');
-        res.redirect('/distribuidor'); 
+        res.redirect('/distribuidor');
 
     } catch (error) {
         console.error('Error al actualizar el distribuidor:', error);
@@ -97,7 +94,7 @@ const updateDistribuidor = async (req, res) => {
 //Metodo para renderizar la vista de actualizar los distribuidores y que carga los datos del distribuidor a actualizar
 const rendUpdateDistribuidor = async (req, res) => {
     try {
-        console.log("ID recibido:", req.params.id); 
+        console.log("ID recibido:", req.params.id);
 
         const distribuidor = await Distribuidores.findByPk(req.params.id);
 
@@ -106,11 +103,10 @@ const rendUpdateDistribuidor = async (req, res) => {
             return res.status(404).send("Distribuidor no encontrado");
         }
 
-        console.log("Distribuidor seleccionado:", JSON.stringify(distribuidor, null, 2)); 
+        console.log("Distribuidor seleccionado:", JSON.stringify(distribuidor, null, 2));
 
         res.render('distribuidoresEditar', {
-            layout: 'layouts/layout',
-            distribuidor: distribuidor 
+            distribuidor: distribuidor
         });
 
     } catch (error) {
@@ -122,20 +118,20 @@ const rendUpdateDistribuidor = async (req, res) => {
 
 const cambiarDistribuidorEstado = async (req, res) => {
     try {
-        const { id } = req.params; 
+        const { id } = req.params;
 
         const distribuidor = await Distribuidores.findByPk(id);
         if (!distribuidor) {
             return res.status(404).json({ message: "Distribuidor no encontrado" });
         }
 
-       
+
         distribuidor.estado = !distribuidor.estado;
-        await distribuidor.save(); 
+        await distribuidor.save();
 
         console.log(`El distribuidor de ID ${id} está ${distribuidor.estado ? 'Activo' : 'Inactivo'}`);
 
-        res.redirect('/distribuidor'); 
+        res.redirect('/distribuidor');
 
     } catch (error) {
         console.error("Error al cambiar el estado del distribuidor:", error);
