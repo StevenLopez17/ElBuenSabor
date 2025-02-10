@@ -1,13 +1,13 @@
 import Colaboradores from "../models/colaboradorModel.js";
 import Horarios from "../models/horarioModel.js"
-import GestionColaboradores from "../models/colaboradorModel.js";
+// import GestionColaboradores from "../models/colaboradorModel.js";
 
 //Metodo para agregar un colaborador
 const insertColaborador = async (req, res) => {
     try {
         const { usuario_id, cargo, fecha_ingreso, horario_id } = req.body;
 
-        await GestionColaboradores.create({
+        await Colaboradores.create({
             usuario_id,
             cargo,
             fecha_ingreso,
@@ -85,32 +85,31 @@ const agregarVista = async (req, res) => {
 //Metodo para actualizar los datos de un distribuidor
 const updateColaborador = async (req, res) => {
     try {
-        const { usuario_id, empresa, telefono, direccion, zona_cobertura } = req.body;
+        const { usuario_id, cargo, fecha_ingreso, horario } = req.body;
         const { id } = req.params;
 
-        if (!id || !usuario_id || !empresa) {
-            return res.status(400).json({ message: "ID, Usuario ID y Empresa son obligatorios" });
+        if (!id || !usuario_id || !cargo || !fecha_ingreso) {
+            return res.status(400).json({ message: "Todos los campos son obligatorios" });
         }
 
-        const distribuidor = await Colaboradores.findByPk(id);
-        if (!distribuidor) {
-            return res.status(404).json({ message: "Distribuidor no encontrado" });
+        const colaborador = await Colaboradores.findByPk(id);
+        if (!colaborador) {
+            return res.status(404).json({ message: "Colaborador no encontrado" });
         }
 
-        await distribuidor.update({
+        await colaborador.update({
             usuario_id,
-            empresa,
-            telefono,
-            direccion,
-            zona_cobertura
+            cargo,
+            fecha_ingreso,
+            horario_id: horario
         });
 
-        console.log('Distribuidor actualizado con éxito');
-        res.redirect('/distribuidor');
+        console.log('Colaborador actualizado con éxito');
+        res.redirect('/colaboradores');
 
     } catch (error) {
-        console.error('Error al actualizar el distribuidor:', error);
-        res.status(500).json({ message: "Error al actualizar distribuidor", error: error.message });
+        console.error('Error al actualizar el colaborador:', error);
+        res.status(500).json({ message: "Error al actualizar colaborador", error: error.message });
     }
 };
 
@@ -119,18 +118,30 @@ const rendUpdateColaborador = async (req, res) => {
     try {
         console.log("ID recibido:", req.params.id);
 
-        const distribuidor = await Colaboradores.findByPk(req.params.id);
+        const colaborador = await Colaboradores.findByPk(req.params.id, {
+            include: {
+                model: Horarios,
+                attributes: ['descripcion']
+            }
+        });
 
-        if (!distribuidor) {
-            console.log("Distribuidor no encontrado en la base de datos");
-            return res.status(404).send("Distribuidor no encontrado");
+
+        if (!colaborador) {
+            console.log("Colaborador no encontrado en la base de datos");
+            return res.status(404).send("Colaborador no encontrado");
         }
 
-        console.log("Distribuidor seleccionado:", JSON.stringify(distribuidor, null, 2));
+        console.log("Colaborador seleccionado:", JSON.stringify(colaborador, null, 2));
+        function formatDate(fecha) {
+            if (!fecha) return "";
+            return new Date(fecha).toISOString().split('T')[0];
+        }
+        const horarios = await Horarios.findAll();
 
-        res.render('ColaboradoresEditar', {
-            layout: 'layouts/layout',
-            distribuidor: distribuidor
+        res.render('gestionColaboradores/colaboradoresEditar', {
+            colaborador,
+            formatDate,
+            horarios
         });
 
     } catch (error) {
@@ -144,21 +155,21 @@ const cambiarColaboradorEstado = async (req, res) => {
     try {
         const { id } = req.params;
 
-        const distribuidor = await Colaboradores.findByPk(id);
-        if (!distribuidor) {
-            return res.status(404).json({ message: "Distribuidor no encontrado" });
+        const colaborador = await Colaboradores.findByPk(id);
+        if (!colaborador) {
+            return res.status(404).json({ message: "Colaborador no encontrado" });
         }
 
 
-        distribuidor.estado = !distribuidor.estado;
-        await distribuidor.save();
+        colaborador.estado = !Boolean(colaborador.estado);
+        await colaborador.save();
 
-        console.log(`El distribuidor de ID ${id} está ${distribuidor.estado ? 'Activo' : 'Inactivo'}`);
+        console.log(`El colaborador de ID ${id} está ${colaborador.estado ? 'Activo' : 'Inactivo'}`);
 
-        res.redirect('/distribuidor');
+        res.redirect('/colaboradores');
 
     } catch (error) {
-        console.error("Error al cambiar el estado del distribuidor:", error);
+        console.error("Error al cambiar el estado del colaborador:", error);
         res.status(500).json({ message: "Error al actualizar estado", error: error.message });
     }
 };

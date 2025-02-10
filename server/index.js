@@ -64,14 +64,9 @@ app.get('/distEditar/:id', (req, res) => {
 //Rutas Colaboradores
 app.use('/', colaboradorRoutes);
 
-app.get('/distAgregar', (req, res) => {
-    res.render('distribuidoresAgregar', { layout: 'layouts/layout' });
+app.get('/colabEditar/:id', (req, res) => {
+    res.render('colaboradoresEditar');
 });
-
-app.get('/distEditar/:id', (req, res) => {
-    res.render('distribuidoresEditar', { layout: 'layouts/layout' });
-});
-
 
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);

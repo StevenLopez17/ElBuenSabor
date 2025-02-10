@@ -1,0 +1,67 @@
+<main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
+    <div class="title-group mb-3">
+        <h1 class="h2 mb-0">Colaboradores</h1>
+    </div>
+
+
+    <div class="row my-4">
+        <div class="col-lg-12 col-12">
+            <div class="custom-block bg-white">
+                <ul class="nav nav-tabs" id="employeeTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="add-employee-tab" data-bs-toggle="tab"
+                            data-bs-target="#add-employee-tab-pane" type="button" role="tab"
+                            aria-controls="add-employee-tab-pane" aria-selected="true">Editar Colaborador</button>
+                    </li>
+
+                </ul>
+
+                <div class="tab-content" id="employeeTabContent">
+                    <div class="tab-pane fade show active" id="add-employee-tab-pane" role="tabpanel"
+                        aria-labelledby="add-employee-tab">
+                        <h6 class="mb-4">Editar Colaborador</h6>
+
+                        <form class="custom-form add-employee-form" action="/colabActualizar/<%= colaborador.id %>"
+                            method="POST" role="form">
+                            <input class="form-control mb-3" type="number" name="usuario_id" id="usuario_id"
+                                value="<%= colaborador.usuario_id %>" placeholder="ID del Usuario" required>
+                            <input class="form-control mb-3" type="text" name="cargo" id="cargo"
+                                value="<%= colaborador.cargo %>" placeholder="Cargo" required>
+                            <input class="form-control mb-3" type="date" name="fecha_ingreso" id="fecha_ingreso"
+                                value="<%= formatDate(colaborador.fecha_ingreso) %>" required>
+                            <select class="form-control mb-3" name="horario_id" id="horario" required>
+                                <option value="" disabled selected>Seleccione un horario</option>
+                                <% horarios.forEach(horario=> { %>
+                                    <option value="<%= horario.id %>">
+                                        <%= horario.descripcion %>
+                                    </option>
+                                    <% }); %>
+                            </select>
+
+                            <div class="d-flex">
+
+                                <button type="submit" class="form-control ms-2">Guardar</button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-lg-12 col-12">
+                    <p class="copyright-text">Copyright © Mini Finance 2048
+                        - Design: <a rel="sponsored" href="https://www.tooplate.com" target="_blank">Tooplate</a></p>
+                </div>
+
+            </div>
+        </div>
+    </footer>
+</main>

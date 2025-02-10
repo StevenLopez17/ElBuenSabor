@@ -16,6 +16,11 @@ const GestionColaboradores = sequelize.define("GestionColaboradores", {
         type: DataTypes.STRING(100),
         allowNull: false,
     },
+    estado: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+    },
     horario_id: {
         type: DataTypes.INTEGER,
         references: {

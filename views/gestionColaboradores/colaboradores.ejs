@@ -70,7 +70,8 @@
                                                                         Editar
                                                                     </a>
 
-                                                                    <form action="eliminar/<%= colaborador.id %>"
+                                                                    <form
+                                                                        action="estadoColaborador/<%= colaborador.id %>"
                                                                         method="POST" style="display:inline;">
                                                                         <button type="submit"
                                                                             class="btn <%= colaborador.estado ? 'btn-danger' : 'btn-success' %>">

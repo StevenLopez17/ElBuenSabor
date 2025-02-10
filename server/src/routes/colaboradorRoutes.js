@@ -16,10 +16,10 @@ router.get('/colabAgregar', agregarVista);
 router.get('/colabEditar/:id', rendUpdateColaborador);
 
 //Ruta para actualizar un colaborador
-router.post('/actualizar/:id', updateColaborador)
+router.post('/colabActualizar/:id', updateColaborador)
 
 //Ruta para cambiar el estado de un colaborador
-router.post('/eliminar/:id', cambiarColaboradorEstado);
+router.post('/estadoColaborador/:id', cambiarColaboradorEstado);
 
 
 
