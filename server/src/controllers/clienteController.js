@@ -109,7 +109,45 @@ const rendUpdateCliente = async (req, res) => {
   }
 };
 
-export { insertCliente, getCliente, updateCliente, rendUpdateCliente };
+const cambiarClienteEstado = async (req, res) => {
+
+    try {
+
+        const { id } = req.params;
+
+        if (!id) {
+            return res.status(400).json({ message: "ID es obligatorio" });
+        }
+
+        const cliente = await Clientes.findByPk(id);
+
+        if (!cliente) {
+
+
+
+
+
+            return res.status(404).json({ message: "Cliente no encontrado" });
+        }
+    } catch (error) {
+        console.error("Error al cambiar el estado del cliente:", error);
+        res.status(500).json({ message: "Error al cambiar el estado del cliente", error: error.message });
+    }
+
+
+
+    cliente.estado = !cliente.estado;
+
+    await cliente.save();
+
+    console.log(`El cliente de ID ${id} está ${cliente.estado ? 'Activo' : 'Inactivo'}`);
+
+    res.redirect('/cliente');
+
+};
+
+
+export { insertCliente, getCliente, updateCliente, rendUpdateCliente, cambiarClienteEstado };
 
 
 

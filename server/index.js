@@ -5,7 +5,8 @@ import ejsLayouts from 'express-ejs-layouts';
 import { fileURLToPath } from 'url';
 import loginRoutes from './src/routes/loginRoutes.js';
 import distribuidorRoutes from './src/routes/distribuidorRoutes.js';
-import colaboradorRoutes from './src/routes/colaboradorRoutes.js'
+import colaboradorRoutes from './src/routes/colaboradorRoutes.js';
+import clienteRoutes from './src/routes/clienteRoutes.js'; // Import clienteRoutes
 import db from './src/models/main.js';
 
 const app = express();
@@ -68,6 +69,20 @@ app.get('/colabEditar/:id', (req, res) => {
     res.render('colaboradoresEditar');
 });
 
+//Rutas Clientes
+app.use('/', clienteRoutes);
+
+app.get('/clienteAgregar', (req, res) => {
+    res.render('clientesAgregar', { layout: 'layouts/layout' });
+});
+
+app.get('/clienteEditar/:id', (req, res) => {
+    res.render('clientesEditar', { layout: 'layouts/layout' });
+});
+
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
+
+
+
