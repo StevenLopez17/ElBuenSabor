@@ -31,32 +31,55 @@ const insertDistribuidor = async (req, res) => {
 
 
 
-//Metodo para obtener los distribuidores almacenados
+//Metodo para obtener los distribuidores almacenados y cargar las direcciones para el select
+
 const getDistribuidor = async (req, res) => {
     try {
+       
+        const direcciones = await Distribuidores.findAll({
+            attributes: ['direccion'],
+            group: ['direccion'],
+            raw: true 
+        });
+
+      
         const distribuidores = await Distribuidores.findAll();
 
+        
         if (distribuidores.length > 0) {
             console.log(`Se encontraron ${distribuidores.length} distribuidores.`);
             res.render('distribuidores', {
-                distribuidores: distribuidores,
+                layout: 'layouts/layout',
+                distribuidores,
+                direcciones, 
+                filtroDireccion: "",
                 mensaje: null
             });
         } else {
             console.log(`No se encontraron distribuidores.`);
             res.render('distribuidores', {
+                layout: 'layouts/layout',
                 distribuidores: [],
+                direcciones,
+                filtroDireccion: "",
                 mensaje: "No hay distribuidores registrados."
             });
         }
+
     } catch (error) {
-        console.error('Error al obtener los distribuidores:', error);
+        console.error('Error al obtener distribuidores:', error);
         res.render('distribuidores', {
+            layout: 'layouts/layout',
             distribuidores: [],
+            direcciones: [],
+            filtroDireccion: "",
             mensaje: "Error al cargar los distribuidores."
         });
     }
 };
+
+
+
 
 
 //Metodo para actualizar los datos de un distribuidor
@@ -116,6 +139,7 @@ const rendUpdateDistribuidor = async (req, res) => {
 };
 
 
+//Metodo para cambiar el estado de un distribuidor
 const cambiarDistribuidorEstado = async (req, res) => {
     try {
         const { id } = req.params;
@@ -141,4 +165,49 @@ const cambiarDistribuidorEstado = async (req, res) => {
 
 
 
-export { insertDistribuidor, getDistribuidor, updateDistribuidor, rendUpdateDistribuidor, cambiarDistribuidorEstado };
+//Metodo para filtrar los distribuidores por direccion
+const filtroDireccionDistribuidores  = async (req, res) => {
+    try {
+       
+        const direcciones = await Distribuidores.findAll({
+            attributes: ['direccion'],
+            group: ['direccion'],
+            raw: true
+        });
+
+        const filtroDireccion = req.query.direccion || "";
+
+        const whereCondition = filtroDireccion ? { direccion: filtroDireccion } : {};
+
+        const distribuidores = await Distribuidores.findAll({
+            where: whereCondition
+        });
+
+        console.log(`Se encontraron ${distribuidores.length} distribuidores con dirección ${filtroDireccion}.`);
+
+        res.render('distribuidores', {
+            layout: 'layouts/layout',
+            distribuidores,
+            direcciones,
+            filtroDireccion,
+            mensaje: distribuidores.length > 0 ? null : "No hay distribuidores con esta dirección."
+        });
+
+    } catch (error) {
+        console.error('Error al filtrar distribuidores:', error);
+        res.render('distribuidores', {
+            layout: 'layouts/layout',
+            distribuidores: [],
+            direcciones: [],
+            filtroDireccion: "",
+            mensaje: "Error al cargar los distribuidores."
+        });
+    }
+};
+
+
+
+
+
+
+export { insertDistribuidor, getDistribuidor, updateDistribuidor, rendUpdateDistribuidor, cambiarDistribuidorEstado, filtroDireccionDistribuidores };

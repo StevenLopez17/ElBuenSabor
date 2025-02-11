@@ -1,5 +1,5 @@
 import express from 'express'
-import { insertDistribuidor, getDistribuidor, updateDistribuidor, rendUpdateDistribuidor,cambiarDistribuidorEstado } from '../controllers/distribuidorController.js'
+import { insertDistribuidor, getDistribuidor, updateDistribuidor, rendUpdateDistribuidor,cambiarDistribuidorEstado, filtroDireccionDistribuidores } from '../controllers/distribuidorController.js'
 
 const router = express.Router()
 
@@ -23,6 +23,8 @@ router.post('/actualizar/:id', updateDistribuidor)
 //Ruta para cambiar el estado de un distribuidor
 router.post('/eliminar/:id', cambiarDistribuidorEstado);
 
+//Ruta para filtrar los distribuidores por direccion
+router.get('/filtrarDireccion', filtroDireccionDistribuidores);
 
 
 export default router;
