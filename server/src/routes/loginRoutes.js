@@ -1,5 +1,6 @@
 import express from 'express'
-import { getUsuario, insertUsuario } from '../controllers/userController.js';
+import { getUsuario, insertUsuario, profileView } from '../controllers/userController.js';
+import identificarUsuario from '../../middleware/identificarUsuario.js';
 
 const router = express.Router()
 
@@ -14,6 +15,9 @@ router.get('/registro', (req, res) => {
 router.post('/registro', insertUsuario);
 
 
+router.get('/profile',
+    identificarUsuario,
+    profileView)
 
 export default router
 

@@ -1,6 +1,7 @@
 import { Sequelize, DataTypes } from 'sequelize';
 import sequelize from '../../config/database.js';
 import bcrypt from 'bcrypt';
+import Rol from './rol.js'
 
 const Usuario = sequelize.define('Usuario', {
     id: {
@@ -22,13 +23,6 @@ const Usuario = sequelize.define('Usuario', {
         type: DataTypes.STRING(255),
         allowNull: false
     },
-    rol: {
-        type: DataTypes.STRING(50),
-        allowNull: false,
-        validate: {
-            isIn: [['Administrador', 'Gerente de planta', 'Distribuidor', 'Colaborador de planta']]
-        }
-    },
     estado: {
         type: DataTypes.BOOLEAN,
         defaultValue: true
@@ -46,6 +40,14 @@ const Usuario = sequelize.define('Usuario', {
             const salt = await bcrypt.genSalt(10);
             usuario.contrasena = await bcrypt.hash(usuario.contrasena, salt);
         }
+    },
+    // Scopes: excluir contraseña y token al realizar consultas
+    scopes: {
+        eliminarPassword: {
+            attributes: {
+                exclude: ['contrasena', 'token']
+            }
+        }
     }
 });
 
@@ -53,5 +55,8 @@ const Usuario = sequelize.define('Usuario', {
 Usuario.prototype.verificarPassword = function (password) {
     return bcrypt.compareSync(password, this.contrasena);
 };
+
+// Definir la relación con la tabla Rol
+Usuario.belongsTo(Rol, { foreignKey: 'rol_id', as: 'rol' });
 
 export default Usuario;

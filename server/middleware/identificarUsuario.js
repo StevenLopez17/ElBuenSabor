@@ -7,7 +7,7 @@ const identificarUsuario = async (req, res, next) => {
     const { _token } = req.cookies
     if (!_token) {
         req.usuario = null;
-        return next()
+        return res.redirect('auth/login')
     }
 
     //Comprobar token 
@@ -22,7 +22,7 @@ const identificarUsuario = async (req, res, next) => {
         return next();
     } catch (error) {
         console.log(error);
-        return res.clearCookie('_token').redirect('/auth/login')
+        return res.clearCookie('_token').redirect('auth/login')
     }
 }
 

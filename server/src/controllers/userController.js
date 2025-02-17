@@ -1,7 +1,8 @@
 import Usuario from '../models/usuarios.js'
 import { generarId, generarJWT } from '../../helpers/tokens.js'
 import { check, validationResult } from 'express-validator';
-import bcrypt from 'bcrypt'
+import identificarUsuario from '../../middleware/identificarUsuario.js';
+
 
 const insertUsuario = async (req, res) => {
     const { nombre, correo, contrasena, rol } = req.body;
@@ -13,12 +14,11 @@ const insertUsuario = async (req, res) => {
                 nombre: nombre,
                 correo: correo,
                 contrasena: contrasena,
-                rol: "Distribuidor",
+                rol_id: 5,
                 token: generarId()
             });
             console.log('Usuario creado con éxito');
-            res.render('login', {
-                layout: false,
+            res.render('auth/profile', {
                 usuario: req.body
             })
 
@@ -85,4 +85,10 @@ const cerrarSesion = (req, res) => {
 }
 
 
-export { insertUsuario, getUsuario };
+const profileView = (req, res, next) => {
+    res.render('auth/profile')
+}
+
+
+
+export { insertUsuario, getUsuario, profileView };

@@ -8,9 +8,12 @@ import distribuidorRoutes from './src/routes/distribuidorRoutes.js';
 import colaboradorRoutes from './src/routes/colaboradorRoutes.js';
 import clienteRoutes from './src/routes/clienteRoutes.js'; // Import clienteRoutes
 import db from './src/models/main.js';
+import cookieParser from 'cookie-parser';
+
 
 const app = express();
-dotenv.config();
+
+app.use(cookieParser());
 
 //EJS ENGINE
 const __filename = fileURLToPath(import.meta.url);
