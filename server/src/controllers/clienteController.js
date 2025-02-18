@@ -1,7 +1,6 @@
 import Clientes from "../models/clienteModel.js";
 
 //Metodo para agregar un cliente
-
 const insertCliente = async (req, res) => {
   try {
     const { nombre, representante, numero, correo, direccion } = req.body;
@@ -110,31 +109,18 @@ const rendUpdateCliente = async (req, res) => {
 };
 
 const cambiarClienteEstado = async (req, res) => {
+  try {
+    const { id } = req.params;
 
-    try {
-
-        const { id } = req.params;
-
-        if (!id) {
-            return res.status(400).json({ message: "ID es obligatorio" });
-        }
-
-        const cliente = await Clientes.findByPk(id);
-
-        if (!cliente) {
-
-
-
-
-
-            return res.status(404).json({ message: "Cliente no encontrado" });
-        }
-    } catch (error) {
-        console.error("Error al cambiar el estado del cliente:", error);
-        res.status(500).json({ message: "Error al cambiar el estado del cliente", error: error.message });
+    if (!id) {
+      return res.status(400).json({ message: "ID es obligatorio" });
     }
 
+    const cliente = await Clientes.findByPk(id);
 
+    if (!cliente) {
+      return res.status(404).json({ message: "Cliente no encontrado" });
+    }
 
     cliente.estado = !cliente.estado;
 
@@ -143,9 +129,11 @@ const cambiarClienteEstado = async (req, res) => {
     console.log(`El cliente de ID ${id} está ${cliente.estado ? 'Activo' : 'Inactivo'}`);
 
     res.redirect('/cliente');
-
+  } catch (error) {
+    console.error("Error al cambiar el estado del cliente:", error);
+    res.status(500).json({ message: "Error al cambiar el estado del cliente", error: error.message });
+  }
 };
-
 
 export { insertCliente, getCliente, updateCliente, rendUpdateCliente, cambiarClienteEstado };
 

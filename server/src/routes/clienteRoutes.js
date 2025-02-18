@@ -1,13 +1,11 @@
-import express from 'express'
+import express from 'express';
+import { getCliente, insertCliente, updateCliente, cambiarClienteEstado, rendUpdateCliente } from '../controllers/clienteController.js';
 
+const router = express.Router();
 
-import { getCliente, insertCliente, updateCliente, cambiarClienteEstado, rendUpdateCliente } from '../controllers/clienteController.js'
+router.get('/cliente', getCliente);
 
-const router = express.Router()
-
-router.get('/cliente', getCliente)
-
-router.post('/agregar', insertCliente)
+router.post('/agregar', insertCliente);
 
 router.get('/clienteAgregar', (req, res) => {
     res.render('clientesAgregar', { layout: 'layouts/layout' });
@@ -15,7 +13,7 @@ router.get('/clienteAgregar', (req, res) => {
 
 router.get('/clienteEditar/:id', rendUpdateCliente);
 
-router.post('/actualizar/:id', updateCliente)
+router.post('/actualizar/:id', updateCliente);
 
 router.post('/eliminar/:id', cambiarClienteEstado);
 

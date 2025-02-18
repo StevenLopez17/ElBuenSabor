@@ -7,6 +7,7 @@ import loginRoutes from './src/routes/loginRoutes.js';
 import distribuidorRoutes from './src/routes/distribuidorRoutes.js';
 import colaboradorRoutes from './src/routes/colaboradorRoutes.js';
 import clienteRoutes from './src/routes/clienteRoutes.js'; // Import clienteRoutes
+import Clientes from './src/models/clienteModel.js'; // Import Clientes model
 import db from './src/models/main.js';
 import cookieParser from 'cookie-parser';
 
@@ -40,8 +41,14 @@ db.sequelize.authenticate()
     .catch(err => console.error('Error de conexión a la BD:', err));
 
 //Home
-app.get('/', (req, res) => {
-    res.render('index');
+app.get('/', async (req, res) => {
+    try {
+        const clientes = await Clientes.findAll();
+        res.render('index', { clientes });
+    } catch (error) {
+        console.error('Error fetching clients:', error);
+        res.render('index', { clientes: [], mensaje: 'Error fetching clients' });
+    }
 });
 
 app.get('/login', (req, res) => {
@@ -79,8 +86,18 @@ app.get('/clienteAgregar', (req, res) => {
     res.render('clientesAgregar', { layout: 'layouts/layout' });
 });
 
-app.get('/clienteEditar/:id', (req, res) => {
-    res.render('clientesEditar', { layout: 'layouts/layout' });
+app.get('/clienteEditar/:id', async (req, res) => {
+    try {
+        const cliente = await Clientes.findByPk(req.params.id);
+        if (cliente) {
+            res.render('clientesEditar', { cliente, layout: 'layouts/layout' });
+        } else {
+            res.redirect('/');
+        }
+    } catch (error) {
+        console.error('Error fetching client:', error);
+        res.redirect('/');
+    }
 });
 
 app.listen(PORT, () => {
