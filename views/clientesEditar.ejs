@@ -20,14 +20,14 @@
                         aria-labelledby="edit-client-tab">
                         <h6 class="mb-4">Editar Cliente</h6>
 
-                        <form class="custom-form edit-client-form" action="/actualizar/<%= cliente.id %>"
+                        <form class="custom-form edit-client-form" action="/actualizar1/<%= cliente.id %>"
                             method="POST" role="form">
                             <input class="form-control mb-3" type="text" name="nombre" id="nombre"
                                 value="<%= cliente.nombre %>" placeholder="Nombre" required>
                             <input class="form-control mb-3" type="text" name="representante" id="representante"
                                 value="<%= cliente.representante %>" placeholder="Representante" required>
-                            <input class="form-control mb-3" type="text" name="telefono" id="telefono"
-                                value="<%= cliente.telefono %>" placeholder="Teléfono" required>
+                            <input class="form-control mb-3" type="text" name="numero" id="numero"
+                                value="<%= cliente.numero %>" placeholder="Teléfono" required>
                             <input class="form-control mb-3" type="email" name="correo" id="correo"
                                 value="<%= cliente.correo %>" placeholder="Correo" required>
                             <input class="form-control mb-3" type="text" name="direccion" id="direccion"

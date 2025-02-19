@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get('/cliente', getCliente);
 
-router.post('/agregar', insertCliente);
+router.post('/agregar1', insertCliente);
 
 router.get('/clienteAgregar', (req, res) => {
     res.render('clientesAgregar', { layout: 'layouts/layout' });
@@ -13,8 +13,8 @@ router.get('/clienteAgregar', (req, res) => {
 
 router.get('/clienteEditar/:id', rendUpdateCliente);
 
-router.post('/actualizar/:id', updateCliente);
+router.post('/actualizar1/:id', updateCliente);
 
-router.post('/eliminar/:id', cambiarClienteEstado);
+router.post('/eliminar1/:id', cambiarClienteEstado);
 
 export default router;

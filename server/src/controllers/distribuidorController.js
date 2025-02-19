@@ -1,5 +1,16 @@
 import Distribuidores from "../models/distribuidorModel.js";
+import PdfPrinter from 'pdfmake';
+import exceljs from 'exceljs';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+import path from 'path';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const printer = new PdfPrinter({
+    Helvetica: { normal: 'Helvetica', bold: 'Helvetica-Bold' }
+});
 
 //Metodo para agregar un distribuidor
 const insertDistribuidor = async (req, res) => {
@@ -27,9 +38,6 @@ const insertDistribuidor = async (req, res) => {
         res.status(500).json({ message: "Error al agregar distribuidor", error: error.message });
     }
 };
-
-
-
 
 //Metodo para obtener los distribuidores almacenados y cargar las direcciones para el select
 
@@ -77,10 +85,6 @@ const getDistribuidor = async (req, res) => {
         });
     }
 };
-
-
-
-
 
 //Metodo para actualizar los datos de un distribuidor
 const updateDistribuidor = async (req, res) => {
@@ -137,7 +141,6 @@ const rendUpdateDistribuidor = async (req, res) => {
         res.status(500).send("Error interno del servidor");
     }
 };
-
 
 //Metodo para cambiar el estado de un distribuidor
 const cambiarDistribuidorEstado = async (req, res) => {
@@ -206,8 +209,134 @@ const filtroDireccionDistribuidores  = async (req, res) => {
 };
 
 
+//Metodo para exportar un PDF con los distribuidores y clientes
+const exportarPDFDist = async (req, res) => {
+    try {
+        const distribuidores = await Distribuidores.findAll();
+
+        if (distribuidores.length === 0) {
+            return res.status(404).send("No existen distribuidores para exportar");
+        }
+
+       
+        const pdfDir = path.join(__dirname, '..', 'client', 'pdf');
+
+       
+        if (!fs.existsSync(pdfDir)) {
+            fs.mkdirSync(pdfDir, { recursive: true });
+        }
+
+        const filepath = path.join(pdfDir, 'ReporteDistribuidores.pdf');
+
+       
+        const docDefinition = {
+            defaultStyle: { font: 'Helvetica' },
+            content: [
+                { text: 'Reporte de Distribuidores y Clientes', fontSize: 16, bold: true, margin: [0, 0, 0, 10] },
+                {
+                    table: {
+                        headerRows: 1,
+                        widths: ['auto', '*', 'auto', '*', 'auto', 'auto'],
+                        body: [
+                            ['ID', 'Empresa', 'Teléfono', 'Dirección', 'Zona de Cobertura', 'Estado'],
+                            ...distribuidores.map(d => [
+                                d.id,
+                                d.empresa,
+                                d.telefono,
+                                d.direccion,
+                                d.zona_cobertura,
+                                d.estado ? 'Activo' : 'Inactivo'
+                            ])
+                        ]
+                    }
+                }
+            ]
+        };
+
+        
+        const pdfDoc = printer.createPdfKitDocument(docDefinition);
+        const stream = fs.createWriteStream(filepath);
+        pdfDoc.pipe(stream);
+        pdfDoc.end();
+
+        
+        stream.on('finish', () => {
+            res.download(filepath, 'ReporteDistribuidores.pdf', () => {
+                fs.unlinkSync(filepath); 
+            });
+        });
+
+    } catch (error) {
+        console.error('Error al exportar PDF:', error);
+        res.status(500).json({ message: "Error al exportar PDF", error: error.message });
+    }
+};
+
+
+//Metodo para exportar un Excel con los distribuidores y clientes 
+const exportarExcelDist = async (req, res) => {
+    try {
+        const distribuidores = await Distribuidores.findAll();
+
+        if (distribuidores.length === 0) {
+            return res.status(404).send("No existen distribuidores para exportar");
+        }
+
+        const workbook = new exceljs.Workbook();
+        const worksheet = workbook.addWorksheet('Distribuidores');
+
+        worksheet.columns = [
+            { header: 'ID', key: 'id', width: 10 },
+            { header: 'Empresa', key: 'empresa', width: 25 },
+            { header: 'Telefono', key: 'telefono', width: 15 },
+            { header: 'Direccion', key: 'direccion', width: 30 },
+            { header: 'Zona de Cobertura', key: 'zona_cobertura', width: 20 },
+            { header: 'Estado', key: 'estado', width: 15 }
+        ];
+
+        distribuidores.forEach(distribuidor => {
+            worksheet.addRow({
+                id: distribuidor.id,
+                empresa: distribuidor.empresa,
+                telefono: distribuidor.telefono,
+                direccion: distribuidor.direccion,
+                zona_cobertura: distribuidor.zona_cobertura,
+                estado: distribuidor.estado ? 'Activo' : 'Inactivo'
+            });
+        });
+
+        //Define la ruta del archivo Excel
+        const excelDir = path.join(__dirname, '..', 'client', 'excel');
+
+        //Crea la carpeta si no existe
+        if (!fs.existsSync(excelDir)) {
+            fs.mkdirSync(excelDir, { recursive: true });
+        }
+
+        const excelFilePath = path.join(excelDir, 'ReporteDistribuidores.xlsx');
+
+        // Escribe el archivo
+        await workbook.xlsx.writeFile(excelFilePath);
+
+        
+        res.download(excelFilePath, 'ReporteDistribuidores.xlsx', () => {
+            fs.unlinkSync(excelFilePath); 
+        });
+
+    } catch (error) {
+        console.error('Error al exportar Excel:', error);
+        res.status(500).json({ message: "Error al exportar Excel", error: error.message });
+    }
+};
 
 
 
 
-export { insertDistribuidor, getDistribuidor, updateDistribuidor, rendUpdateDistribuidor, cambiarDistribuidorEstado, filtroDireccionDistribuidores };
+export { insertDistribuidor,
+      getDistribuidor,
+      updateDistribuidor, 
+      rendUpdateDistribuidor, 
+      cambiarDistribuidorEstado, 
+      filtroDireccionDistribuidores,
+      exportarPDFDist,
+      exportarExcelDist};

@@ -19,15 +19,15 @@ const Clientes = sequelize.define(
     },
     numero: {
       type: DataTypes.STRING(20),
-      allowNull: true,
+      allowNull: false,
     },
     correo: {
       type: DataTypes.STRING(100),
-      allowNull: true,
+      allowNull: false,
     },
     direccion: {
       type: DataTypes.TEXT,
-      allowNull: true,
+      allowNull: false,
     },
     estado: {
       type: DataTypes.BOOLEAN,

@@ -51,7 +51,7 @@
                                                         <td><%= cliente.estado ? 'Activo' : 'Inactivo' %></td>
                                                         <td>
                                                             <a href="clienteEditar/<%= cliente.id %>" class="btn btn-warning">Editar</a>
-                                                            <form action="eliminarCliente/<%= cliente.id %>" method="POST" style="display:inline;">
+                                                            <form action="eliminar1/<%= cliente.id %>" method="POST" style="display:inline;">
                                                                 <button type="submit" class="btn <%= cliente.estado ? 'btn-danger' : 'btn-success' %>">
                                                                     <%= cliente.estado ? 'Desactivar' : 'Activar' %>
                                                                 </button>

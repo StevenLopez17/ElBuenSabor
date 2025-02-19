@@ -1,5 +1,5 @@
 import express from 'express'
-import { insertDistribuidor, getDistribuidor, updateDistribuidor, rendUpdateDistribuidor,cambiarDistribuidorEstado, filtroDireccionDistribuidores } from '../controllers/distribuidorController.js'
+import { insertDistribuidor, getDistribuidor, updateDistribuidor, rendUpdateDistribuidor,cambiarDistribuidorEstado, filtroDireccionDistribuidores, exportarPDFDist, exportarExcelDist } from '../controllers/distribuidorController.js'
 
 const router = express.Router()
 
@@ -26,5 +26,13 @@ router.post('/eliminar/:id', cambiarDistribuidorEstado);
 //Ruta para filtrar los distribuidores por direccion
 router.get('/filtrarDireccion', filtroDireccionDistribuidores);
 
+//Ruta para exportar distribuidores a PDF
+router.get('/exportarPDF', exportarPDFDist);
+
+//Ruta para exportar distribuidores a Excel 
+router.get('/exportarExcel', exportarExcelDist);
+
+
 
 export default router;
+
