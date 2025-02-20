@@ -1,5 +1,6 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../../config/database.js';
+import Clientes from './clienteModel.js';
 
 const Distribuidores = sequelize.define('Distribuidores', {
     id: {
@@ -17,29 +18,40 @@ const Distribuidores = sequelize.define('Distribuidores', {
     },
     telefono: {
         type: DataTypes.STRING(20),
-        allowNull: true
+        allowNull: false
     },
     direccion: {
         type: DataTypes.TEXT,
-        allowNull: true
+        allowNull: false
     },
     zona_cobertura: {
         type: DataTypes.STRING(100),
-        allowNull: true
+        allowNull: false
     },
     fecha_registro: {
         type: DataTypes.DATE,
-        allowNull: true,
+        allowNull: false,
         defaultValue: DataTypes.NOW
     },
     estado: { 
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: true 
+    },
+    cliente_id:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'clientes', 
+            key: 'id'
+        }
     }
+
 }, {
     tableName: 'distribuidores', 
     timestamps: false 
 });
+
+Distribuidores.belongsTo(Clientes, { foreignKey: 'cliente_id' });
 
 export default Distribuidores;

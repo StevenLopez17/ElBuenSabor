@@ -1,5 +1,13 @@
 import express from 'express'
-import { insertDistribuidor, getDistribuidor, updateDistribuidor, rendUpdateDistribuidor,cambiarDistribuidorEstado, filtroDireccionDistribuidores, exportarPDFDist, exportarExcelDist } from '../controllers/distribuidorController.js'
+import { insertDistribuidor, 
+    rendInsertDistribuidor, 
+    getDistribuidor, 
+    updateDistribuidor, 
+    rendUpdateDistribuidor, 
+    cambiarDistribuidorEstado, 
+    filtroDireccionDistribuidores, 
+    exportarPDFDist, 
+    exportarExcelDist } from '../controllers/distribuidorController.js'
 
 const router = express.Router()
 
@@ -9,10 +17,8 @@ router.get('/distribuidor', getDistribuidor)
 //Ruta para agregar un distribuidor
 router.post('/agregar', insertDistribuidor)
 
-//Ruta para renderizar la vista de agregar un distribuidor
-router.get('/distAgregar', (req, res) => {
-    res.render('distribuidoresAgregar', { layout: 'layouts/layout' });
-});
+//Ruta para renderizar la vista de agregar un distribuidor, con la lista de clientes cargada.
+router.get('/distAgregar', rendInsertDistribuidor);
 
 //Ruta para renderizar la vista de actualizar los distribuidores y que carga los datos del distribuidor a actualizar
 router.get('/distEditar/:id', rendUpdateDistribuidor);

@@ -1,5 +1,6 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../../config/database.js";
+import Distribuidores from "./distribuidorModel.js";
 
 const Clientes = sequelize.define(
   "Clientes",
@@ -40,5 +41,9 @@ const Clientes = sequelize.define(
     timestamps: false, // Disable timestamps
   }
 );
+
+Clientes.associate = (models) => {
+  Clientes.hasMany(models.Distribuidores, { foreignKey: "cliente_id" });
+}
 
 export default Clientes;

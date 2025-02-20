@@ -61,6 +61,7 @@
                                         <thead>
                                             <tr>
                                                 <th>Nombre</th>
+                                                <th>Cliente Asignado</th>
                                                 <th>Dirección</th>
                                                 <th>Telefono</th>
                                                 <th>Pedidos Pendientes</th>
@@ -73,6 +74,7 @@
                                                 <% distribuidores.forEach(distribuidor => { %>
                                                     <tr>
                                                         <td><%= distribuidor.empresa %></td>
+                                                        <td><%= distribuidor.Cliente ? distribuidor.Cliente.nombre : 'Sin Cliente' %></td>
                                                         <td><%= distribuidor.direccion %></td>
                                                         <td><%= distribuidor.telefono %></td>
                                                         <td>Pedidos</td>

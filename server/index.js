@@ -10,6 +10,7 @@ import clienteRoutes from './src/routes/clienteRoutes.js'; // Import clienteRout
 import Clientes from './src/models/clienteModel.js'; // Import Clientes model
 import db from './src/models/main.js';
 import cookieParser from 'cookie-parser';
+import sequelize from './config/database.js';
 
 
 const app = express();

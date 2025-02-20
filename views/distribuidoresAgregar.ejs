@@ -21,25 +21,28 @@
                     <div class="tab-pane fade show active" id="add-employee-tab-pane" role="tabpanel"
                         aria-labelledby="add-employee-tab">
                         <h6 class="mb-4">Agregar Distribuidor</h6>
-                        <form class="custom-form add-employee-form" action="agregar" method="POST" role="form">
-                            <input class="form-control mb-3" type="number" name="usuario_id" id="usuario_id"
-                                placeholder="ID del Usuario" required>
-                            <input class="form-control mb-3" type="text" name="empresa" id="empresa"
-                                placeholder="Empresa" required>
-                            <input class="form-control mb-3" type="text" name="telefono" id="telefono"
-                                placeholder="Telefono" required>
-                            <input class="form-control mb-3" type="text" name="direccion" id="direccion"
-                                placeholder="Direccion" required>
-                            <input class="form-control mb-3" type="text" name="zona_cobertura" id="zona_cobertura"
-                                placeholder="Zona de Cobertura" required>
-
-                            <div class="d-flex">
-                                <!-- <button type="reset" class="form-control me-3">Restablecer</button> -->
-                                <button type="submit" class="form-control ms-2">Guardar</button>
-                            </div>
+                        <form class="custom-form add-employee-form" action="/agregar" method="POST">
+                            <label for="cliente_id">Seleccionar Cliente:</label>
+                            <select name="cliente_id" id="cliente_id" class="form-control mb-3" required>
+                                <option value="">Seleccione un cliente</option>
+                                <% if (clientes && clientes.length > 0) { %>
+                                    <% clientes.forEach(cliente => { %>
+                                        <option value="<%= cliente.id %>"><%= cliente.nombre %></option>
+                                    <% }) %>
+                                <% } else { %>
+                                    <option value="" disabled>No hay clientes disponibles</option>
+                                <% } %>
+                            </select>
+                            <input class="form-control mb-3" type="number" name="usuario_id" id="usuario_id" placeholder="ID del Usuario" required>
+                            <input class="form-control mb-3" type="text" name="empresa" id="empresa" placeholder="Empresa" required>
+                            <input class="form-control mb-3" type="text" name="telefono" id="telefono" placeholder="Teléfono" required>
+                            <input class="form-control mb-3" type="text" name="direccion" id="direccion" placeholder="Dirección" required>
+                            <input class="form-control mb-3" type="text" name="zona_cobertura" id="zona_cobertura" placeholder="Zona de Cobertura" required>
+                        
+                            <button type="submit" class="btn btn-primary">Guardar</button>
                         </form>
                     </div>
-
+                    
 
                 </div>
             </div>
