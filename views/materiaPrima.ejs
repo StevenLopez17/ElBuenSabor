@@ -1,0 +1,140 @@
+<div class="container-fluid">
+
+    <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
+        <div class="title-group mb-3">
+            <h1 class="h2 mb-0">Materia Prima</h1>
+        </div>
+
+        <div class="row my-4">
+            <div class="col-lg-12 col-12">
+                <div class="custom-block bg-white">
+
+                    <div class="row my-4">
+                        <div class="col-lg-12 col-12">
+                            <div class="custom-block bg-white ">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-5"> Materia Prima</h5>
+                                    <ul class="d-flex list-unstyled mb-0">
+                                        <form method="GET" action="/filtrarDireccion">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <label for="filtroDireccion">Filtrar por Dirección:</label>
+                                                <select name="direccion" id="filtroDireccion" class="form-control mb-3">
+                                                    <option value="">Todas</option>
+                                                </select>
+                                                <ul class="d-flex list-unstyled mb-0">
+                                                    <button type="submit" class="btn btn-primary mb-3">Filtrar</button>
+                                                </ul>
+                                            </div>
+                                        </form>
+                                        <li class="me-3">
+                                            <a class="page-link active" href="insertar_materia_prima" aria-label="Next">
+                                                + Agregar Distribuidor
+                                            </a>
+                                        </li>
+                                        <div class="d-flex justify-content-end mb-3">
+                                            <a href="/exportarExcel" class="btn btn-success me-2">Exportar a Excel</a>
+                                            <a href="/exportarPDF" class="btn btn-danger">Exportar a PDF</a>
+                                        </div>
+                                    </ul>
+                                </div>
+
+
+
+
+
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>id</th>
+                                                <th>Producto ID</th>
+                                                <th>Cantidad</th>
+                                                <th>Fecha</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% if (materiaPrima.length> 0) { %>
+                                                <% materiaPrima.forEach(item=> { %>
+                                                    <tr>
+                                                        <td>
+                                                            <%= item.id %>
+                                                        </td>
+                                                        <td>
+                                                            <%= item.producto_id %>
+                                                        </td>
+                                                        <td>
+                                                            <%= item.cantidad_disponible %>
+                                                        </td>
+                                                        <td>
+                                                            <%= item.fecha_actualizacion.toLocaleString() %>
+                                                        </td>
+                                                        <td>
+                                                            <a href="/inventario/editar/<%= item.id %>"
+                                                                class="btn btn-warning">Editar</a>
+                                                            <form action="/inventario/eliminar/<%= item.id %>"
+                                                                method="POST" style="display:inline;">
+                                                                <button type="submit"
+                                                                    class="btn btn-danger">Eliminar</button>
+                                                            </form>
+                                                        </td>
+                                                    </tr>
+                                                    <% }) %>
+                                                        <% } else { %>
+                                                            <tr>
+                                                                <td colspan="5" class="text-center">No hay registros en
+                                                                    el inventario de materias primas.</td>
+                                                            </tr>
+                                                            <% } %>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center mb-0">
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Previous">
+                                    <span aria-hidden="true">Prev</span>
+                                </a>
+                            </li>
+
+                            <li class="page-item active" aria-current="page">
+                                <a class="page-link" href="#">1</a>
+                            </li>
+
+                            <li class="page-item">
+                                <a class="page-link" href="#">2</a>
+                            </li>
+
+                            <li class="page-item">
+                                <a class="page-link" href="#">3</a>
+                            </li>
+
+                            <li class="page-item">
+                                <a class="page-link" href="#">4</a>
+                            </li>
+
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Next">
+                                    <span aria-hidden="true">Next</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </main>
+
+</div>
+</div>
+
+<!-- JAVASCRIPT FILES -->
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.bundle.min.js"></script>
+<script src="js/apexcharts.min.js"></script>
+<script src="js/custom.js"></script>

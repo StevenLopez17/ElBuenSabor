@@ -7,6 +7,7 @@ import loginRoutes from './src/routes/loginRoutes.js';
 import distribuidorRoutes from './src/routes/distribuidorRoutes.js';
 import colaboradorRoutes from './src/routes/colaboradorRoutes.js';
 import clienteRoutes from './src/routes/clienteRoutes.js'; // Import clienteRoutes
+import materiaPrimaRoutes from './src/routes/materiaPrimaRoutes.js'; // Import materiaPrimaRoutes
 import Clientes from './src/models/clienteModel.js'; // Import Clientes model
 import db from './src/models/main.js';
 import cookieParser from 'cookie-parser';
@@ -71,6 +72,16 @@ app.get('/distEditar/:id', (req, res) => {
     res.render('distribuidoresEditar', { layout: 'layouts/layout' });
 });
 
+//Rutas Materia Prima
+app.use('/', materiaPrimaRoutes);
+
+app.get('/materiaPrimaAgregar', (req, res) => {
+    res.render('materiaPrimaAgregar', { layout: 'layouts/layout' });
+}   );
+
+app.get('/insertar_materia_prima/:id', async (req, res) => {
+    res.render('insertar_materia_prima', { layout: 'layouts/layout' });
+});
 
 
 //Rutas Colaboradores
