@@ -14,7 +14,7 @@ const insertUsuario = async (req, res) => {
                 nombre: nombre,
                 correo: correo,
                 contrasena: contrasena,
-                rol_id: 5,
+                rol_id: 1,
                 token: generarId()
             });
             console.log('Usuario creado con éxito');

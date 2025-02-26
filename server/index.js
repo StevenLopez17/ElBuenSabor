@@ -77,7 +77,7 @@ app.use('/', materiaPrimaRoutes);
 
 app.get('/materiaPrimaAgregar', (req, res) => {
     res.render('materiaPrimaAgregar', { layout: 'layouts/layout' });
-}   );
+});
 
 app.get('/insertar_materia_prima/:id', async (req, res) => {
     res.render('insertar_materia_prima', { layout: 'layouts/layout' });

@@ -37,6 +37,7 @@ const getColaboradores = async (req, res) => {
         if (colaboradores.length > 0) {
             console.log(`Se encontraron ${colaboradores.length} Colaboradores.`);
             res.render('gestionColaboradores/colaboradores', {
+                layout: 'layouts/layout',
                 colaboradores: colaboradores,
                 horarios: horarios,
                 mensaje: null
@@ -64,12 +65,12 @@ const agregarVista = async (req, res) => {
     try {
         const horarios = await Horarios.findAll();
 
-        if (!horarios || horarios.length === 0) {
-            res.render('gestionColaboradores/colaboradores', {
-                horarios: [],
-                mensaje: "Error al mostrar horarios disponibles"
-            });
-        }
+        // if (!horarios || horarios.length === 0) {
+        //     res.render('gestionColaboradores/colaboradores', {
+        //         horarios: [],
+        //         mensaje: "Error al mostrar horarios disponibles"
+        //     });
+        // }
 
         res.render('gestionColaboradores/colaboradoresAgregar', {
             horarios: horarios,

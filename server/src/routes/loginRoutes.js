@@ -16,7 +16,6 @@ router.post('/registro', insertUsuario);
 
 
 router.get('/profile',
-    identificarUsuario,
     profileView)
 
 export default router

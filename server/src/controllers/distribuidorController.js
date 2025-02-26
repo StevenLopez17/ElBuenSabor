@@ -1,5 +1,5 @@
 import Distribuidores from "../models/distribuidorModel.js";
-import Clientes from "../models/clienteModel.js"; 
+import Clientes from "../models/clienteModel.js";
 import PdfPrinter from 'pdfmake';
 import exceljs from 'exceljs';
 import fs from 'fs';
@@ -21,7 +21,7 @@ const printer = new PdfPrinter({
 //Metodo para agregar un distribuidor
 const insertDistribuidor = async (req, res) => {
     try {
-        const { usuario_id, empresa, telefono, direccion, zona_cobertura,cliente_id } = req.body;
+        const { usuario_id, empresa, telefono, direccion, zona_cobertura, cliente_id } = req.body;
 
         if (!usuario_id || !empresa) {
             return res.status(400).json({ message: "Usuario ID y Empresa son obligatorios" });
@@ -54,14 +54,14 @@ const rendInsertDistribuidor = async (req, res) => {
 
         res.render('distribuidoresAgregar', {
             layout: 'layouts/layout',
-            clientes 
+            clientes
         });
 
     } catch (error) {
         console.error("Error al obtener los clientes:", error);
         res.render('distribuidoresAgregar', {
             layout: 'layouts/layout',
-            clientes: [], 
+            clientes: [],
             mensaje: "Error al cargar los clientes"
         });
     }
@@ -71,14 +71,14 @@ const rendInsertDistribuidor = async (req, res) => {
 
 const getDistribuidor = async (req, res) => {
     try {
-       
+
         const direcciones = await Distribuidores.findAll({
             attributes: ['direccion'],
             group: ['direccion'],
-            raw: true 
+            raw: true
         });
 
-      
+
         // const distribuidores = await Distribuidores.findAll();
 
         const distribuidores = await Distribuidores.findAll({
@@ -93,7 +93,7 @@ const getDistribuidor = async (req, res) => {
             res.render('distribuidores', {
                 layout: 'layouts/layout',
                 distribuidores,
-                direcciones, 
+                direcciones,
                 filtroDireccion: "",
                 mensaje: null
             });
@@ -219,13 +219,13 @@ const filtroDireccionDistribuidores = async (req, res) => {
         const filtroDireccion = req.query.direccion || "";
         const whereCondition = filtroDireccion ? { direccion: filtroDireccion } : {};
 
-        
+
         const distribuidores = await Distribuidores.findAll({
             where: whereCondition,
             include: [
                 {
-                    model: Clientes, 
-                    attributes: ['id', 'nombre'], 
+                    model: Clientes,
+                    attributes: ['id', 'nombre'],
                 }
             ]
         });
@@ -256,7 +256,7 @@ const filtroDireccionDistribuidores = async (req, res) => {
 const exportarPDFDist = async (req, res) => {
     try {
         const distribuidores = await Distribuidores.findAll({
-            include: [{ model: Clientes, attributes: ['id', 'nombre'] }] 
+            include: [{ model: Clientes, attributes: ['id', 'nombre'] }]
         });
 
         if (!distribuidores || distribuidores.length === 0) {
@@ -280,7 +280,7 @@ const exportarPDFDist = async (req, res) => {
             d.direccion || 'No registrada',
             d.zona_cobertura || 'No registrada',
             d.estado ? 'Activo' : 'Inactivo',
-            
+
         ]);
 
         if (tableBody.length === 0) {
@@ -296,7 +296,7 @@ const exportarPDFDist = async (req, res) => {
                         headerRows: 1,
                         widths: ['auto', '*', 'auto', '*', 'auto', 'auto', '*'],
                         body: [
-                            ['ID', 'Empresa','Cliente Asignado', 'Teléfono', 'Dirección', 'Zona de Cobertura', 'Estado'],
+                            ['ID', 'Empresa', 'Cliente Asignado', 'Teléfono', 'Dirección', 'Zona de Cobertura', 'Estado'],
                             ...tableBody // Aca nada mas se asigna el cuerpo de la tabla que se creo antes
                         ]
                     }
@@ -370,9 +370,9 @@ const exportarExcelDist = async (req, res) => {
         // Escribe el archivo
         await workbook.xlsx.writeFile(excelFilePath);
 
-        
+
         res.download(excelFilePath, 'ReporteDistribuidores.xlsx', () => {
-            fs.unlinkSync(excelFilePath); 
+            fs.unlinkSync(excelFilePath);
         });
 
     } catch (error) {
@@ -384,12 +384,14 @@ const exportarExcelDist = async (req, res) => {
 
 
 
-export { insertDistribuidor,
-      rendInsertDistribuidor,
-      getDistribuidor,
-      updateDistribuidor, 
-      rendUpdateDistribuidor, 
-      cambiarDistribuidorEstado, 
-      filtroDireccionDistribuidores,
-      exportarPDFDist,
-      exportarExcelDist};
+export {
+    insertDistribuidor,
+    rendInsertDistribuidor,
+    getDistribuidor,
+    updateDistribuidor,
+    rendUpdateDistribuidor,
+    cambiarDistribuidorEstado,
+    filtroDireccionDistribuidores,
+    exportarPDFDist,
+    exportarExcelDist
+};
