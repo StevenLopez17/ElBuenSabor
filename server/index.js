@@ -65,12 +65,14 @@ app.use('/', loginRoutes);
 app.use('/', distribuidorRoutes);
 
 app.get('/distAgregar', (req, res) => {
-    res.render('distribuidoresAgregar', { layout: 'layouts/layout' });
+    res.render('distribuidores/distribuidoresAgregar', { layout: 'layouts/layout' });
 });
 
 app.get('/distEditar/:id', (req, res) => {
-    res.render('distribuidoresEditar', { layout: 'layouts/layout' });
+    res.render('distribuidores/distribuidoresEditar', { layout: 'layouts/layout' });
 });
+
+
 
 //Rutas Materia Prima
 app.use('/', materiaPrimaRoutes);
@@ -95,14 +97,14 @@ app.get('/colabEditar/:id', (req, res) => {
 app.use('/', clienteRoutes);
 
 app.get('/clienteAgregar', (req, res) => {
-    res.render('clientesAgregar', { layout: 'layouts/layout' });
+    res.render('clientes/clientesAgregar', { layout: 'layouts/layout' });
 });
 
 app.get('/clienteEditar/:id', async (req, res) => {
     try {
         const cliente = await Clientes.findByPk(req.params.id);
         if (cliente) {
-            res.render('clientesEditar', { cliente, layout: 'layouts/layout' });
+            res.render('clientes/clientesEditar', { cliente, layout: 'layouts/layout' });
         } else {
             res.redirect('/');
         }

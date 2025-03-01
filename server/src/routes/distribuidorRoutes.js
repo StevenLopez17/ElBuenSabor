@@ -1,6 +1,5 @@
 import express from 'express'
-import { insertDistribuidor, 
-    rendInsertDistribuidor, 
+import { insertDistribuidor,
     getDistribuidor, 
     updateDistribuidor, 
     rendUpdateDistribuidor, 
@@ -18,7 +17,7 @@ router.get('/distribuidor', getDistribuidor)
 router.post('/agregar', insertDistribuidor)
 
 //Ruta para renderizar la vista de agregar un distribuidor, con la lista de clientes cargada.
-router.get('/distAgregar', rendInsertDistribuidor);
+// router.get('/distAgregar', rendInsertDistribuidor);
 
 //Ruta para renderizar la vista de actualizar los distribuidores y que carga los datos del distribuidor a actualizar
 router.get('/distEditar/:id', rendUpdateDistribuidor);

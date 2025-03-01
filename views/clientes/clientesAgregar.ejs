@@ -25,6 +25,17 @@
                             <input class="form-control mb-3" type="text" name="numero" id="numero" placeholder="Teléfono" required>
                             <input class="form-control mb-3" type="email" name="correo" id="correo" placeholder="Correo" required>
                             <input class="form-control mb-3" type="text" name="direccion" id="direccion" placeholder="Dirección" required>
+                            <label for="distribuidor_id">Seleccionar Distribuidor:</label>
+                            <select name="distribuidor_id" id="distribuidor_id" class="form-control mb-3" required>
+                                <option value="">Seleccione un distribuidor</option>
+                                <% if (distribuidores && distribuidores.length > 0) { %>
+                                    <% distribuidores.forEach(distribuidor => { %>
+                                        <option value="<%= distribuidor.id %>"><%= distribuidor.empresa %></option>
+                                    <% }) %>
+                                <% } else { %>
+                                    <option value="" disabled>No hay distribuidores disponibles</option>
+                                <% } %>
+                            </select>
                             <div class="d-flex">
                                 <button type="submit" class="form-control ms-2">Guardar</button>
                             </div>

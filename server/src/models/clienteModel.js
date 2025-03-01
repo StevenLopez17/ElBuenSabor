@@ -1,6 +1,6 @@
-import { DataTypes } from "sequelize";
-import sequelize from "../../config/database.js";
-import Distribuidores from "./distribuidorModel.js";
+import { DataTypes } from 'sequelize';
+import sequelize from '../../config/database.js';
+import Distribuidores from './distribuidorModel.js';
 
 const Clientes = sequelize.define(
   "Clientes",
@@ -35,6 +35,14 @@ const Clientes = sequelize.define(
       allowNull: false,
       defaultValue: true,
     },
+    distribuidor_id:{
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+          model: 'distribuidores', 
+          key: 'id'
+      }
+  }
   },
   {
     tableName: "clientes", // Ensure the table name is in lowercase
@@ -42,8 +50,6 @@ const Clientes = sequelize.define(
   }
 );
 
-Clientes.associate = (models) => {
-  Clientes.hasMany(models.Distribuidores, { foreignKey: "cliente_id" });
-}
+
 
 export default Clientes;

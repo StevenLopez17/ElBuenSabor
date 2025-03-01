@@ -21,7 +21,7 @@
                         <h6 class="mb-4">Editar Cliente</h6>
 
                         <form class="custom-form edit-client-form" action="/actualizar1/<%= cliente.id %>"
-                            method="POST" role="form">
+                            method="POST" role="form">                            
                             <input class="form-control mb-3" type="text" name="nombre" id="nombre"
                                 value="<%= cliente.nombre %>" placeholder="Nombre" required>
                             <input class="form-control mb-3" type="text" name="representante" id="representante"
@@ -32,6 +32,20 @@
                                 value="<%= cliente.correo %>" placeholder="Correo" required>
                             <input class="form-control mb-3" type="text" name="direccion" id="direccion"
                                 value="<%= cliente.direccion %>" placeholder="Dirección" required>
+
+                                <label for="distribuidor_id">Seleccionar Distribuidor:</label>
+                                <select name="distribuidor_id" id="distribuidor_id" class="form-control mb-3" required>
+                                    <option value="">Seleccione un Distribuidor</option>
+                                    <% if (distribuidores && distribuidores.length > 0) { %>
+                                        <% distribuidores.forEach(distribuidor => { %>
+                                            <option value="<%= distribuidor.id %>" <%= cliente.Distribuidor && cliente.Distribuidor.id === distribuidor.id ? 'selected' : '' %>>
+                                                <%= distribuidor.empresa %>
+                                            </option>                                            
+                                        <% }) %>
+                                    <% } else { %>
+                                        <option value="" disabled>No hay distribuidores disponibles</option>
+                                    <% } %>
+                                </select>
 
                             <div class="d-flex">
                                 <button type="submit" class="form-control ms-2">Guardar</button>

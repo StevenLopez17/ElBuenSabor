@@ -1,9 +1,10 @@
 import Clientes from "../models/clienteModel.js";
+import Distribuidores from "../models/distribuidorModel.js";
 
 //Metodo para agregar un cliente
 const insertCliente = async (req, res) => {
   try {
-    const { nombre, representante, numero, correo, direccion } = req.body;
+    const { nombre, representante, numero, correo, direccion, distribuidor_id } = req.body;
 
     if (!nombre) {
       return res.status(400).json({ message: "Nombre es obligatorio" });
@@ -15,6 +16,7 @@ const insertCliente = async (req, res) => {
       numero,
       correo,
       direccion,
+      distribuidor_id,
       estado: true,
     });
 
@@ -28,26 +30,52 @@ const insertCliente = async (req, res) => {
   }
 };
 
+const rendInsertCliente = async (req, res) => {
+  try {
+      
+      const distribuidores = await Distribuidores.findAll();
+
+      res.render('clientes/clientesAgregar', {
+          layout: 'layouts/layout',
+          distribuidores
+      });
+
+  } catch (error) {
+      console.error("Error al obtener los Distribuidores:", error);
+      res.render('clientes/clientesAgregar', {
+          layout: 'layouts/layout',
+          clientes: [],
+          mensaje: "Error al cargar los Distribuidores"
+      });
+  }
+};
+
 const getCliente = async (req, res) => {
   try {
-    const clientes = await Clientes.findAll();
+    const clientes = await Clientes.findAll({
+      include:[{
+        model: Distribuidores,
+        attributes: ['empresa'],
+        as: 'Distribuidor'
+      }]
+    });
 
     if (clientes.length > 0) {
       console.log(`Se encontraron ${clientes.length} clientes.`);
-      res.render("clientes", {
+      res.render("clientes/clientes", {
         clientes: clientes,
         mensaje: null,
       });
     } else {
       console.log(`No se encontraron clientes.`);
-      res.render("clientes", {
+      res.render("clientes/clientes", {
         clientes: [],
         mensaje: "No hay clientes registrados.",
       });
     }
   } catch (error) {
     console.error("Error al obtener los clientes:", error);
-    res.render("clientes", {
+    res.render("clientes/clientes", {
       clientes: [],
       mensaje: "Error al cargar los clientes.",
     });
@@ -56,7 +84,7 @@ const getCliente = async (req, res) => {
 
 const updateCliente = async (req, res) => {
   try {
-    const { nombre, representante, numero, correo, direccion } = req.body;
+    const { nombre, representante, numero, correo, direccion, distribuidor_id } = req.body;
     const { id } = req.params;
 
     if (!id || !nombre) {
@@ -73,7 +101,8 @@ const updateCliente = async (req, res) => {
       representante,
       numero,
       correo,
-      direccion
+      direccion,
+      id_distribuidor: distribuidor_id
     });
 
     console.log("Cliente actualizado con éxito");
@@ -89,7 +118,9 @@ const rendUpdateCliente = async (req, res) => {
   try {
     console.log("ID recibido:", req.params.id);
 
-    const cliente = await Clientes.findByPk(req.params.id);
+    const cliente = await Clientes.findByPk(req.params.id, {
+      include: [{ model: Distribuidores,as: 'Distribuidor', attributes: ['id', 'empresa'] }]
+    });
 
     if (!cliente) {
       console.log("Cliente no encontrado en la base de datos");
@@ -98,8 +129,11 @@ const rendUpdateCliente = async (req, res) => {
 
     console.log("Cliente seleccionado:", JSON.stringify(cliente, null, 2));
 
-    res.render('clientesEditar', {
-      cliente: cliente
+    const distribuidores = await Distribuidores.findAll({ attributes: ['id', 'empresa'] });
+
+    res.render('clientes/clientesEditar', {
+      cliente: cliente,
+      distribuidores
     });
 
   } catch (error) {
@@ -135,7 +169,7 @@ const cambiarClienteEstado = async (req, res) => {
   }
 };
 
-export { insertCliente, getCliente, updateCliente, rendUpdateCliente, cambiarClienteEstado };
+export { insertCliente, getCliente, updateCliente, rendUpdateCliente, cambiarClienteEstado, rendInsertCliente };
 
 
 

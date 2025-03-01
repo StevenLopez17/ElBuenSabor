@@ -9,9 +9,11 @@ const __dirname = path.dirname(__filename);
 
 const db = {};
 
-
 // Importar modelos manualmente si es necesario
-import Distribuidores from './distribuidorModel.js'; 
+import Clientes from './clienteModel.js';
+import Distribuidores from './distribuidorModel.js';
+
+db.Clientes = Clientes;
 db.Distribuidores = Distribuidores;
 
 // Cargar automáticamente otros modelos en la carpeta models/
@@ -24,14 +26,15 @@ fs.readdirSync(__dirname)
   });
 
 
-  Object.keys(db).forEach(modelName => {
-    if (db[modelName].associate) {
-      db[modelName].associate(db);
-    }
-  });
+Distribuidores.hasMany(Clientes, { foreignKey: "distribuidor_id", as: 'Clientes' });
+Clientes.belongsTo(Distribuidores, { foreignKey: "distribuidor_id", as: 'Distribuidor' });
 
 
-
+Object.keys(db).forEach(modelName => {
+  if (db[modelName].associate) {
+    db[modelName].associate(db);
+  }
+});
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

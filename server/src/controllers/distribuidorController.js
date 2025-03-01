@@ -21,7 +21,7 @@ const printer = new PdfPrinter({
 //Metodo para agregar un distribuidor
 const insertDistribuidor = async (req, res) => {
     try {
-        const { usuario_id, empresa, telefono, direccion, zona_cobertura, cliente_id } = req.body;
+        const { usuario_id, empresa, telefono, direccion, zona_cobertura} = req.body;
 
         if (!usuario_id || !empresa) {
             return res.status(400).json({ message: "Usuario ID y Empresa son obligatorios" });
@@ -33,7 +33,6 @@ const insertDistribuidor = async (req, res) => {
             telefono,
             direccion,
             zona_cobertura,
-            cliente_id,
             estado: true
         });
 
@@ -47,25 +46,25 @@ const insertDistribuidor = async (req, res) => {
 };
 
 //Metodo para cargar la vista de insercion de distribuidores con la lista de clientes
-const rendInsertDistribuidor = async (req, res) => {
-    try {
-        // Obtener todos los clientes registrados
-        const clientes = await Clientes.findAll();
+// const rendInsertDistribuidor = async (req, res) => {
+//     try {
+//         // Obtener todos los clientes registrados
+//         const clientes = await Clientes.findAll();
 
-        res.render('distribuidoresAgregar', {
-            layout: 'layouts/layout',
-            clientes
-        });
+//         res.render('distribuidoresAgregar', {
+//             layout: 'layouts/layout',
+//             clientes
+//         });
 
-    } catch (error) {
-        console.error("Error al obtener los clientes:", error);
-        res.render('distribuidoresAgregar', {
-            layout: 'layouts/layout',
-            clientes: [],
-            mensaje: "Error al cargar los clientes"
-        });
-    }
-};
+//     } catch (error) {
+//         console.error("Error al obtener los clientes:", error);
+//         res.render('distribuidoresAgregar', {
+//             layout: 'layouts/layout',
+//             clientes: [],
+//             mensaje: "Error al cargar los clientes"
+//         });
+//     }
+// };
 
 //Metodo para obtener los distribuidores almacenados y cargar las direcciones para el select
 
@@ -79,18 +78,18 @@ const getDistribuidor = async (req, res) => {
         });
 
 
-        // const distribuidores = await Distribuidores.findAll();
+        const distribuidores = await Distribuidores.findAll();
 
-        const distribuidores = await Distribuidores.findAll({
-            include: [{
-                model: Clientes,  // 🔹 Relación con Clientes
-                attributes: ['nombre'],  // 🔹 Solo traer el nombre del cliente
-            }]
-        });
+        // const distribuidores = await Distribuidores.findAll({
+        //     include: [{
+        //         model: Clientes,  // 🔹 Relación con Clientes
+        //         attributes: ['nombre'],  // 🔹 Solo traer el nombre del cliente
+        //     }]
+        // });
 
         if (distribuidores.length > 0) {
             console.log(`Se encontraron ${distribuidores.length} distribuidores.`);
-            res.render('distribuidores', {
+            res.render('distribuidores/distribuidores', {
                 layout: 'layouts/layout',
                 distribuidores,
                 direcciones,
@@ -99,7 +98,7 @@ const getDistribuidor = async (req, res) => {
             });
         } else {
             console.log(`No se encontraron distribuidores.`);
-            res.render('distribuidores', {
+            res.render('distribuidores/distribuidores', {
                 layout: 'layouts/layout',
                 distribuidores: [],
                 direcciones,
@@ -110,7 +109,7 @@ const getDistribuidor = async (req, res) => {
 
     } catch (error) {
         console.error('Error al obtener distribuidores:', error);
-        res.render('distribuidores', {
+        res.render('distribuidores/distribuidores', {
             layout: 'layouts/layout',
             distribuidores: [],
             direcciones: [],
@@ -123,7 +122,7 @@ const getDistribuidor = async (req, res) => {
 //Metodo para actualizar los datos de un distribuidor
 const updateDistribuidor = async (req, res) => {
     try {
-        const { usuario_id, empresa, telefono, direccion, zona_cobertura, cliente_id } = req.body;
+        const { usuario_id, empresa, telefono, direccion, zona_cobertura } = req.body;
         const { id } = req.params;
 
         if (!id || !usuario_id || !empresa) {
@@ -140,8 +139,7 @@ const updateDistribuidor = async (req, res) => {
             empresa,
             telefono,
             direccion,
-            zona_cobertura,
-            id_cliente: cliente_id
+            zona_cobertura
         });
 
         console.log('Distribuidor actualizado con éxito');
@@ -158,9 +156,7 @@ const rendUpdateDistribuidor = async (req, res) => {
     try {
         console.log("ID recibido:", req.params.id);
 
-        const distribuidor = await Distribuidores.findByPk(req.params.id, {
-            include: [{ model: Clientes, attributes: ['id', 'nombre'] }] // 🔹 Traer el cliente asignado
-        });
+        const distribuidor = await Distribuidores.findByPk(req.params.id);
 
         if (!distribuidor) {
             console.log("Distribuidor no encontrado en la base de datos");
@@ -169,11 +165,8 @@ const rendUpdateDistribuidor = async (req, res) => {
 
         console.log("Distribuidor seleccionado:", JSON.stringify(distribuidor, null, 2));
 
-        const clientes = await Clientes.findAll({ attributes: ['id', 'nombre'] });
-
-        res.render('distribuidoresEditar', {
-            distribuidor: distribuidor,
-            clientes
+        res.render('distribuidores/distribuidoresEditar', {
+            distribuidor: distribuidor
         });
 
     } catch (error) {
@@ -221,18 +214,12 @@ const filtroDireccionDistribuidores = async (req, res) => {
 
 
         const distribuidores = await Distribuidores.findAll({
-            where: whereCondition,
-            include: [
-                {
-                    model: Clientes,
-                    attributes: ['id', 'nombre'],
-                }
-            ]
+            where: whereCondition
         });
 
         console.log(`Se encontraron ${distribuidores.length} distribuidores con dirección ${filtroDireccion}.`);
 
-        res.render('distribuidores', {
+        res.render('distribuidores/distribuidores', {
             layout: 'layouts/layout',
             distribuidores,
             direcciones,
@@ -242,7 +229,7 @@ const filtroDireccionDistribuidores = async (req, res) => {
 
     } catch (error) {
         console.error('Error al filtrar distribuidores:', error);
-        res.render('distribuidores', {
+        res.render('distribuidores/distribuidores', {
             layout: 'layouts/layout',
             distribuidores: [],
             direcciones: [],
@@ -255,9 +242,7 @@ const filtroDireccionDistribuidores = async (req, res) => {
 //Metodo para exportar un PDF con los distribuidores y clientes
 const exportarPDFDist = async (req, res) => {
     try {
-        const distribuidores = await Distribuidores.findAll({
-            include: [{ model: Clientes, attributes: ['id', 'nombre'] }]
-        });
+        const distribuidores = await Distribuidores.findAll();
 
         if (!distribuidores || distribuidores.length === 0) {
             return res.status(404).send("No existen distribuidores para exportar");
@@ -273,9 +258,8 @@ const exportarPDFDist = async (req, res) => {
 
         //Se carga el cuerpo de la tabla con los valores desde antes
         const tableBody = distribuidores.map(d => [
-            d.id || '',
+            d.id ? String(d.id) : 'Sin ID',
             d.empresa || 'Sin empresa',
-            d.Cliente ? d.Cliente.nombre : 'No asignado',
             d.telefono || 'No registrado',
             d.direccion || 'No registrada',
             d.zona_cobertura || 'No registrada',
@@ -290,19 +274,21 @@ const exportarPDFDist = async (req, res) => {
         const docDefinition = {
             defaultStyle: { font: 'Helvetica' },
             content: [
-                { text: 'Reporte de Distribuidores y Clientes', fontSize: 16, bold: true, margin: [0, 0, 0, 10] },
+                { text: 'Reporte de Distribuidores', fontSize: 16, bold: true, margin: [0, 0, 0, 10] },
                 {
                     table: {
                         headerRows: 1,
-                        widths: ['auto', '*', 'auto', '*', 'auto', 'auto', '*'],
+                        widths: ['auto', '*', 'auto', '*', 'auto', '*'],
                         body: [
-                            ['ID', 'Empresa', 'Cliente Asignado', 'Teléfono', 'Dirección', 'Zona de Cobertura', 'Estado'],
+                            ['ID', 'Empresa', 'Teléfono', 'Dirección', 'Zona de Cobertura', 'Estado'],
                             ...tableBody // Aca nada mas se asigna el cuerpo de la tabla que se creo antes
                         ]
                     }
                 }
             ]
         };
+
+        console.log("Datos a exportar en PDF:", JSON.stringify(tableBody, null, 2));
 
         const pdfDoc = printer.createPdfKitDocument(docDefinition);
         const stream = fs.createWriteStream(filepath);
@@ -324,9 +310,7 @@ const exportarPDFDist = async (req, res) => {
 //Metodo para exportar un Excel con los distribuidores y clientes 
 const exportarExcelDist = async (req, res) => {
     try {
-        const distribuidores = await Distribuidores.findAll({
-            include: [{ model: Clientes, attributes: ['id', 'nombre'] }] // 🔹 Incluir cliente
-        });
+        const distribuidores = await Distribuidores.findAll();
 
         if (distribuidores.length === 0) {
             return res.status(404).send("No existen distribuidores para exportar");
@@ -338,7 +322,6 @@ const exportarExcelDist = async (req, res) => {
         worksheet.columns = [
             { header: 'ID', key: 'id', width: 10 },
             { header: 'Empresa', key: 'empresa', width: 25 },
-            { header: 'Cliente Asignado', key: 'cliente', width: 25 },
             { header: 'Telefono', key: 'telefono', width: 15 },
             { header: 'Direccion', key: 'direccion', width: 30 },
             { header: 'Zona de Cobertura', key: 'zona_cobertura', width: 20 },
@@ -349,7 +332,6 @@ const exportarExcelDist = async (req, res) => {
             worksheet.addRow({
                 id: distribuidor.id,
                 empresa: distribuidor.empresa,
-                cliente: distribuidor.Cliente ? distribuidor.Cliente.nombre : 'No Asignado',
                 telefono: distribuidor.telefono,
                 direccion: distribuidor.direccion,
                 zona_cobertura: distribuidor.zona_cobertura,
@@ -386,7 +368,6 @@ const exportarExcelDist = async (req, res) => {
 
 export {
     insertDistribuidor,
-    rendInsertDistribuidor,
     getDistribuidor,
     updateDistribuidor,
     rendUpdateDistribuidor,

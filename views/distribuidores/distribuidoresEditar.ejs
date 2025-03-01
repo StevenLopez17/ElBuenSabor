@@ -42,19 +42,6 @@
                         </form> -->
 
                         <form class="custom-form add-employee-form" action="/actualizar/<%= distribuidor.id %>" method="POST">
-                            <label for="cliente_id">Seleccionar Cliente:</label>
-                            <select name="cliente_id" id="cliente_id" class="form-control mb-3" required>
-                                <option value="">Seleccione un cliente</option>
-                                <% if (clientes && clientes.length > 0) { %>
-                                    <% clientes.forEach(cliente => { %>
-                                        <option value="<%= cliente.id %>" <%= distribuidor.id_cliente === cliente.id ? 'selected' : '' %>>
-                                            <%= cliente.nombre %>
-                                        </option>
-                                    <% }) %>
-                                <% } else { %>
-                                    <option value="" disabled>No hay clientes disponibles</option>
-                                <% } %>
-                            </select>
                         
                             <input class="form-control mb-3" type="number" name="usuario_id" id="usuario_id"
                                 value="<%= distribuidor.usuario_id %>" placeholder="ID del Usuario" required>

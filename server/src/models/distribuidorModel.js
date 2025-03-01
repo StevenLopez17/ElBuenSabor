@@ -37,21 +37,15 @@ const Distribuidores = sequelize.define('Distribuidores', {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: true 
-    },
-    cliente_id:{
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-            model: 'clientes', 
-            key: 'id'
-        }
     }
-
 }, {
     tableName: 'distribuidores', 
     timestamps: false 
 });
 
-Distribuidores.belongsTo(Clientes, { foreignKey: 'cliente_id' });
+
+
 
 export default Distribuidores;
+
+
