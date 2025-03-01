@@ -1,12 +1,13 @@
-import express from 'express'
-import { getMateriaPrima, insertarMateriaPrimaView } from '../controllers/materiaPrimaController.js'
+import express from "express";
+import { insertMateriaPrima, getMateriaPrima, updateMateriaPrima, deleteMateriaPrima, rendUpdateMateriaPrima, rendAgregarMateriaPrima } from "../controllers/materiaPrimaController.js";
 
-const router = express.Router()
+const router = express.Router();
 
-router.get('/materia_prima', getMateriaPrima)
-
-router.get('/insertar_materia_prima', insertarMateriaPrimaView)
-
-
+router.post("/materiaPrima", insertMateriaPrima);
+router.get("/materiaPrima", getMateriaPrima);
+router.put("/materiaPrima/:id", updateMateriaPrima);
+router.delete("/materiaPrima/:id", deleteMateriaPrima);
+router.get("/materiaPrima/editar/:id", rendUpdateMateriaPrima);
+router.get("/materiaPrima/agregar", rendAgregarMateriaPrima);
 
 export default router;

@@ -12,6 +12,7 @@ import Clientes from './src/models/clienteModel.js'; // Import Clientes model
 import db from './src/models/main.js';
 import cookieParser from 'cookie-parser';
 import sequelize from './config/database.js';
+import productoRoutes from './src/routes/productoRoutes.js'; // Import productoRoutes
 
 
 const app = express();
@@ -81,6 +82,10 @@ app.get('/materiaPrimaAgregar', (req, res) => {
     res.render('materiaPrimaAgregar', { layout: 'layouts/layout' });
 });
 
+app.get('/materiaPrima/editar/:id', (req, res) => {
+    res.render('materiaPrimaEditar', { layout: 'layouts/layout' });
+});
+
 app.get('/insertar_materia_prima/:id', async (req, res) => {
     res.render('insertar_materia_prima', { layout: 'layouts/layout' });
 });
@@ -112,6 +117,17 @@ app.get('/clienteEditar/:id', async (req, res) => {
         console.error('Error fetching client:', error);
         res.redirect('/');
     }
+});
+
+//Rutas Producto
+app.use('/', productoRoutes);
+
+app.get('/producto/agregar', (req, res) => {
+    res.render('productoAgregar', { layout: 'layouts/layout' });
+});
+
+app.get('/producto/editar/:id', (req, res) => {
+    res.render('productoEditar', { layout: 'layouts/layout' });
 });
 
 app.listen(PORT, () => {
