@@ -1,7 +1,6 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../../config/database.js";
 
-
 const MateriaPrima = sequelize.define("MateriaPrima", {
     id: {
         type: DataTypes.INTEGER,
@@ -20,11 +19,10 @@ const MateriaPrima = sequelize.define("MateriaPrima", {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    }, {
-    
-    });
+}, {
+    tableName: 'materias_primas', // Correct table name
+    timestamps: false // Disable timestamps
+});
 
+export default MateriaPrima;
 
-    export default MateriaPrima;
-
-    

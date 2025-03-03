@@ -27,7 +27,6 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
                                     <th>Nombre</th>
                                     <th>Precio</th>
                                     <th>Stock</th>
@@ -38,7 +37,6 @@
                                 <% if (materiasPrimas.length > 0) { %>
                                     <% materiasPrimas.forEach(materiaPrima => { %>
                                         <tr>
-                                            <td><%= materiaPrima.id %></td>
                                             <td><%= materiaPrima.nombre %></td>
                                             <td><%= materiaPrima.precio %></td>
                                             <td><%= materiaPrima.stock %></td>
@@ -52,7 +50,7 @@
                                     <% }) %>
                                 <% } else { %>
                                     <tr>
-                                        <td colspan="5" class="text-center">No hay materias primas registradas.</td>
+                                        <td colspan="4" class="text-center">No hay materias primas registradas.</td>
                                     </tr>
                                 <% } %>
                             </tbody>

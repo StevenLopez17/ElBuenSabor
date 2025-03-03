@@ -11,7 +11,7 @@ import {
 const router = express.Router();
 
 // Ruta para agregar un producto
-router.post("/producto", insertProducto);
+router.post("/producto/agregar", insertProducto); // Update this route
 
 // Ruta para obtener todos los productos
 router.get("/producto", getProducto);

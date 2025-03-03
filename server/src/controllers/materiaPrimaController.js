@@ -1,7 +1,7 @@
-import MateriaPrima from "../models/materiaPrimaModel.js";
+import MateriaPrima from '../models/materiaPrimaModel.js';
 
 // Método para agregar una materia prima
-const insertMateriaPrima = async (req, res) => {
+export const insertMateriaPrima = async (req, res) => {
   try {
     const { nombre, precio, stock } = req.body;
 
@@ -26,34 +26,20 @@ const insertMateriaPrima = async (req, res) => {
 };
 
 // Método para obtener las materias primas
-const getMateriaPrima = async (req, res) => {
+export const getMateriaPrima = async (req, res) => {
   try {
-    const materiasPrimas = await MateriaPrima.findAll();
-
-    if (materiasPrimas.length > 0) {
-      console.log(`Se encontraron ${materiasPrimas.length} materias primas.`);
-      res.render("materiaPrima", {
-        materiasPrimas: materiasPrimas,
-        mensaje: null,
-      });
-    } else {
-      console.log(`No se encontraron materias primas.`);
-      res.render("materiaPrima", {
-        materiasPrimas: [],
-        mensaje: "No hay materias primas registradas.",
-      });
-    }
-  } catch (error) {
-    console.error("Error al obtener las materias primas:", error);
-    res.render("materiaPrima", {
-      materiasPrimas: [],
-      mensaje: "Error al cargar las materias primas.",
+    const materiasPrimas = await MateriaPrima.findAll({
+      attributes: ['id', 'nombre', 'precio', 'stock'] // Remove createdAt and updatedAt
     });
+    res.render('materiaPrima', { materiasPrimas, mensaje: null });
+  } catch (error) {
+    console.error('Error al obtener las materias primas:', error);
+    res.render('materiaPrima', { materiasPrimas: [], mensaje: 'Error al obtener las materias primas' });
   }
 };
 
 // Método para actualizar una materia prima
-const updateMateriaPrima = async (req, res) => {
+export const updateMateriaPrima = async (req, res) => {
   try {
     const { nombre, precio, stock } = req.body;
     const { id } = req.params;
@@ -83,7 +69,7 @@ const updateMateriaPrima = async (req, res) => {
 };
 
 // Método para eliminar una materia prima
-const deleteMateriaPrima = async (req, res) => {
+export const deleteMateriaPrima = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -108,7 +94,7 @@ const deleteMateriaPrima = async (req, res) => {
 };
 
 // Método para renderizar la vista de edición de una materia prima
-const rendUpdateMateriaPrima = async (req, res) => {
+export const rendUpdateMateriaPrima = async (req, res) => {
   try {
     console.log("ID recibido:", req.params.id);
 
@@ -132,10 +118,8 @@ const rendUpdateMateriaPrima = async (req, res) => {
 };
 
 // Método para renderizar la vista de agregar una materia prima
-const rendAgregarMateriaPrima = (req, res) => {
+export const rendAgregarMateriaPrima = (req, res) => {
   res.render('materiaPrimaAgregar');
 };
-
-export { insertMateriaPrima, getMateriaPrima, updateMateriaPrima, deleteMateriaPrima, rendUpdateMateriaPrima, rendAgregarMateriaPrima };
 
 

@@ -20,7 +20,8 @@ const Productos = sequelize.define("Productos", {
     allowNull: false,
   },
 }, {
-  
+  tableName: 'productos', // Specify the correct table name here
+  timestamps: false // Disable timestamps
 });
 
 export default Productos;

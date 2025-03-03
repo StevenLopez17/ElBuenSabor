@@ -1,0 +1,101 @@
+<div class="container-fluid">
+    <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
+        <div class="title-group mb-3">
+            <h1 class="h2 mb-0">Productos</h1>
+        </div>
+
+        <div class="row my-4">
+            <div class="col-lg-12 col-12">
+                <div class="custom-block bg-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-5"> Lista de Productos</h5>
+                        <ul class="d-flex list-unstyled mb-0">
+                            <li class="me-3">
+                                <a class="page-link active" href="/producto/agregar" aria-label="Next">
+                                    + Agregar Producto
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="table-responsive">
+                        <% if (mensaje) { %>
+                            <div class="alert alert-warning">
+                                <%= mensaje %>
+                            </div>
+                        <% } %>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Precio</th>
+                                    <th>Stock</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if (productos.length > 0) { %>
+                                    <% productos.forEach(producto => { %>
+                                        <tr>
+                                            <td><%= producto.nombre %></td>
+                                            <td><%= producto.precio %></td>
+                                            <td><%= producto.stock %></td>
+                                            <td>
+                                                <a href="/producto/editar/<%= producto.id %>" class="btn btn-warning">Editar</a>
+                                                <form action="/producto/<%= producto.id %>?_method=DELETE" method="POST" style="display:inline;">
+                                                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    <% }) %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="4" class="text-center">No hay productos registrados.</td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center mb-0">
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Previous">
+                                    <span aria-hidden="true">Prev</span>
+                                </a>
+                            </li>
+
+                            <li class="page-item active" aria-current="page">
+                                <a class="page-link" href="#">1</a>
+                            </li>
+
+                            <li class="page-item">
+                                <a class="page-link" href="#">2</a>
+                            </li>
+
+                            <li class="page-item">
+                                <a class="page-link" href="#">3</a>
+                            </li>
+
+                            <li class="page-item">
+                                <a class="page-link" href="#">4</a>
+                            </li>
+
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Next">
+                                    <span aria-hidden="true">Next</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- JAVASCRIPT FILES -->
+<script src="/js/jquery.min.js"></script>
+<script src="/js/bootstrap.bundle.min.js"></script>
+<script src="/js/apexcharts.min.js"></script>
+<script src="/js/custom.js"></script>
