@@ -1,0 +1,61 @@
+<main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
+    <div class="title-group mb-3">
+        <h1 class="h2 mb-0">Horarios</h1>
+    </div>
+    <div class="row my-4">
+        <div class="col-lg-12 col-12">
+            <div class="custom-block bg-white">
+                <ul class="nav nav-tabs" id="employeeTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="add-employee-tab" data-bs-toggle="tab"
+                            data-bs-target="#add-employee-tab-pane" type="button" role="tab"
+                            aria-controls="add-employee-tab-pane" aria-selected="true">Agregar Horario</button>
+                    </li>
+                </ul>
+                <% if (errores && errores.length> 0) { %>
+                    <div class="alert alert-danger" role="alert">
+                        <ul class="mb-0">
+                            <% errores.forEach(error=> { %>
+                                <li>
+                                    <%= error.msg %>
+                                </li>
+                                <% }) %>
+                        </ul>
+                    </div>
+                    <% } %>
+
+                        <% if (success && success.length> 0) { %>
+                            <div class="alert alert-success" role="alert">
+                                <ul class="mb-0">
+                                    <% success.forEach(mensaje=> { %>
+                                        <li>
+                                            <%= mensaje.msg %>
+                                        </li>
+                                        <% }) %>
+                                </ul>
+                            </div>
+                            <% } %>
+                                <div class="tab-content" id="employeeTabContent">
+                                    <div class="tab-pane fade show active" id="add-employee-tab-pane" role="tabpanel"
+                                        aria-labelledby="add-employee-tab">
+                                        <h6 class="mb-4">Agregar Horario</h6>
+                                        <form class="custom-form add-employee-form" action="agregarHorario"
+                                            method="POST" role="form">
+                                            <input class="form-control mb-3" type="text" name="descripcion"
+                                                id="descripcion" placeholder="Ejemplo: Lunes-Viernes 9am-6pm" required>
+
+                                            <div class="d-flex">
+                                                <!-- <button type="reset" class="form-control me-3">Restablecer</button> -->
+                                                <button type="submit" class="form-control ms-2">Guardar</button>
+                                            </div>
+                                        </form>
+                                        <div class="card-footer text-center mt-3">
+                                            <small class="text-muted">Regresar <a href="/horarios">Horarios
+                                                    Administrador</a></small>
+                                        </div>
+                                    </div>
+                                </div>
+            </div>
+        </div>
+    </div>
+</main>

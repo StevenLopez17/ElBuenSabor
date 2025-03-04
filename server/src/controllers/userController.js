@@ -3,6 +3,8 @@ import { generarId, generarJWT } from '../../helpers/tokens.js'
 import { check, validationResult } from 'express-validator';
 import identificarUsuario from '../../middleware/identificarUsuario.js';
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken';
+
 
 const insertUsuario = async (req, res) => {
     const { nombre, correo, contrasena, rol } = req.body;
@@ -68,9 +70,9 @@ const getUsuario = async (req, res) => {
                 return res.render('login', { layout: false, errores, success });
             }
             console.log(`Usuario ${usuario.correo} autenticado correctamente!`);
-
             // Generar JWT
-            const token = generarJWT({ id: usuario.id, nombre: usuario.nombre });
+            const token = generarJWT({ id: usuario.id, nombre: usuario.nombre, rol: usuario.rol_id, correo: usuario.correo });
+            // console.log("Token generado:", jwt.decode(token));
             return res.cookie('_token', token, {
                 httpOnly: true
                 //secure: true,
@@ -85,7 +87,9 @@ const getUsuario = async (req, res) => {
     } catch (error) {
         console.error('Error al obtener el usuario:', error);
         res.render('login', {
-            layout: false
+            layout: false,
+            errores: [{ msg: 'Error al obtener usuario' }],
+            success: []
         });
     }
 }
@@ -97,7 +101,8 @@ const cerrarSesion = (req, res) => {
 
 
 const profileView = (req, res, next) => {
-    res.render('auth/profile')
+    const usuario = req.usuario
+    res.render('auth/profile', { usuario })
 }
 
 const updatePassword = async (req, res, next) => {

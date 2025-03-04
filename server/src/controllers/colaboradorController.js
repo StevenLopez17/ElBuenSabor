@@ -43,7 +43,7 @@ const getColaboradores = async (req, res) => {
                 mensaje: null
             });
         } else {
-            console.log(`No se encontraron Colaboradores.`);
+            // console.log(`No se encontraron Colaboradores.`);
             res.render('gestionColaboradores/colaboradores', {
                 colaboradores: [],
                 horarios: [],

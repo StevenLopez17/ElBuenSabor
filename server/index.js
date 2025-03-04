@@ -13,7 +13,7 @@ import db from './src/models/main.js';
 import cookieParser from 'cookie-parser';
 import sequelize from './config/database.js';
 import productoRoutes from './src/routes/productoRoutes.js'; // Import productoRoutes
-
+import horarioRoutes from './src/routes/horarioRoutes.js';
 
 const app = express();
 
@@ -125,6 +125,9 @@ app.get('/producto/agregar', (req, res) => {
 app.get('/producto/editar/:id', (req, res) => {
     res.render('productoEditar', { layout: 'layouts/layout' });
 });
+
+// Rutas Horarios
+app.use('/', horarioRoutes);
 
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);

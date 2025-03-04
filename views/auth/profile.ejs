@@ -28,132 +28,56 @@
                                 <div class="col-lg-9 col-12">
                                     <p class="d-flex flex-wrap mb-2">
                                         <strong>Nombre:</strong>
-
-                                        <span>Thomas Edison</span>
+                                        <span>
+                                            <%= usuario.nombre %>
+                                        </span>
                                     </p>
 
 
                                     <p class="d-flex flex-wrap mb-2">
                                         <strong>Correo Electronico:</strong>
-
-                                        <a href="#">
-                                            thomas@site.com
-                                        </a>
+                                        <span>
+                                            <%= usuario.correo %>
+                                        </span>
                                     </p>
-
-                                    <p class="d-flex flex-wrap mb-2">
-                                        <strong>Telefono:</strong>
-
-                                        <a href="#">
-                                            (60) 12 345 6789
-                                        </a>
-                                    </p>
-
-                                    <p class="d-flex flex-wrap mb-2">
-                                        <strong>Fecha de Nacimiento:</strong>
-
-                                        <span>March 5, 1992</span>
-                                    </p>
-
-                                    <p class="d-flex flex-wrap">
-                                        <strong>Direccion:</strong>
-
-                                        <span>551 Swanston Street, Melbourne</span>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="custom-block custom-block-profile bg-white">
-                            <h6 class="mb-4">Informacion de Empleado</h6>
-
-                            <p class="d-flex flex-wrap mb-2">
-                                <strong>User ID:</strong>
-
-                                <span>012 395 8647</span>
-                            </p>
-
-                            <p class="d-flex flex-wrap mb-2">
-                                <strong>Rol:</strong>
-
-                                <span>Administrador</span>
-                            </p>
-
-                            <p class="d-flex flex-wrap mb-2">
-                                <strong>Salario:</strong>
-
-                                <span>120.000$</span>
-                            </p>
-
-                            <p class="d-flex flex-wrap mb-2">
-                                <strong>Creado:</strong>
-
-                                <span>July 19, 2020</span>
-                            </p>
-
-                        </div>
-                    </div>
-
-                    <div class="col-lg-5 col-12"> <!-- Cambiado de col-lg-5 a col-lg-8 para mayor ancho -->
-                        <div class="custom-block primary-bg p-5" style="min-height: 300px;">
-                            <!-- Aumentado el padding y altura mínima -->
-                            <h5 class="text-white mb-4 text-center">Gestión de Empleados</h5>
-
-                            <div class="d-flex flex-wrap justify-content-between gap-3">
-                                <!-- Agregar Empleados -->
-                                <div class="profile-rounded text-center">
-                                    <a href="registro" class="d-flex flex-column align-items-center">
-                                        <i class="profile-rounded-icon bi bi-plus-circle fs-1"></i>
-                                        <small class="text-white mt-3">Agregar</small>
-                                    </a>
-                                </div>
-
-                                <!-- Asignación de Roles -->
-                                <div class="profile-rounded text-center">
-                                    <a href="#" class="d-flex flex-column align-items-center">
-                                        <i class="profile-rounded-icon bi bi-person fs-1"></i>
-                                        <small class="text-white mt-3">Asignación de Roles</small>
-                                    </a>
-                                </div>
-
-                                <!-- Actualización de Usuarios -->
-                                <div class="profile-rounded text-center">
-                                    <a href="#" class="d-flex flex-column align-items-center ">
-                                        <i class="profile-rounded-icon bi bi-pencil fs-1"></i>
-                                        <small class="text-white mt-3">Actualización</small>
-                                    </a>
-                                </div>
-
-                                <!-- Eliminación de Usuarios -->
-                                <div class="profile-rounded text-center">
-                                    <a href="#" class="d-flex flex-column align-items-center">
-                                        <i class="profile-rounded-icon bi bi-trash fs-1"></i>
-                                        <small class="text-white mt-3">Eliminación</small>
-                                    </a>
                                 </div>
                             </div>
                         </div>
                     </div>
 
+                    <% if (usuario.rol===2) { %>
+                        <div class="col-lg-5 col-12">
+                            <div class="custom-block primary-bg p-5" style="min-height: 300px;">
+                                <h5 class="text-white mb-4 text-center">Panel Administrador</h5>
 
+                                <div class="d-flex flex-wrap justify-content-between gap-5">
+                                    <div class="profile-rounded text-center">
+                                        <a href="registro" class="d-flex flex-column align-items-center">
+                                            <i class="profile-rounded-icon bi bi-plus-circle fs-1"></i>
+                                            <small class="text-white mt-2">Crear Usuario</small>
+                                        </a>
+                                    </div>
 
+                                    <div class="profile-rounded text-center">
+                                        <a href="horarios" class="d-flex flex-column align-items-center">
+                                            <i class="profile-rounded-icon bi bi-pencil fs-1"></i>
+                                            <small class="text-white mt-3">Horarios</small>
+                                        </a>
+                                    </div>
 
+                                    <div class="profile-rounded text-center">
+                                        <a href="#" class="d-flex flex-column align-items-center">
+                                            <i class="profile-rounded-icon bi bi-person fs-1"></i>
+                                            <small class="text-white mt-3">Actualización</small>
+                                        </a>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <% } %>
 
                 </div>
-
-                <footer class="site-footer">
-                    <div class="container">
-                        <div class="row">
-
-                            <div class="col-lg-12 col-12">
-                                <p class="copyright-text">Copyright © Mini Finance 2048
-                                    - Design: <a rel="sponsored" href="https://www.tooplate.com"
-                                        target="_blank">Tooplate</a></p>
-                            </div>
-
-                        </div>
-                    </div>
-                </footer>
             </main>
 
         </div>
