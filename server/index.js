@@ -14,6 +14,7 @@ import cookieParser from 'cookie-parser';
 import sequelize from './config/database.js';
 import productoRoutes from './src/routes/productoRoutes.js'; // Import productoRoutes
 import horarioRoutes from './src/routes/horarioRoutes.js';
+import formulacionRoutes from './src/routes/formulacionesRoutes.js'
 
 const app = express();
 
@@ -128,6 +129,10 @@ app.get('/producto/editar/:id', (req, res) => {
 
 // Rutas Horarios
 app.use('/', horarioRoutes);
+
+//Rutas Formulaciones
+app.use('/', formulacionRoutes);
+
 
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
