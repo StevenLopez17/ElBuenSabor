@@ -3,31 +3,56 @@ import path from 'path';
 import { Sequelize } from 'sequelize';
 import { fileURLToPath } from 'url';
 import sequelize from '../../config/database.js';
+import Clientes from './clienteModel.js';
+import Distribuidores from './distribuidorModel.js';
+import Formulaciones from './formulacionesModel.js';
+import MateriaPrima from './materiaPrimaModel.js';
+import GestionFormulaciones from './gestion_formulacionesModel.js';
+import Productos from './productoModel.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const db = {};
 
-// Importar modelos manualmente si es necesario
-import Clientes from './clienteModel.js';
-import Distribuidores from './distribuidorModel.js';
-
 db.Clientes = Clientes;
 db.Distribuidores = Distribuidores;
-
-// Cargar automáticamente otros modelos en la carpeta models/
-fs.readdirSync(__dirname)
-  .filter(file => file.endsWith('.js') && file !== 'main.js')
-  .forEach(async (file) => {
-    const module = await import(`file://${path.join(__dirname, file)}`);
-    const model = module.default;
-    db[model.name] = model;
-  });
+db.Formulaciones = Formulaciones;
+db.MateriaPrima = MateriaPrima;
+db.GestionFormulaciones = GestionFormulaciones;
+db.Productos = Productos;
 
 
-Distribuidores.hasMany(Clientes, { foreignKey: "distribuidor_id", as: 'Clientes' });
-Clientes.belongsTo(Distribuidores, { foreignKey: "distribuidor_id", as: 'Distribuidor' });
+//Relación Many-to-Many entre Formulaciones y Materias Primas
+Formulaciones.belongsToMany(MateriaPrima, {
+  through: GestionFormulaciones,
+  foreignKey: "formulacion_id",
+  otherKey: "materia_prima_id",
+  as: "MateriasPrimas"
+});
+
+MateriaPrima.belongsToMany(Formulaciones, {
+  through: GestionFormulaciones,
+  foreignKey: "materia_prima_id",
+  otherKey: "formulacion_id",
+  as: "Formulaciones"
+});
+
+//Relación entre Productos y Formulaciones
+Productos.belongsTo(Formulaciones, { foreignKey: "formulaciones_id", as: "Formulacion" });
+Formulaciones.hasMany(Productos, { foreignKey: "formulaciones_id", as: "Productos" });
+
+//Relación entre Clientes y Distribuidores
+Distribuidores.hasMany(Clientes, { foreignKey: "distribuidor_id", as: "Clientes" });
+Clientes.belongsTo(Distribuidores, { foreignKey: "distribuidor_id", as: "Distribuidor" });
+
+//Relación entre GestionFormulaciones y Materia Prima
+GestionFormulaciones.belongsTo(MateriaPrima, { foreignKey: "materia_prima_id", as: "MateriaPrima" });
+MateriaPrima.hasMany(GestionFormulaciones, { foreignKey: "materia_prima_id", as: "Gestiones" });
+
+//Relación entre GestionFormulaciones y Formulaciones
+GestionFormulaciones.belongsTo(Formulaciones, { foreignKey: "formulacion_id", as: "Formulacion" });
+Formulaciones.hasMany(GestionFormulaciones, { foreignKey: "formulacion_id", as: "Gestiones" });
 
 
 Object.keys(db).forEach(modelName => {

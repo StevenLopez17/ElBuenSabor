@@ -19,6 +19,10 @@ const Productos = sequelize.define("Productos", {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
+  formulaciones_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
 }, {
   tableName: 'productos', // Specify the correct table name here
   timestamps: false // Disable timestamps

@@ -1,0 +1,101 @@
+<div class="container-fluid">
+    <div class="row">
+        <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
+            <div class="title-group mb-3">
+                <h1 class="h2 mb-0">Gestión de Fórmulas</h1>
+            </div>
+
+            <div class="row my-4">
+                <div class="col-lg-12 col-12">
+                    <div class="custom-block bg-white">
+                        <h6 class="mb-4">Agregar Fórmulas</h6>
+                        <form class="custom-form" id="formula-form" action="/guardar-formulacion" method="post">
+                            <div class="mb-3">
+                                <label for="formula-name" class="form-label">Nombre de la Fórmula</label>
+                                <input type="text" class="form-control" id="formula-name" name="nombre" placeholder="Nombre del Producto" required>
+                            </div>
+                        
+                            <div class="mb-3">
+                                <label for="total-producir" class="form-label">Total a Producir</label>
+                                <input type="number" class="form-control" id="total-producir" name="total_producir" placeholder="Cantidad a producir" required>
+                            </div>
+                            
+                        
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="formula-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Materia Prima</th>
+                                            <th>Cantidad</th>
+                                            <th>Costo Unitario</th>
+                                            <th>Costo Total</th>
+                                            <!-- <th>Acciones</th> -->
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% materiasPrimas.forEach(materia => { %>
+                                            <tr>
+                                                <td>
+                                                    <input type="hidden" name="materia_id[]" value="<%= materia.id %>">
+                                                    <%= materia.nombre %>
+                                                </td>
+                                                <td>
+                                                    <input type="number" class="form-control" name="cantidad[]" placeholder="Cantidad utilizada" required>
+                                                </td>
+                                                <td>
+                                                    <input type="number" class="form-control" name="precio_unitario[]" value="<%= materia.precio %>" readonly>
+                                                </td>
+                                                <td>
+                                                    <input type="number" class="form-control" name="precio_total[]" value="0" readonly>
+                                                </td>
+                                                <!-- <td>
+                                                    <button type="button" class="btn btn-danger remove-row">Eliminar</button>
+                                                </td> -->
+                                            </tr>
+                                        <% }) %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        
+                            <div class="d-flex mt-4">
+                                <button type="submit" class="btn btn-primary me-3">Guardar Fórmula</button>
+                            </div>
+                            
+                        </form>
+                        <div class="d-flex mt-4">
+                            <a href="/getformulaciones" class="custom-form btn-primary">Ver Formulaciones</a>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <footer class="site-footer">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12 col-12">
+                            <p class="copyright-text">Copyright © Mini Finance 2048 
+                            - Design: <a rel="sponsored" href="https://www.tooplate.com" target="_blank">Tooplate</a></p>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </main>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('input[name="cantidad[]"]').forEach(input => {
+            input.addEventListener('input', function() {
+                let row = this.closest('tr');
+                let precioUnitario = parseFloat(row.querySelector('input[name="precio_unitario[]"]').value) || 0;
+                let cantidad = parseInt(this.value) || 0;
+
+                // Calcular el precio total
+                let total = (precioUnitario * cantidad).toFixed(2);
+                row.querySelector('input[name="precio_total[]"]').value = total;
+            });
+        });
+    });
+</script>

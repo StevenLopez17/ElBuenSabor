@@ -1,5 +1,6 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../../config/database.js";
+import GestionFormulaciones from './gestion_formulacionesModel.js';
 
 const MateriaPrima = sequelize.define("MateriaPrima", {
     id: {

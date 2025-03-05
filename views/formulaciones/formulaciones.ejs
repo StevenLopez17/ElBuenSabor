@@ -1,0 +1,58 @@
+<div class="container-fluid">
+    <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
+        <div class="title-group mb-3">
+            <h1 class="h2 mb-0">Listado de Formulaciones</h1>
+        </div>
+
+        <div class="row my-4">
+            <div class="col-lg-12 col-12">
+                <div class="custom-block bg-white">
+                    <h5 class="mb-5">Lista de Formulaciones</h5>
+
+                    <div class="table-responsive">
+                        <% if (mensaje) { %>
+                            <div class="alert alert-warning">
+                                <%= mensaje %>
+                            </div>
+                        <% } %>
+
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Nombre de la Fórmula</th>
+                                    <th>Total a Producir</th>
+                                    <th>Precio Total</th>
+                                    <th>Ingredientes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if (formulaciones.length > 0) { %>
+                                    <% formulaciones.forEach(formulacion => { %>
+                                        <tr>
+                                            <td><%= formulacion.nombre %></td>
+                                            <td><%= formulacion.total_producir %></td>
+                                            <td><%= formulacion.precio_total %></td>
+                                            <td>
+                                                <ul>
+                                                    <% formulacion.Gestiones.forEach(gestion => { %>
+                                                        <li>
+                                                            <%= gestion.MateriaPrima.nombre %>: <%= gestion.cantidad %> unidades
+                                                        </li>
+                                                    <% }) %>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                    <% }) %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="4" class="text-center">No hay formulaciones registradas.</td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>

@@ -1,29 +1,154 @@
 import Productos from "../models/productoModel.js";
+import Formulaciones from "../models/formulacionesModel.js";
+import GestionFormulaciones from "../models/gestion_formulacionesModel.js";
+import MateriaPrima from "../models/materiaPrimaModel.js";
 
 // Método para agregar un producto
+// const insertProducto = async (req, res) => {
+//   try {
+//     console.log("Datos recibidos:", req.body);
+
+//       const { nombre, precio, stock, formulaciones_id } = req.body;
+
+//       if (!nombre || !formulaciones_id) {
+//           return res.status(400).json({ message: "Nombre y Formulación son obligatorios" });
+//       }
+
+//       // Crear el producto en la base de datos
+//       const nuevoProducto = await Productos.create({
+//           nombre,
+//           precio,
+//           stock,
+//           formulaciones_id
+//       });
+
+//       // Obtener los ingredientes de la formulación
+//       const ingredientes = await GestionFormulaciones.findAll({
+//         where: { formulacion_id: formulaciones_id } 
+//     });
+
+//       // Actualizar stock de materias primas
+//       for (const ingrediente of ingredientes) {
+//           const materiaPrima = await MateriaPrima.findByPk(ingrediente.materia_prima_id);
+//           if (materiaPrima) {
+//               materiaPrima.stock -= ingrediente.cantidad * stock; // Resta según la cantidad a producir
+//               await materiaPrima.save();
+//           }
+//       }
+
+//       console.log("Producto creado con éxito y stock actualizado");
+//       res.redirect("/producto");
+//   } catch (error) {
+//       console.error("Error al crear el producto:", error);
+//       res.status(500).json({ message: "Error al agregar producto", error: error.message });
+//   }
+// };
+
+
+// const insertProducto = async (req, res) => {
+//   try {
+//     console.log("Datos recibidos:", req.body);
+
+//     const { nombre, precio, stock, formulaciones_id } = req.body;
+
+//     if (!nombre || !formulaciones_id) {
+//       return res.status(400).json({ message: "Nombre y Formulación son obligatorios" });
+//     }
+
+//     // Obtener la formulación seleccionada
+//     const formulacion = await Formulaciones.findByPk(formulaciones_id);
+
+//     if (!formulacion) {
+//       return res.status(400).json({ message: "La formulación seleccionada no existe" });
+//     }
+
+//     const totalProducir = formulacion.total_producir; // Cantidad definida en la formulación
+
+//     // Crear el producto en la base de datos
+//     const nuevoProducto = await Productos.create({
+//       nombre,
+//       precio,
+//       stock,
+//       formulaciones_id
+//     });
+
+//     // Obtener los ingredientes de la formulación
+//     const ingredientes = await GestionFormulaciones.findAll({
+//       where: { formulacion_id: formulaciones_id }
+//     });
+
+//     // Actualizar stock de materias primas basado en `total_producir`
+//     for (const ingrediente of ingredientes) {
+//       const materiaPrima = await MateriaPrima.findByPk(ingrediente.materia_prima_id);
+//       if (materiaPrima) {
+//         materiaPrima.stock -= ingrediente.cantidad * totalProducir; // Usamos `total_producir` de la formulación
+//         await materiaPrima.save();
+//       }
+//     }
+
+//     console.log("Producto creado con éxito y stock actualizado");
+//     res.redirect("/producto");
+//   } catch (error) {
+//     console.error("Error al crear el producto:", error);
+//     res.status(500).json({ message: "Error al agregar producto", error: error.message });
+//   }
+// };
+
+
+
 const insertProducto = async (req, res) => {
   try {
-    const { nombre, precio, stock } = req.body;
+    console.log("Datos recibidos:", req.body);
 
-    if (!nombre) {
-      return res.status(400).json({ message: "Nombre es obligatorio" });
+    const { nombre, precio, stock, formulaciones_id } = req.body;
+
+    if (!nombre || !formulaciones_id) {
+      return res.status(400).json({ message: "Nombre y Formulación son obligatorios" });
     }
 
-    await Productos.create({
+    // Obtener la formulación correspondiente
+    const formulacion = await Formulaciones.findByPk(formulaciones_id);
+    if (!formulacion) {
+      return res.status(404).json({ message: "La formulación seleccionada no existe" });
+    }
+
+    // Crear el producto en la base de datos
+    const nuevoProducto = await Productos.create({
       nombre,
       precio,
       stock,
+      formulaciones_id
     });
 
-    console.log("Producto creado con éxito");
+    // Obtener los ingredientes de la formulación
+    const ingredientes = await GestionFormulaciones.findAll({
+      where: { formulacion_id: formulaciones_id }
+    });
+
+    // Actualizar stock de materias primas basado en total_producir de la formulación
+    for (const ingrediente of ingredientes) {
+      const materiaPrima = await MateriaPrima.findByPk(ingrediente.materia_prima_id);
+      if (materiaPrima) {
+        const cantidadNecesaria = ingrediente.cantidad * formulacion.total_producir;
+        if (materiaPrima.stock >= cantidadNecesaria) {
+          materiaPrima.stock -= cantidadNecesaria;
+          await materiaPrima.save();
+        } else {
+          console.warn(`No hay suficiente stock de ${materiaPrima.nombre}. Se intentó restar ${cantidadNecesaria}, pero solo hay ${materiaPrima.stock}.`);
+          return res.status(400).json({ message: `Stock insuficiente para ${materiaPrima.nombre}` });
+        }
+      }
+    }
+
+    console.log("Producto creado con éxito y stock actualizado");
     res.redirect("/producto");
   } catch (error) {
     console.error("Error al crear el producto:", error);
-    res
-      .status(500)
-      .json({ message: "Error al agregar producto", error: error.message });
+    res.status(500).json({ message: "Error al agregar producto", error: error.message });
   }
 };
+
+
 
 // Método para obtener los productos
 const getProducto = async (req, res) => {
@@ -132,9 +257,16 @@ const rendUpdateProducto = async (req, res) => {
 };
 
 // Método para renderizar la vista de agregar un producto
-const rendAgregarProducto = (req, res) => {
-  res.render('productoAgregar');
+const rendAgregarProducto = async (req, res) => {
+    try {
+        const formulaciones = await Formulaciones.findAll();
+        res.render("productoAgregar", { formulaciones });
+    } catch (error) {
+        console.error("Error al obtener las formulaciones:", error);
+        res.render("productoAgregar", { formulaciones: [], mensaje: "Error al cargar las formulaciones." });
+    }
 };
+
 
 export { insertProducto, getProducto, updateProducto, deleteProducto, rendUpdateProducto, rendAgregarProducto };
 
