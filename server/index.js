@@ -15,8 +15,11 @@ import sequelize from './config/database.js';
 import productoRoutes from './src/routes/productoRoutes.js'; // Import productoRoutes
 import horarioRoutes from './src/routes/horarioRoutes.js';
 import formulacionRoutes from './src/routes/formulacionesRoutes.js'
+import supabase from './config/supabaseClient.js';
+import multer from 'multer';
 
 const app = express();
+const supabase = supabase;
 
 app.use(cookieParser());
 
