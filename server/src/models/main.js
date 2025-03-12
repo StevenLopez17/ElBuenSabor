@@ -9,6 +9,9 @@ import Formulaciones from './formulacionesModel.js';
 import MateriaPrima from './materiaPrimaModel.js';
 import GestionFormulaciones from './gestion_formulacionesModel.js';
 import Productos from './productoModel.js';
+import Pedidos from './pedidoModel.js';
+import PedidoDetalle from './pedidoDetalle.js';
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -53,6 +56,12 @@ MateriaPrima.hasMany(GestionFormulaciones, { foreignKey: "materia_prima_id", as:
 //Relación entre GestionFormulaciones y Formulaciones
 GestionFormulaciones.belongsTo(Formulaciones, { foreignKey: "formulacion_id", as: "Formulacion" });
 Formulaciones.hasMany(GestionFormulaciones, { foreignKey: "formulacion_id", as: "Gestiones" });
+
+Pedidos.belongsTo(Distribuidores, { foreignKey: 'distribuidorId', as: 'distribuidor' });
+Pedidos.hasMany(PedidoDetalle, { foreignKey: 'idpedido', as: 'detalles' });
+PedidoDetalle.belongsTo(Pedidos, { foreignKey: 'idpedido', as: 'pedido' });
+PedidoDetalle.belongsTo(Productos, { foreignKey: 'productoId', as: 'producto' });
+
 
 
 Object.keys(db).forEach(modelName => {
