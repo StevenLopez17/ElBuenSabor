@@ -14,26 +14,31 @@ const Pedidos = sequelize.define('Pedidos', {
   },
   distribuidorId: {
     type: DataTypes.INTEGER,
-    allowNull: false
+    allowNull: false,
+    field: 'distribuidorid'
   },
   precioTotal: {
     type: DataTypes.FLOAT,
     allowNull: false,
-    defaultValue: 0
+    defaultValue: 0,
+    field: 'preciototal'
   },
   estadoDePago: {
     type: DataTypes.ENUM('pendiente', 'en revision', 'aprobado'),
     allowNull: false,
-    defaultValue: 'pendiente'
+    defaultValue: 'pendiente',
+    field: 'estadodepago'
   },
   estadoDeEntrega: {
     type: DataTypes.ENUM('entregado', 'no entregado'),
     allowNull: false,
-    defaultValue: 'no entregado'
+    defaultValue: 'no entregado',
+    field: 'estadodeentrega'
   },
   comprobanteDePago: {
     type: DataTypes.STRING(255),
-    allowNull: true
+    allowNull: true,
+     field: 'comprobantedepago'
   },
   created_at: {
     type: DataTypes.DATE,

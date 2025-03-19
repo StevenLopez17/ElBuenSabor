@@ -57,9 +57,8 @@ MateriaPrima.hasMany(GestionFormulaciones, { foreignKey: "materia_prima_id", as:
 GestionFormulaciones.belongsTo(Formulaciones, { foreignKey: "formulacion_id", as: "Formulacion" });
 Formulaciones.hasMany(GestionFormulaciones, { foreignKey: "formulacion_id", as: "Gestiones" });
 
-Pedidos.belongsTo(Distribuidores, { foreignKey: 'distribuidorId', as: 'distribuidor' });
-Pedidos.hasMany(PedidoDetalle, { foreignKey: 'idpedido', as: 'detalles' });
-PedidoDetalle.belongsTo(Pedidos, { foreignKey: 'idpedido', as: 'pedido' });
+Pedidos.hasMany(PedidoDetalle, { foreignKey: 'pedidoid', as: 'detalles' });
+PedidoDetalle.belongsTo(Pedidos, { foreignKey: 'pedidoid', as: 'pedido' });
 PedidoDetalle.belongsTo(Productos, { foreignKey: 'productoId', as: 'producto' });
 
 
