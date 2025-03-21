@@ -5,7 +5,8 @@ import {
   updatePedido, 
   deletePedido, 
   rendUpdatePedido, 
-  rendAgregarPedido 
+  rendAgregarPedido,
+  getTodosPedidos // Add this import
 } from "../controllers/pedidoController.js";
 
 const router = express.Router();
@@ -27,5 +28,8 @@ router.get("/pedido/editar/:id", rendUpdatePedido);
 
 // Ruta para renderizar la vista de agregar un pedido
 router.get("/pedido/agregar", rendAgregarPedido);
+
+// Ruta para obtener todos los pedidos sin filtro
+router.get("/pedidos/todos", getTodosPedidos);
 
 export default router;

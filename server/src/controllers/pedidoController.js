@@ -26,6 +26,7 @@ const insertPedido = async (req, res) => {
     );
 
     let precioTotal = 0;
+    let validItems = 0;
 
     // Procesar cada ítem del pedido
     for (const item of items) {
@@ -34,12 +35,14 @@ const insertPedido = async (req, res) => {
       // Buscar el producto para obtener el precio unitario
       const producto = await Productos.findByPk(productoId);
       if (!producto) {
-        throw new Error(`Producto con id ${productoId} no encontrado`);
+        console.warn(`Producto con id ${productoId} no encontrado. Se omitirá este ítem.`);
+        continue;
       }
 
       const precioUnitario = producto.precio;
       const subtotal = precioUnitario * cantidad;
       precioTotal += subtotal;
+      validItems++;
 
       // Crear el registro en la tabla de detalles
       await PedidoDetalle.create(
@@ -52,6 +55,10 @@ const insertPedido = async (req, res) => {
         },
         { transaction: t }
       );
+    }
+
+    if (validItems === 0) {
+      throw new Error("No se seleccionó ningún producto válido para el pedido");
     }
 
     // Actualizar el precioTotal del pedido
@@ -84,9 +91,17 @@ const getPedido = async (req, res) => {
       ]
     });
 
+    const pedidosWithProductos = pedidos.map(pedido => ({
+      ...pedido.toJSON(),
+      productos: pedido.detalles.map(detalle => ({
+        nombre: detalle.producto.nombre,
+        cantidad: detalle.cantidad
+      }))
+    }));
+
     if (pedidos.length > 0) {
       console.log(`Se encontraron ${pedidos.length} pedidos.`);
-      res.render("pedidos", { pedidos, mensaje: null, layout: 'layouts/layout' });
+      res.render("pedidos", { pedidos: pedidosWithProductos, mensaje: null, layout: 'layouts/layout' });
     } else {
       console.log("No se encontraron pedidos.");
       res.render("pedidos", { pedidos: [], mensaje: "No hay pedidos registrados.", layout: 'layouts/layout' });
@@ -94,6 +109,36 @@ const getPedido = async (req, res) => {
   } catch (error) {
     console.error("Error al obtener los pedidos:", error);
     res.render("pedidos", { pedidos: [], mensaje: "Error al cargar los pedidos.", layout: 'layouts/layout' });
+  }
+};
+
+// Función para obtener y renderizar todos los pedidos
+const getTodosPedidos = async (req, res) => {
+  try {
+    const pedidos = await Pedidos.findAll({
+      include: [
+        {
+          model: PedidoDetalle,
+          as: 'detalles',
+          include: [
+            { model: Productos, as: 'producto' }
+          ]
+        }
+      ]
+    });
+
+    const pedidosWithProductos = pedidos.map(pedido => ({
+      ...pedido.toJSON(),
+      productos: pedido.detalles.map(detalle => ({
+        nombre: detalle.producto.nombre,
+        cantidad: detalle.cantidad
+      }))
+    }));
+
+    res.render("pedidostodos", { pedidos: pedidosWithProductos, layout: 'layouts/layout' });
+  } catch (error) {
+    console.error("Error al obtener todos los pedidos:", error);
+    res.render("pedidostodos", { pedidos: [], mensaje: "Error al cargar los pedidos.", layout: 'layouts/layout' });
   }
 };
 
@@ -220,6 +265,7 @@ const rendAgregarPedido = async (req, res) => {
 export { 
   insertPedido, 
   getPedido, 
+  getTodosPedidos,
   updatePedido, 
   deletePedido, 
   rendUpdatePedido, 

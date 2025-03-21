@@ -50,4 +50,11 @@ const PedidoDetalle = sequelize.define('PedidoDetalle', {
   timestamps: false // Si quieres usar createdAt/updatedAt automáticos, setea true y ajusta "field" en "underscored" o similar
 });
 
+PedidoDetalle.associate = (models) => {
+  PedidoDetalle.belongsTo(models.Producto, {
+    foreignKey: 'productoId',
+    as: 'producto'
+  });
+};
+
 export default PedidoDetalle;
