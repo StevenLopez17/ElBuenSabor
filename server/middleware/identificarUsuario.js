@@ -8,7 +8,7 @@ const identificarUsuario = async (req, res, next) => {
 
     if (!_token) {
         req.usuario = null;
-        return res.redirect('login');
+        return res.redirect('/login');
     }
 
     const datosUsuario = obtenerUsuarioJWT(_token);

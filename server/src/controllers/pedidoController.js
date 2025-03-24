@@ -179,7 +179,7 @@ const updatePedido = async (req, res) => {
     if (items && Array.isArray(items) && items.length > 0) {
       // Eliminar los detalles existentes para el pedido
       await PedidoDetalle.destroy({ where: { pedidoId: pedido.idpedido }, transaction: t });
-      
+
       // Crear nuevos detalles y recalcular el precio total
       for (const item of items) {
         const { productoId, cantidad } = item;
@@ -260,11 +260,24 @@ const rendUpdatePedido = async (req, res) => {
 // Función para renderizar la vista de agregar un pedido
 const rendAgregarPedido = async (req, res) => {
   try {
-    // Para crear un pedido se puede requerir la lista de productos (y, opcionalmente, distribuidores)
-    const productos = await Productos.findAll();
-    // Si es necesario, puedes agregar también la lista de distribuidores:
-    // const distribuidores = await Distribuidores.findAll();
-    res.render("pedidoAgregar", { productos, layout: 'layouts/layout' /*, distribuidores*/ });
+    const { id, rol } = req.usuario
+    if (rol == 3) {
+      const productos = await Productos.findAll();
+      const distribuidor = await Distribuidores.findOne({
+        where: {
+          usuario_id: id
+        }
+      });
+      const distribuidorId = distribuidor.id
+      res.render("pedidoAgregarDistribuidor", { productos, distribuidorId /*, distribuidores*/ });
+    }
+    else if (rol == 1) {
+      const productos = await Productos.findAll();
+      const distribuidores = await Distribuidores.findAll();
+      res.render("pedidoAgregarAdmin", { productos, distribuidores /*, admin*/ });
+    } else {
+      res.redirect('/')
+    }
   } catch (error) {
     console.error("Error al renderizar vista de agregar pedido:", error);
     res.render("pedidoAgregar", { productos: [], mensaje: "Error al cargar datos para el pedido.", layout: 'layouts/layout' });
@@ -386,13 +399,13 @@ const exportarPDFPedido = async (req, res) => {
 
 
 
-export { 
-  insertPedido, 
-  getPedido, 
+export {
+  insertPedido,
+  getPedido,
   getTodosPedidos,
-  updatePedido, 
-  deletePedido, 
-  rendUpdatePedido, 
+  updatePedido,
+  deletePedido,
+  rendUpdatePedido,
   rendAgregarPedido,
-  exportarPDFPedido 
+  exportarPDFPedido
 };

@@ -1,6 +1,7 @@
 import express from 'express'
 import { getUsuario, insertUsuario, profileView, updatePassword } from '../controllers/userController.js';
 import identificarUsuario from '../../middleware/identificarUsuario.js';
+import Rol from '../models/rol.js'
 
 const router = express.Router()
 
@@ -12,10 +13,11 @@ router.get('/login', (req, res) => {
 
 router.post('/login', getUsuario);
 
-router.get('/registro', (req, res) => {
+router.get('/registro', async (req, res) => {
     let success = [];
     let errores = [];
-    res.render('auth/registro', { layout: false, errores, success })
+    const roles = await Rol.findAll();
+    res.render('auth/registro', { layout: false, errores, success, roles })
 });
 
 router.post('/registro', insertUsuario);

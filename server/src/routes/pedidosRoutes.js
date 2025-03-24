@@ -1,14 +1,15 @@
 import express from "express";
-import { 
-  insertPedido, 
-  getPedido, 
-  updatePedido, 
-  deletePedido, 
-  rendUpdatePedido, 
+import {
+  insertPedido,
+  getPedido,
+  updatePedido,
+  deletePedido,
+  rendUpdatePedido,
   rendAgregarPedido,
   getTodosPedidos,
   exportarPDFPedido, // Add this import
 } from "../controllers/pedidoController.js";
+import identificarUsuario from '../../middleware/identificarUsuario.js';
 
 const router = express.Router();
 
@@ -28,7 +29,7 @@ router.delete("/pedido/:id", deletePedido);
 router.get("/pedido/editar/:id", rendUpdatePedido);
 
 // Ruta para renderizar la vista de agregar un pedido
-router.get("/pedido/agregar", rendAgregarPedido);
+router.get("/pedido/agregar", identificarUsuario, rendAgregarPedido);
 
 // Ruta para obtener todos los pedidos sin filtro
 router.get("/pedidos/todos", getTodosPedidos);

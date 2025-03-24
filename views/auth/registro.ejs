@@ -72,6 +72,18 @@
                                                 <input type="password" class="form-control" id="contrasena"
                                                     name="contrasena" placeholder="Ingrese una Contraseña">
                                             </div>
+                                            <div class="mb-3">
+                                                <label for="rol_id" class="form-label">Roles</label>
+                                                <select class="form-control" id="rol_id" name="rol_id">
+                                                    <option value="" disabled selected>Seleccione un rol
+                                                    </option>
+                                                    <% roles.forEach(rol=> { %>
+                                                        <option value="<%= rol.id %>">
+                                                            <%= rol.nombre %>
+                                                        </option>
+                                                        <% }); %>
+                                                </select>
+                                            </div>
                                             <div class="d-grid">
                                                 <button type="submit" class="btn custom-btn">Registrarse</button>
                                             </div>

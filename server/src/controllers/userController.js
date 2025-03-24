@@ -1,20 +1,21 @@
 import Usuario from '../models/usuarios.js'
 import { generarId, generarJWT } from '../../helpers/tokens.js'
 import { check, validationResult } from 'express-validator';
-import identificarUsuario from '../../middleware/identificarUsuario.js';
 import bcrypt from 'bcrypt'
-import jwt from 'jsonwebtoken';
+import Rol from '../models/rol.js'
 
 
 const insertUsuario = async (req, res) => {
-    const { nombre, correo, contrasena, rol } = req.body;
+    const { nombre, correo, contrasena, rol_id } = req.body;
     let errores = [];
     let success = [];
     if (!nombre) errores.push({ msg: 'El nombre es obligatorio' });
     if (!correo) errores.push({ msg: 'El correo es obligatorio' });
     if (!contrasena) errores.push({ msg: 'La contraseña es obligatoria' });
+    if (!rol_id) errores.push({ msg: 'El rol es obligatorio' });
+    const roles = await Rol.findAll();
     if (errores.length > 0) {
-        return res.render('auth/registro', { layout: false, errores, success });
+        return res.render('auth/registro', { layout: false, errores, success, roles });
     }
 
     try {
@@ -32,12 +33,12 @@ const insertUsuario = async (req, res) => {
             nombre: nombre,
             correo: correo,
             contrasena: contrasena,
-            rol_id: 1,
+            rol_id: rol_id,
             token: generarId()
         });
 
         success.push({ msg: 'Usuario creado con éxito' });
-        return res.render('auth/registro', { layout: false, usuario: req.body, errores, success });
+        return res.render('auth/registro', { layout: false, usuario: req.body, errores, success, roles });
     } catch (error) {
         console.error('Error al crear usuario', error);
         errores.push({ msg: 'Error interno del servidor' });
@@ -100,9 +101,15 @@ const cerrarSesion = (req, res) => {
 }
 
 
-const profileView = (req, res, next) => {
+const profileView = async (req, res, next) => {
     const usuario = req.usuario
-    res.render('auth/profile', { usuario })
+    const rol = await Rol.findOne({
+        where: {
+            id: req.usuario.rol
+        }
+    });
+    const rol_name = rol.nombre
+    res.render('auth/profile', { usuario, rol_name })
 }
 
 const updatePassword = async (req, res, next) => {

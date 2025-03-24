@@ -40,12 +40,19 @@
                                             <%= usuario.correo %>
                                         </span>
                                     </p>
+
+                                    <p class="d-flex flex-wrap mb-2">
+                                        <strong>Rol:</strong>
+                                        <span>
+                                            <%= rol_name%>
+                                        </span>
+                                    </p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <% if (usuario.rol===2) { %>
+                    <% if (usuario.rol===1) { %>
                         <div class="col-lg-5 col-12">
                             <div class="custom-block primary-bg p-5" style="min-height: 300px;">
                                 <h5 class="text-white mb-4 text-center">Panel Administrador</h5>
