@@ -6,7 +6,8 @@ import {
   deletePedido, 
   rendUpdatePedido, 
   rendAgregarPedido,
-  getTodosPedidos // Add this import
+  getTodosPedidos,
+  exportarPDFPedido, // Add this import
 } from "../controllers/pedidoController.js";
 
 const router = express.Router();
@@ -31,5 +32,8 @@ router.get("/pedido/agregar", rendAgregarPedido);
 
 // Ruta para obtener todos los pedidos sin filtro
 router.get("/pedidos/todos", getTodosPedidos);
+
+//Ruta para obtener factura
+router.get('/exportarPDFP/:id', exportarPDFPedido);
 
 export default router;

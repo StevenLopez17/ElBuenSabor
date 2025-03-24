@@ -62,6 +62,8 @@ PedidoDetalle.belongsTo(Pedidos, { foreignKey: 'pedidoid', as: 'pedido' });
 PedidoDetalle.belongsTo(Productos, { foreignKey: 'productoId', as: 'producto' });
 
 
+Pedidos.belongsTo(Distribuidores, { foreignKey: 'distribuidorId', as: 'Distribuidor' });
+
 
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {

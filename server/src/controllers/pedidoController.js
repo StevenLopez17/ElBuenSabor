@@ -2,6 +2,15 @@ import Pedidos from "../models/pedidoModel.js";
 import PedidoDetalle from "../models/pedidoDetalle.js";
 import Productos from "../models/productoModel.js";
 import sequelize from "../../config/database.js";
+import Distribuidores from '../models/distribuidorModel.js';
+import PdfPrinter from 'pdfmake';
+
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Función para crear un pedido
 const insertPedido = async (req, res) => {
@@ -262,6 +271,121 @@ const rendAgregarPedido = async (req, res) => {
   }
 };
 
+
+
+//PDF
+
+const fontsPath = path.join(__dirname, '..', 'client', 'fonts');
+const logoPath = path.join(__dirname, '..', '..', '..', 'public', 'images', 'Logo-Rellenos-El-Buen-Sabor-Version-Naranja.png');
+const logoBase64 = fs.readFileSync(logoPath).toString('base64');
+const printer = new PdfPrinter({
+  Roboto: {
+    normal: path.join(fontsPath, 'Roboto-Regular.ttf'),
+    bold: path.join(fontsPath, 'Roboto-Medium.ttf'),
+    italics: path.join(fontsPath, 'Roboto-Italic.ttf'),
+    bolditalics: path.join(fontsPath, 'Roboto-MediumItalic.ttf')
+  }
+});
+
+// Función para formatear montos con CRC
+const formatCRC = (valor) => `CRC ${valor.toLocaleString()}`;
+
+const exportarPDFPedido = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const pedido = await Pedidos.findByPk(id, {
+      include: [
+        {
+          model: PedidoDetalle,
+          as: 'detalles',
+          include: [{ model: Productos, as: 'producto' }]
+        },
+        {
+          model: Distribuidores,
+          as: 'Distribuidor'
+        }
+      ]
+    });
+
+    if (!pedido) {
+      return res.status(404).send("Pedido no encontrado");
+    }
+
+    const tableBody = pedido.detalles.map(detalle => [
+      detalle.producto.nombre,
+      `${detalle.cantidad.toFixed(2)} kg`,
+      formatCRC(detalle.precioUnitario),
+      formatCRC(detalle.subtotal),
+      formatCRC(0),
+      detalle.producto.id.toString().padStart(4, '0')
+    ]);
+
+    const docDefinition = {
+      defaultStyle: { font: 'Roboto' },
+      content: [
+        {
+          image: `data:image/png;base64,${logoBase64}`,
+          width: 120,
+          alignment: 'left',
+          margin: [0, 0, 0, 10]
+        },
+        { text: 'CALBARR S.R.L.\nRELLENOS EL BUEN SABOR', fontSize: 14, bold: true, margin: [0, 0, 0, 10] },
+        { text: 'Ident. Jurídica:  3-102-873151' },
+        { text: 'Correo: rellenoselbuensabor@gmail.com\nTeléfono: +(506) 2102-0518' },
+        { text: `\nFactura Electrónica N° 0010000101000000${id.toString().padStart(4, '0')}` },
+        { text: `Fecha de emisión: ${pedido.fecha}` },
+        { text: `Condición de Venta: Contado\nMedio de Pago: Efectivo\nDistribuidor: ${pedido.Distribuidor?.empresa || 'Desconocido'}` },
+        {
+          table: {
+            headerRows: 1,
+            widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto'],
+            body: [
+              ['Descripción', 'Cantidad', 'Precio', 'Subtotal', 'Impuesto', 'Código'],
+              ...tableBody
+            ]
+          },
+          margin: [0, 10, 0, 10]
+        },
+        {
+          table: {
+            widths: ['*', 'auto'],
+            body: [
+              ['Subtotal', formatCRC(pedido.precioTotal)],
+              ['Total del Comprobante', formatCRC(pedido.precioTotal)]
+            ]
+          }
+        },
+      ]
+    };
+
+    const pdfDir = path.join(__dirname, '..', 'client', 'pdf');
+    if (!fs.existsSync(pdfDir)) {
+      fs.mkdirSync(pdfDir, { recursive: true });
+    }
+
+    const filepath = path.join(pdfDir, `Pedido_${id}.pdf`);
+
+    const pdfDoc = printer.createPdfKitDocument(docDefinition);
+    const stream = fs.createWriteStream(filepath);
+    pdfDoc.pipe(stream);
+    pdfDoc.end();
+
+    stream.on('finish', () => {
+      res.download(filepath, `Pedido_${id}.pdf`, () => {
+        fs.unlinkSync(filepath);
+      });
+    });
+
+  } catch (error) {
+    console.error('Error al exportar PDF del pedido:', error);
+    res.status(500).json({ message: 'Error al exportar PDF del pedido', error: error.message });
+  }
+};
+
+
+
+
 export { 
   insertPedido, 
   getPedido, 
@@ -269,5 +393,6 @@ export {
   updatePedido, 
   deletePedido, 
   rendUpdatePedido, 
-  rendAgregarPedido 
+  rendAgregarPedido,
+  exportarPDFPedido 
 };
