@@ -88,7 +88,9 @@ const insertPedido = async (req, res) => {
 // Función para obtener y renderizar la lista de pedidos
 const getPedido = async (req, res) => {
   try {
+    const { id, rol } = req.usuario
     const pedidos = await Pedidos.findAll({
+      where: { distribuidorId: id },
       include: [
         {
           model: PedidoDetalle,
@@ -124,27 +126,33 @@ const getPedido = async (req, res) => {
 // Función para obtener y renderizar todos los pedidos
 const getTodosPedidos = async (req, res) => {
   try {
-    const pedidos = await Pedidos.findAll({
-      include: [
-        {
-          model: PedidoDetalle,
-          as: 'detalles',
-          include: [
-            { model: Productos, as: 'producto' }
-          ]
-        }
-      ]
-    });
+    const { id, rol } = req.usuario
+    if (rol != 1) {
+      res.redirect('/')
+    }
+    else {
+      const pedidos = await Pedidos.findAll({
+        include: [
+          {
+            model: PedidoDetalle,
+            as: 'detalles',
+            include: [
+              { model: Productos, as: 'producto' }
+            ]
+          }
+        ]
+      });
 
-    const pedidosWithProductos = pedidos.map(pedido => ({
-      ...pedido.toJSON(),
-      productos: pedido.detalles.map(detalle => ({
-        nombre: detalle.producto.nombre,
-        cantidad: detalle.cantidad
-      }))
-    }));
+      const pedidosWithProductos = pedidos.map(pedido => ({
+        ...pedido.toJSON(),
+        productos: pedido.detalles.map(detalle => ({
+          nombre: detalle.producto.nombre,
+          cantidad: detalle.cantidad
+        }))
+      }));
 
-    res.render("pedidostodos", { pedidos: pedidosWithProductos, layout: 'layouts/layout' });
+      res.render("pedidostodos", { pedidos: pedidosWithProductos, layout: 'layouts/layout' });
+    }
   } catch (error) {
     console.error("Error al obtener todos los pedidos:", error);
     res.render("pedidostodos", { pedidos: [], mensaje: "Error al cargar los pedidos.", layout: 'layouts/layout' });

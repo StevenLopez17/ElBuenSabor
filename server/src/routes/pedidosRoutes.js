@@ -17,7 +17,7 @@ const router = express.Router();
 router.post("/pedido/agregar", insertPedido);
 
 // Ruta para obtener todos los pedidos
-router.get("/pedido", getPedido);
+router.get("/pedido", identificarUsuario, getPedido);
 
 // Ruta para actualizar un pedido
 router.put("/pedido/:id", updatePedido);
@@ -32,7 +32,7 @@ router.get("/pedido/editar/:id", rendUpdatePedido);
 router.get("/pedido/agregar", identificarUsuario, rendAgregarPedido);
 
 // Ruta para obtener todos los pedidos sin filtro
-router.get("/pedidos/todos", getTodosPedidos);
+router.get("/pedidos/todos", identificarUsuario, getTodosPedidos);
 
 //Ruta para obtener factura
 router.get('/exportarPDFP/:id', exportarPDFPedido);
