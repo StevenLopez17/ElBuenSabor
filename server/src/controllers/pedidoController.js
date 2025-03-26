@@ -89,8 +89,14 @@ const insertPedido = async (req, res) => {
 const getPedido = async (req, res) => {
   try {
     const { id, rol } = req.usuario
+    const distribuidor = await Distribuidores.findOne({
+      where: {
+        usuario_id: id
+      }
+    });
+    const distribuidorId = distribuidor.id
     const pedidos = await Pedidos.findAll({
-      where: { distribuidorId: id },
+      where: { distribuidorId: distribuidorId },
       include: [
         {
           model: PedidoDetalle,
