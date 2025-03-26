@@ -89,55 +89,22 @@ const insertPedido = async (req, res) => {
 const getPedido = async (req, res) => {
   try {
     const { id, rol } = req.usuario
-    const distribuidor = await Distribuidores.findOne({
-      where: {
-        usuario_id: id
-      }
-    });
-    const distribuidorId = distribuidor.id
-    const pedidos = await Pedidos.findAll({
-      where: { distribuidorId: distribuidorId },
-      include: [
-        {
-          model: PedidoDetalle,
-          as: 'detalles',
-          include: [
-            { model: Productos, as: 'producto' }
-          ]
+    if (rol == 3) {
+      const distribuidor = await Distribuidores.findOne({
+        where: {
+          usuario_id: id
         }
-      ]
-    });
-
-    const pedidosWithProductos = pedidos.map(pedido => ({
-      ...pedido.toJSON(),
-      productos: pedido.detalles.map(detalle => ({
-        nombre: detalle.producto.nombre,
-        cantidad: detalle.cantidad
-      }))
-    }));
-
-    if (pedidos.length > 0) {
-      console.log(`Se encontraron ${pedidos.length} pedidos.`);
-      res.render("pedidos", { pedidos: pedidosWithProductos, mensaje: null, layout: 'layouts/layout' });
-    } else {
-      console.log("No se encontraron pedidos.");
-      res.render("pedidos", { pedidos: [], mensaje: "No hay pedidos registrados.", layout: 'layouts/layout' });
-    }
-  } catch (error) {
-    console.error("Error al obtener los pedidos:", error);
-    res.render("pedidos", { pedidos: [], mensaje: "Error al cargar los pedidos.", layout: 'layouts/layout' });
-  }
-};
-
-// Función para obtener y renderizar todos los pedidos
-const getTodosPedidos = async (req, res) => {
-  try {
-    const { id, rol } = req.usuario
-    if (rol != 1) {
-      res.redirect('/')
-    }
-    else {
+      });
+      if (!distribuidor) {
+        return res.redirect('/');
+      }
+      const distribuidorId = distribuidor.id
       const pedidos = await Pedidos.findAll({
+        where: {
+          distribuidorId: distribuidorId,
+          estadoDeEntrega: "no entregado",
+          estadoDePago: "pendiente"
+        },
         include: [
           {
             model: PedidoDetalle,
@@ -157,11 +124,128 @@ const getTodosPedidos = async (req, res) => {
         }))
       }));
 
-      res.render("pedidostodos", { pedidos: pedidosWithProductos, layout: 'layouts/layout' });
+      if (pedidos.length > 0) {
+        console.log(`Se encontraron ${pedidos.length} pedidos.`);
+        res.render("pedidos", { pedidos: pedidosWithProductos, mensaje: null });
+      } else {
+        console.log("No se encontraron pedidos.");
+        res.render("pedidos", { pedidos: [], mensaje: "No hay pedidos registrados." });
+      }
+    }
+    else if (rol == 1) {
+      const pedidos = await Pedidos.findAll({
+        where: {
+          estadoDeEntrega: "no entregado",
+          estadoDePago: "pendiente"
+        },
+        include: [
+          {
+            model: PedidoDetalle,
+            as: 'detalles',
+            include: [
+              { model: Productos, as: 'producto' }
+            ]
+          }
+        ]
+      });
+      const pedidosWithProductos = pedidos.map(pedido => ({
+        ...pedido.toJSON(),
+        productos: pedido.detalles.map(detalle => ({
+          nombre: detalle.producto.nombre,
+          cantidad: detalle.cantidad
+        }))
+      }));
+
+      if (pedidos.length > 0) {
+        console.log(`Se encontraron ${pedidos.length} pedidos.`);
+        res.render("pedidos", { pedidos: pedidosWithProductos, mensaje: null });
+      } else {
+        console.log("No se encontraron pedidos.");
+        res.render("pedidos", { pedidos: [], mensaje: "No hay pedidos registrados." });
+      }
+    }
+    else {
+      res.redirect('/')
     }
   } catch (error) {
+    console.error("Error al obtener los pedidos:", error);
+    res.render("pedidos", { pedidos: [], mensaje: "Error al cargar los pedidos." });
+  }
+};
+
+// Función para obtener y renderizar todos los pedidos
+const getTodosPedidos = async (req, res) => {
+  try {
+    const { id, rol } = req.usuario
+    if (rol == 3) {
+      const distribuidor = await Distribuidores.findOne({
+        where: {
+          usuario_id: id
+        }
+      });
+      if (!distribuidor) {
+        return res.redirect('/');
+      }
+      const distribuidorId = distribuidor.id
+      const pedidos = await Pedidos.findAll({
+        where: {
+          distribuidorId: distribuidorId
+        },
+        include: [
+          {
+            model: PedidoDetalle,
+            as: 'detalles',
+            include: [
+              { model: Productos, as: 'producto' }
+            ]
+          }
+        ]
+      });
+
+      const pedidosWithProductos = pedidos.map(pedido => ({
+        ...pedido.toJSON(),
+        productos: pedido.detalles.map(detalle => ({
+          nombre: detalle.producto.nombre,
+          cantidad: detalle.cantidad
+        }))
+      }));
+      res.render("pedidostodos", { pedidos: pedidosWithProductos });
+    }
+    else if (rol == 1) {
+      const pedidos = await Pedidos.findAll({
+        include: [
+          {
+            model: PedidoDetalle,
+            as: 'detalles',
+            include: [
+              { model: Productos, as: 'producto' }
+            ]
+          }
+        ]
+      });
+      const pedidosWithProductos = pedidos.map(pedido => ({
+        ...pedido.toJSON(),
+        productos: pedido.detalles.map(detalle => ({
+          nombre: detalle.producto.nombre,
+          cantidad: detalle.cantidad
+        }))
+      }));
+
+      if (pedidos.length > 0) {
+        console.log(`Se encontraron ${pedidos.length} pedidos.`);
+        res.render("pedidostodos", { pedidos: pedidosWithProductos, mensaje: null });
+      } else {
+        console.log("No se encontraron pedidos.");
+        res.render("pedidostodos", { pedidos: [], mensaje: "No hay pedidos registrados." });
+      }
+    }
+    else {
+      res.redirect('/')
+    }
+
+  } catch (error) {
     console.error("Error al obtener todos los pedidos:", error);
-    res.render("pedidostodos", { pedidos: [], mensaje: "Error al cargar los pedidos.", layout: 'layouts/layout' });
+    res.render("pedidostodos", { pedidos: [], mensaje: "Error al cargar los pedidos." });
   }
 };
 

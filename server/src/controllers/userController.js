@@ -27,7 +27,7 @@ const insertUsuario = async (req, res) => {
 
         if (usuario) {
             errores.push({ msg: 'Intente con un correo diferente' });
-            return res.render('auth/registro', { layout: false, errores, success });
+            return res.render('auth/registro', { layout: false, errores, success, roles });
         }
         await Usuario.create({
             nombre: nombre,
@@ -43,7 +43,7 @@ const insertUsuario = async (req, res) => {
         console.error('Error al crear usuario', error);
         errores.push({ msg: 'Error interno del servidor' });
     }
-    return res.render('auth/registro', { layout: false, errores, success });
+    return res.render('auth/registro', { layout: false, errores, success, roles });
 }
 
 const getUsuario = async (req, res) => {
@@ -97,7 +97,7 @@ const getUsuario = async (req, res) => {
 
 
 const cerrarSesion = (req, res) => {
-    return res.clearCookie('_token').status(200).redirect('/');
+    return res.clearCookie('_token').status(200).redirect('/login');
 }
 
 
@@ -165,4 +165,4 @@ const updatePassword = async (req, res, next) => {
 };
 
 
-export { insertUsuario, getUsuario, profileView, updatePassword };
+export { insertUsuario, getUsuario, profileView, updatePassword, cerrarSesion };

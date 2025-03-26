@@ -1,5 +1,5 @@
 import express from 'express'
-import { getUsuario, insertUsuario, profileView, updatePassword } from '../controllers/userController.js';
+import { getUsuario, insertUsuario, profileView, updatePassword, cerrarSesion } from '../controllers/userController.js';
 import identificarUsuario from '../../middleware/identificarUsuario.js';
 import Rol from '../models/rol.js'
 
@@ -31,6 +31,8 @@ router.get('/updateUsuario', (req, res) => {
 });
 
 router.post('/updateUsuario', updatePassword)
+
+router.get('/logout', cerrarSesion)
 
 export default router
 
