@@ -3,96 +3,6 @@ import Formulaciones from "../models/formulacionesModel.js";
 import GestionFormulaciones from "../models/gestion_formulacionesModel.js";
 import MateriaPrima from "../models/materiaPrimaModel.js";
 
-// Método para agregar un producto
-// const insertProducto = async (req, res) => {
-//   try {
-//     console.log("Datos recibidos:", req.body);
-
-//       const { nombre, precio, stock, formulaciones_id } = req.body;
-
-//       if (!nombre || !formulaciones_id) {
-//           return res.status(400).json({ message: "Nombre y Formulación son obligatorios" });
-//       }
-
-//       // Crear el producto en la base de datos
-//       const nuevoProducto = await Productos.create({
-//           nombre,
-//           precio,
-//           stock,
-//           formulaciones_id
-//       });
-
-//       // Obtener los ingredientes de la formulación
-//       const ingredientes = await GestionFormulaciones.findAll({
-//         where: { formulacion_id: formulaciones_id } 
-//     });
-
-//       // Actualizar stock de materias primas
-//       for (const ingrediente of ingredientes) {
-//           const materiaPrima = await MateriaPrima.findByPk(ingrediente.materia_prima_id);
-//           if (materiaPrima) {
-//               materiaPrima.stock -= ingrediente.cantidad * stock; // Resta según la cantidad a producir
-//               await materiaPrima.save();
-//           }
-//       }
-
-//       console.log("Producto creado con éxito y stock actualizado");
-//       res.redirect("/producto");
-//   } catch (error) {
-//       console.error("Error al crear el producto:", error);
-//       res.status(500).json({ message: "Error al agregar producto", error: error.message });
-//   }
-// };
-
-
-// const insertProducto = async (req, res) => {
-//   try {
-//     console.log("Datos recibidos:", req.body);
-
-//     const { nombre, precio, stock, formulaciones_id } = req.body;
-
-//     if (!nombre || !formulaciones_id) {
-//       return res.status(400).json({ message: "Nombre y Formulación son obligatorios" });
-//     }
-
-//     // Obtener la formulación seleccionada
-//     const formulacion = await Formulaciones.findByPk(formulaciones_id);
-
-//     if (!formulacion) {
-//       return res.status(400).json({ message: "La formulación seleccionada no existe" });
-//     }
-
-//     const totalProducir = formulacion.total_producir; // Cantidad definida en la formulación
-
-//     // Crear el producto en la base de datos
-//     const nuevoProducto = await Productos.create({
-//       nombre,
-//       precio,
-//       stock,
-//       formulaciones_id
-//     });
-
-//     // Obtener los ingredientes de la formulación
-//     const ingredientes = await GestionFormulaciones.findAll({
-//       where: { formulacion_id: formulaciones_id }
-//     });
-
-//     // Actualizar stock de materias primas basado en `total_producir`
-//     for (const ingrediente of ingredientes) {
-//       const materiaPrima = await MateriaPrima.findByPk(ingrediente.materia_prima_id);
-//       if (materiaPrima) {
-//         materiaPrima.stock -= ingrediente.cantidad * totalProducir; // Usamos `total_producir` de la formulación
-//         await materiaPrima.save();
-//       }
-//     }
-
-//     console.log("Producto creado con éxito y stock actualizado");
-//     res.redirect("/producto");
-//   } catch (error) {
-//     console.error("Error al crear el producto:", error);
-//     res.status(500).json({ message: "Error al agregar producto", error: error.message });
-//   }
-// };
 
 
 
@@ -157,20 +67,20 @@ const getProducto = async (req, res) => {
 
     if (productos.length > 0) {
       console.log(`Se encontraron ${productos.length} productos.`);
-      res.render("producto", {
+      res.render("productos/producto", {
         productos: productos,
         mensaje: null,
       });
     } else {
       console.log(`No se encontraron productos.`);
-      res.render("producto", {
+      res.render("productos/producto", {
         productos: [],
         mensaje: "No hay productos registrados.",
       });
     }
   } catch (error) {
     console.error("Error al obtener los productos:", error);
-    res.render("producto", {
+    res.render("productos/producto", {
       productos: [],
       mensaje: "Error al cargar los productos.",
     });
@@ -246,7 +156,7 @@ const rendUpdateProducto = async (req, res) => {
 
     console.log("Producto seleccionado:", JSON.stringify(producto, null, 2));
 
-    res.render('productoEditar', {
+    res.render('productos/productoEditar', {
       producto: producto
     });
 
@@ -260,10 +170,10 @@ const rendUpdateProducto = async (req, res) => {
 const rendAgregarProducto = async (req, res) => {
     try {
         const formulaciones = await Formulaciones.findAll();
-        res.render("productoAgregar", { formulaciones });
+        res.render("productos/productoAgregar", { formulaciones });
     } catch (error) {
         console.error("Error al obtener las formulaciones:", error);
-        res.render("productoAgregar", { formulaciones: [], mensaje: "Error al cargar las formulaciones." });
+        res.render("productos/productoAgregar", { formulaciones: [], mensaje: "Error al cargar las formulaciones." });
     }
 };
 

@@ -31,10 +31,10 @@ export const getMateriaPrima = async (req, res) => {
     const materiasPrimas = await MateriaPrima.findAll({
       attributes: ['id', 'nombre', 'precio', 'stock'] // Remove createdAt and updatedAt
     });
-    res.render('materiaPrima', { materiasPrimas, mensaje: null });
+    res.render('materiasPrimas/materiaPrima', { materiasPrimas, mensaje: null });
   } catch (error) {
     console.error('Error al obtener las materias primas:', error);
-    res.render('materiaPrima', { materiasPrimas: [], mensaje: 'Error al obtener las materias primas' });
+    res.render('materiasPrimas/materiaPrima', { materiasPrimas: [], mensaje: 'Error al obtener las materias primas' });
   }
 };
 
@@ -107,7 +107,7 @@ export const rendUpdateMateriaPrima = async (req, res) => {
 
     console.log("Materia prima seleccionada:", JSON.stringify(materiaPrima, null, 2));
 
-    res.render('materiaPrimaEditar', {
+    res.render('materiasPrimas/materiaPrimaEditar', {
       materiaPrima: materiaPrima
     });
 
@@ -119,7 +119,7 @@ export const rendUpdateMateriaPrima = async (req, res) => {
 
 // Método para renderizar la vista de agregar una materia prima
 export const rendAgregarMateriaPrima = (req, res) => {
-  res.render('materiaPrimaAgregar');
+  res.render('materiasPrimas/materiaPrimaAgregar');
 };
 
 

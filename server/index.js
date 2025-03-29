@@ -19,6 +19,8 @@ import supabase from './config/supabaseClient.js';
 import multer from 'multer';
 import pedidosRoutes from './src/routes/pedidosRoutes.js'; // Import pedidosRoutes
 import vacacionesRoutes from './src/routes/vacacionesRoutes.js';
+import reportesRoutes from './src/routes/reportesRoutes.js';
+import errorLogger from './middleware/errorLogger.js';
 
 const app = express();
 
@@ -144,6 +146,12 @@ app.use('/', pedidosRoutes); // Ensure the correct path is used
 // Rutas Solicitudes Vacaciones
 app.use('/', vacacionesRoutes);
 
+
+//Rutas de Reportes
+app.use('/', reportesRoutes);
+
+//Middleware global para el manejo de errores
+app.use(errorLogger);
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });

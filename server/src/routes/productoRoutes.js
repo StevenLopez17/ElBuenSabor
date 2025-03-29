@@ -17,7 +17,7 @@ router.post("/producto/agregar", insertProducto);
 router.get("/producto", getProducto);
 
 // Ruta para actualizar un producto
-router.put("/producto/:id", updateProducto);
+router.post("/producto/:id", updateProducto);
 
 // Ruta para eliminar un producto
 router.delete("/producto/:id", deleteProducto);
