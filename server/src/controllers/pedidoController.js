@@ -125,7 +125,7 @@ const getPedido = async (req, res) => {
       }));
 
       if (pedidos.length > 0) {
-        console.log(`Se encontraron ${pedidos.length} pedidos.`);
+        // console.log(`Se encontraron ${pedidos.length} pedidos.`);
         res.render("pedidos", { pedidos: pedidosWithProductos, mensaje: null });
       } else {
         console.log("No se encontraron pedidos.");

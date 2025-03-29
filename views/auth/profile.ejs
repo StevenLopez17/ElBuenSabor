@@ -1,98 +1,114 @@
-<body>
+<div class="container-fluid">
+    <div class="row">
 
-    <div class="container-fluid">
-        <div class="row">
+        <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
+            <div class="title-group mb-3">
+                <h1 class="h2 mb-0">Perfil</h1>
+            </div>
 
-            <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
-                <div class="title-group mb-3">
-                    <h1 class="h2 mb-0">Perfil</h1>
+            <div class="row my-4">
+                <div class="col-lg-7 col-12">
+                    <div class="custom-block custom-block-profile">
+                        <div class="row">
+                            <div class="col-lg-12 col-12 mb-3">
+                                <h6>General</h6>
+                            </div>
+
+                            <div class="col-lg-3 col-12 mb-4 mb-lg-0">
+                                <div class="custom-block-profile-image-wrap">
+                                    <img src="images/medium-shot-happy-man-smiling.jpg"
+                                        class="custom-block-profile-image img-fluid" alt="">
+
+                                    <a href="setting.html" class="bi-pencil-square custom-block-edit-icon"></a>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-9 col-12">
+                                <p class="d-flex flex-wrap mb-2">
+                                    <strong>Nombre:</strong>
+                                    <span>
+                                        <%= usuario.nombre %>
+                                    </span>
+                                </p>
+
+
+                                <p class="d-flex flex-wrap mb-2">
+                                    <strong>Correo Electronico:</strong>
+                                    <span>
+                                        <%= usuario.correo %>
+                                    </span>
+                                </p>
+
+                                <p class="d-flex flex-wrap mb-2">
+                                    <strong>Rol:</strong>
+                                    <span>
+                                        <%= rol_name%>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="row my-4">
-                    <div class="col-lg-7 col-12">
-                        <div class="custom-block custom-block-profile">
-                            <div class="row">
-                                <div class="col-lg-12 col-12 mb-3">
-                                    <h6>General</h6>
+                <% if (usuario.rol===1) { %>
+                    <div class="col-lg-5 col-12">
+                        <div class="custom-block primary-bg p-5" style="min-height: 300px;">
+                            <h5 class="text-white mb-4 text-center">Panel Administrador</h5>
+
+                            <div class="d-flex flex-wrap justify-content-between gap-5">
+                                <div class="profile-rounded text-center">
+                                    <a href="registro" class="d-flex flex-column align-items-center">
+                                        <i class="profile-rounded-icon bi bi-plus-circle fs-1"></i>
+                                        <small class="text-white mt-2">Crear Usuario</small>
+                                    </a>
                                 </div>
 
-                                <div class="col-lg-3 col-12 mb-4 mb-lg-0">
-                                    <div class="custom-block-profile-image-wrap">
-                                        <img src="images/medium-shot-happy-man-smiling.jpg"
-                                            class="custom-block-profile-image img-fluid" alt="">
-
-                                        <a href="setting.html" class="bi-pencil-square custom-block-edit-icon"></a>
-                                    </div>
+                                <div class="profile-rounded text-center">
+                                    <a href="horarios" class="d-flex flex-column align-items-center">
+                                        <i class="profile-rounded-icon bi bi-calendar-fill fs-1"></i>
+                                        <small class="text-white mt-3">Horarios</small>
+                                    </a>
                                 </div>
 
-                                <div class="col-lg-9 col-12">
-                                    <p class="d-flex flex-wrap mb-2">
-                                        <strong>Nombre:</strong>
-                                        <span>
-                                            <%= usuario.nombre %>
-                                        </span>
-                                    </p>
-
-
-                                    <p class="d-flex flex-wrap mb-2">
-                                        <strong>Correo Electronico:</strong>
-                                        <span>
-                                            <%= usuario.correo %>
-                                        </span>
-                                    </p>
-
-                                    <p class="d-flex flex-wrap mb-2">
-                                        <strong>Rol:</strong>
-                                        <span>
-                                            <%= rol_name%>
-                                        </span>
-                                    </p>
+                                <div class="profile-rounded text-center">
+                                    <a href="vacacionesSolicitudes" class="d-flex flex-column align-items-center">
+                                        <i class="profile-rounded-icon bi bi-bookmarks fs-1"></i>
+                                        <small class="text-white mt-3">Solicitudes Vacaciones</small>
+                                    </a>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <% } %>
+                        <% if (usuario.rol===2 || usuario.rol===4) { %>
+                            <div class="col-lg-5 col-12">
+                                <div class="custom-block primary-bg p-5" style="min-height: 300px;">
+                                    <h5 class="text-white mb-4 text-center">Panel Colaboradores</h5>
 
-                    <% if (usuario.rol===1) { %>
-                        <div class="col-lg-5 col-12">
-                            <div class="custom-block primary-bg p-5" style="min-height: 300px;">
-                                <h5 class="text-white mb-4 text-center">Panel Administrador</h5>
+                                    <div class="d-flex flex-wrap justify-content-between gap-5">
 
-                                <div class="d-flex flex-wrap justify-content-between gap-5">
-                                    <div class="profile-rounded text-center">
-                                        <a href="registro" class="d-flex flex-column align-items-center">
-                                            <i class="profile-rounded-icon bi bi-plus-circle fs-1"></i>
-                                            <small class="text-white mt-2">Crear Usuario</small>
-                                        </a>
+                                        <div class="profile-rounded text-center">
+                                            <a href="vacaciones" class="d-flex flex-column align-items-center">
+                                                <i class="profile-rounded-icon bi bi-calendar-check fs-1"></i>
+                                                <small class="text-white mt-3">Solicitar Vacaciones</small>
+                                            </a>
+                                        </div>
+
+                                        <div class="profile-rounded text-center">
+                                            <a href="vacacionesSolicitadasUser"
+                                                class="d-flex flex-column align-items-center">
+                                                <i class="profile-rounded-icon bi bi-clock fs-1"></i>
+                                                <small class="text-white mt-3">Solicitudes Realizadas</small>
+                                            </a>
+                                        </div>
+
                                     </div>
-
-                                    <div class="profile-rounded text-center">
-                                        <a href="horarios" class="d-flex flex-column align-items-center">
-                                            <i class="profile-rounded-icon bi bi-pencil fs-1"></i>
-                                            <small class="text-white mt-3">Horarios</small>
-                                        </a>
-                                    </div>
-
-                                    <div class="profile-rounded text-center">
-                                        <a href="#" class="d-flex flex-column align-items-center">
-                                            <i class="profile-rounded-icon bi bi-person fs-1"></i>
-                                            <small class="text-white mt-3">Actualización</small>
-                                        </a>
-                                    </div>
-
                                 </div>
                             </div>
-                        </div>
-                        <% } %>
+                            <% } %>
 
-                </div>
-            </main>
+            </div>
+        </main>
 
-        </div>
     </div>
-
-    <!-- JAVASCRIPT FILES -->
-    <script src="js/jquery.min.js"></script>
-    <script src="js/bootstrap.bundle.min.js"></script>
-    <script src="js/custom.js"></script>
-
-</body>
+</div>

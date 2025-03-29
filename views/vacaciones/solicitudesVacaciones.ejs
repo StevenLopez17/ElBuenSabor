@@ -1,0 +1,79 @@
+<main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
+    <div class="title-group mb-3">
+        <h1 class="h2 mb-0">Solicitudes Vacaciones</h1>
+    </div>
+
+
+    <div class="row my-4">
+        <div class="col-lg-12 col-12">
+            <div class="custom-block bg-white">
+                <ul class="nav nav-tabs" id="employeeTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="add-employee-tab" data-bs-toggle="tab"
+                            data-bs-target="#add-employee-tab-pane" type="button" role="tab"
+                            aria-controls="add-employee-tab-pane" aria-selected="true">Vacaciones</button>
+                    </li>
+
+                </ul>
+
+                <div class="tab-content" id="employeeTabContent">
+                    <!-- Agregar Solicitud -->
+                    <div class="tab-pane fade show active" id="add-employee-tab-pane" role="tabpanel"
+                        aria-labelledby="add-employee-tab">
+                        <h6 class="mb-4">Agregar Solicitud</h6>
+                        <% if (errores && errores.length> 0) { %>
+                            <div class="alert alert-danger" role="alert">
+                                <ul class="mb-0">
+                                    <% errores.forEach(error=> { %>
+                                        <li>
+                                            <%= error.msg %>
+                                        </li>
+                                        <% }) %>
+                                </ul>
+                            </div>
+                            <% } %>
+
+                                <% if (success && success.length> 0) { %>
+                                    <div class="alert alert-success" role="alert">
+                                        <ul class="mb-0">
+                                            <% success.forEach(mensaje=> { %>
+                                                <li>
+                                                    <%= mensaje.msg %>
+                                                </li>
+                                                <% }) %>
+                                        </ul>
+                                    </div>
+                                    <% } %>
+                                        <form class="custom-form add-employee-form" action="agregarSolicitud"
+                                            method="POST" role="form">
+                                            <input type="hidden" id="usuario_id" name="usuario_id"
+                                                value="<%= usuario_id %>">
+
+                                            <div class="mb-3">
+                                                <label for="fecha_inicio"
+                                                    class="form-label fw-bold text-secondary">Fecha Inicio</label>
+                                                <input class="form-control" type="date" name="fecha_inicio"
+                                                    id="fecha_inicio">
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label for="fecha_fin" class="form-label fw-bold text-secondary">Fecha
+                                                    Finalización</label>
+                                                <input class="form-control" type="date" name="fecha_fin" id="fecha_fin">
+                                            </div>
+
+                                            <div class="d-flex">
+                                                <button type="submit" class="btn btn-primary w-100">Guardar</button>
+                                            </div>
+                                        </form>
+                                        <div class="card-footer text-center mt-3">
+                                            <small class="text-muted">Regresar <a href="profile">Mi perfil</a></small>
+                                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</main>

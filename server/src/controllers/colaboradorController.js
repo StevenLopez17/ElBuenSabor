@@ -35,7 +35,7 @@ const getColaboradores = async (req, res) => {
         const horarios = await Horarios.findAll();
 
         if (colaboradores.length > 0) {
-            console.log(`Se encontraron ${colaboradores.length} Colaboradores.`);
+            // console.log(`Se encontraron ${colaboradores.length} Colaboradores.`);
             res.render('gestionColaboradores/colaboradores', {
                 layout: 'layouts/layout',
                 colaboradores: colaboradores,

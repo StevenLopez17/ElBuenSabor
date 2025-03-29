@@ -13,6 +13,12 @@ const identificarUsuario = async (req, res, next) => {
 
     const datosUsuario = obtenerUsuarioJWT(_token);
 
+    if (datosUsuario?.error === 'Token expirado') {
+        console.warn('Usuario con token expirado, redirigiendo a login...');
+        res.clearCookie('_token');
+        return res.redirect('/login');
+    }
+
     if (datosUsuario) {
         req.usuario = {
             correo: datosUsuario.correo,

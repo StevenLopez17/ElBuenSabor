@@ -1,156 +1,129 @@
-<div class="container-fluid">
+<main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
+    <div class="title-group mb-3">
+        <h1 class="h2 mb-0">Colaboradores</h1>
+    </div>
+
+    <div class="row my-4">
+        <div class="col-lg-12 col-12">
+            <div class="custom-block bg-white">
+
+                <div class="row my-4">
+                    <div class="col-lg-12 col-12">
+                        <div class="custom-block bg-white ">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-5"> Lista de Colaboradores</h5>
+                                <ul class="d-flex list-unstyled mb-0">
+                                    <li class="me-3">
+                                        <a class="page-link active" href="colabAgregar" aria-label="Next">
+                                            + Agregar Colaborador
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
 
 
-    <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
-        <div class="title-group mb-3">
-            <h1 class="h2 mb-0">Colaboradores</h1>
-        </div>
+                            <div class="table-responsive">
+                                <% if (mensaje) { %>
+                                    <div class="alert alert-warning">
+                                        <%= mensaje %>
+                                    </div>
+                                    <% } %>
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Identificación</th>
+                                                    <th>Cargo</th>
+                                                    <th>Horario</th>
+                                                    <th>Fecha_Ingreso</th>
+                                                    <th>Estado</th>
+                                                    <th>Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <% if (colaboradores.length> 0) { %>
+                                                    <% colaboradores.forEach(colaborador=> { %>
+                                                        <tr>
+                                                            <td>
+                                                                <%= colaborador.usuario_id %>
+                                                            </td>
+                                                            <td>
+                                                                <%= colaborador.cargo %>
+                                                            </td>
+                                                            <td>
+                                                                <%= colaborador.Horario ?
+                                                                    colaborador.Horario.descripcion : 'Sin horario' %>
+                                                            </td>
+                                                            <td>
+                                                                <%= colaborador.fecha_ingreso %>
+                                                            </td>
+                                                            <td>
+                                                                <%= colaborador.estado ? 'Activo' : 'Inactivo' %>
+                                                            </td>
+                                                            <td>
+                                                                <a href="colabEditar/<%= colaborador.id %>"
+                                                                    class="btn btn-warning">
+                                                                    Editar
+                                                                </a>
 
-        <div class="row my-4">
-            <div class="col-lg-12 col-12">
-                <div class="custom-block bg-white">
+                                                                <form action="estadoColaborador/<%= colaborador.id %>"
+                                                                    method="POST" style="display:inline;">
+                                                                    <button type="submit"
+                                                                        class="btn <%= colaborador.estado ? 'btn-danger' : 'btn-success' %>">
+                                                                        <%= colaborador.estado ? 'Desactivar'
+                                                                            : 'Activar' %>
+                                                                    </button>
+                                                                </form>
 
-                    <div class="row my-4">
-                        <div class="col-lg-12 col-12">
-                            <div class="custom-block bg-white ">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <h5 class="mb-5"> Lista de Colaboradores</h5>
-                                    <ul class="d-flex list-unstyled mb-0">
-                                        <li class="me-3">
-                                            <a class="page-link active" href="colabAgregar" aria-label="Next">
-                                                + Agregar Colaborador
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
+                                                            </td>
 
-
-                                <div class="table-responsive">
-                                    <% if (mensaje) { %>
-                                        <div class="alert alert-warning">
-                                            <%= mensaje %>
-                                        </div>
-                                        <% } %>
-                                            <table class="table table-striped">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Identificación</th>
-                                                        <th>Cargo</th>
-                                                        <th>Horario</th>
-                                                        <th>Fecha_Ingreso</th>
-                                                        <th>Estado</th>
-                                                        <th>Acciones</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <% if (colaboradores.length> 0) { %>
-                                                        <% colaboradores.forEach(colaborador=> { %>
-                                                            <tr>
-                                                                <td>
-                                                                    <%= colaborador.usuario_id %>
-                                                                </td>
-                                                                <td>
-                                                                    <%= colaborador.cargo %>
-                                                                </td>
-                                                                <td>
-                                                                    <%= colaborador.Horario ?
-                                                                        colaborador.Horario.descripcion : 'Sin horario'
-                                                                        %>
-                                                                </td>
-                                                                <td>
-                                                                    <%= colaborador.fecha_ingreso %>
-                                                                </td>
-                                                                <td>Pedidos</td>
-                                                                <td>
-                                                                    <%= colaborador.estado ? 'Activo' : 'Inactivo' %>
-                                                                </td>
-                                                                <td>
-                                                                    <a href="colabEditar/<%= colaborador.id %>"
-                                                                        class="btn btn-warning">
-                                                                        Editar
-                                                                    </a>
-
-                                                                    <form
-                                                                        action="estadoColaborador/<%= colaborador.id %>"
-                                                                        method="POST" style="display:inline;">
-                                                                        <button type="submit"
-                                                                            class="btn <%= colaborador.estado ? 'btn-danger' : 'btn-success' %>">
-                                                                            <%= colaborador.estado ? 'Desactivar'
-                                                                                : 'Activar' %>
-                                                                        </button>
-                                                                    </form>
-                                                            
-                                                                </td>
-
-                                                            </tr>
-                                                            <% }) %>
-                                                                <% } else { %>
-                                                                    <tr>
-                                                                        <td colspan="4" class="text-center">No hay
-                                                                            colaboradores registrados.</td>
-                                                                    </tr>
-                                                                    <% } %>
-                                                </tbody>
-                                            </table>
-                                </div>
+                                                        </tr>
+                                                        <% }) %>
+                                                            <% } else { %>
+                                                                <tr>
+                                                                    <td colspan="4" class="text-center">No hay
+                                                                        colaboradores registrados.</td>
+                                                                </tr>
+                                                                <% } %>
+                                            </tbody>
+                                        </table>
                             </div>
                         </div>
                     </div>
-
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination justify-content-center mb-0">
-                            <li class="page-item">
-                                <a class="page-link" href="#" aria-label="Previous">
-                                    <span aria-hidden="true">Prev</span>
-                                </a>
-                            </li>
-
-                            <li class="page-item active" aria-current="page">
-                                <a class="page-link" href="#">1</a>
-                            </li>
-
-                            <li class="page-item">
-                                <a class="page-link" href="#">2</a>
-                            </li>
-
-                            <li class="page-item">
-                                <a class="page-link" href="#">3</a>
-                            </li>
-
-                            <li class="page-item">
-                                <a class="page-link" href="#">4</a>
-                            </li>
-
-                            <li class="page-item">
-                                <a class="page-link" href="#" aria-label="Next">
-                                    <span aria-hidden="true">Next</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
                 </div>
+
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center mb-0">
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Previous">
+                                <span aria-hidden="true">Prev</span>
+                            </a>
+                        </li>
+
+                        <li class="page-item active" aria-current="page">
+                            <a class="page-link" href="#">1</a>
+                        </li>
+
+                        <li class="page-item">
+                            <a class="page-link" href="#">2</a>
+                        </li>
+
+                        <li class="page-item">
+                            <a class="page-link" href="#">3</a>
+                        </li>
+
+                        <li class="page-item">
+                            <a class="page-link" href="#">4</a>
+                        </li>
+
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Next">
+                                <span aria-hidden="true">Next</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
-
-
-
-            {/* <!-- <footer class="site-footer">
-                    <div class="container">
-                        <div class="row">
-                            
-                            <div class="col-lg-12 col-12">
-                                <p class="copyright-text">Copyright © Mini Finance 2048 
-                                - Design: <a rel="sponsored" href="https://www.tooplate.com" target="_blank">Tooplate</a></p>
-                            </div>
-
-                        </div>
-                    </div>
-                </footer> --> */}
-    </main>
+        </div>
+</main>
 
 </div>
-</div>
-
-<script src="js/jquery.min.js"></script>
-<script src="js/bootstrap.bundle.min.js"></script>
-<script src="js/apexcharts.min.js"></script>
-<script src="js/custom.js"></script>

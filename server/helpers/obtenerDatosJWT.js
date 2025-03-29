@@ -11,8 +11,13 @@ const obtenerUsuarioJWT = (token) => {
             rol: decoded.rol
         };
     } catch (error) {
-        console.error('Error al verificar el token:', error);
-        return null;
+        if (error.name === 'TokenExpiredError') {
+            console.warn('Token expirado en:', error.expiredAt);
+            return { error: 'Token expirado' };
+        } else {
+            console.error('Error al verificar el token:', error);
+            return null;
+        }
     }
 };
 
