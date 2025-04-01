@@ -14,12 +14,14 @@ import cookieParser from 'cookie-parser';
 import sequelize from './config/database.js';
 import productoRoutes from './src/routes/productoRoutes.js'; // Import productoRoutes
 import horarioRoutes from './src/routes/horarioRoutes.js';
-import formulacionRoutes from './src/routes/formulacionesRoutes.js'
+import formulacionRoutes from './src/routes/formulacionesRoutes.js';
 import supabase from './config/supabaseClient.js';
 import multer from 'multer';
 import pedidosRoutes from './src/routes/pedidosRoutes.js'; // Import pedidosRoutes
 import vacacionesRoutes from './src/routes/vacacionesRoutes.js';
 import reportesRoutes from './src/routes/reportesRoutes.js';
+import proveedorRoutes from './src/routes/proveedorRoutes.js'; // Ensure this is correct
+
 import errorLogger from './middleware/errorLogger.js';
 
 const app = express();
@@ -146,6 +148,8 @@ app.use('/', pedidosRoutes); // Ensure the correct path is used
 // Rutas Solicitudes Vacaciones
 app.use('/', vacacionesRoutes);
 
+//Rutas Proveedores
+app.use('/proveedores', proveedorRoutes); // Add routes for proveedores
 
 //Rutas de Reportes
 app.use('/', reportesRoutes);
