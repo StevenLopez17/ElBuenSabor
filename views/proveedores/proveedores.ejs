@@ -50,8 +50,8 @@
                                                         <td><%= proveedor.direccion %></td>
                                                         <td><%= proveedor.estado ? 'Activo' : 'Inactivo' %></td>
                                                         <td>
-                                                            <a href="editar/<%= proveedor.id %>" class="btn btn-warning">Editar</a>
-                                                            <form action="estado/<%= proveedor.id %>" method="POST" style="display:inline;">
+                                                            <a href="/proveedores/editar/<%= proveedor.id %>" class="btn btn-warning">Editar</a>
+                                                            <form action="/proveedores/estado/<%= proveedor.id %>" method="POST" style="display:inline;">
                                                                 <button type="submit" class="btn <%= proveedor.estado ? 'btn-danger' : 'btn-success' %>">
                                                                     <%= proveedor.estado ? 'Desactivar' : 'Activar' %>
                                                                 </button>
