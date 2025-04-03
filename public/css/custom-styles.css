@@ -1,0 +1,32 @@
+.btn {
+    background-color: #FBB800;
+    border-color: #F49602;
+    color: white;
+}
+.btn:hover {
+    background-color: #F49602;
+    border-color: #F14B00;
+}
+.btn:active {
+    background-color: #F14B00;
+    border-color: #96C700;
+}
+.nav-link {
+    color: black !important;
+    white-space: nowrap; /* Ensure text stays on one line */
+    overflow: hidden; /* Hide overflow if text is too long */
+    text-overflow: ellipsis; /* Add ellipsis for overflowed text */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+.nav-link:hover {
+    background-color: #96C700 !important;
+    color: white !important;
+}
+.nav-link strong {
+    transition: color 0.3s ease;
+}
+#sidebarMenu {
+    width: auto !important; /* Adjust width dynamically based on content */
+    min-width: 200px; /* Set a minimum width for better appearance */
+    max-width: 300px; /* Set a maximum width to avoid excessive size */
+}
