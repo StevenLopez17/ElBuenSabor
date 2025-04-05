@@ -20,7 +20,9 @@ import multer from 'multer';
 import pedidosRoutes from './src/routes/pedidosRoutes.js'; // Import pedidosRoutes
 import vacacionesRoutes from './src/routes/vacacionesRoutes.js';
 import reportesRoutes from './src/routes/reportesRoutes.js';
-import proveedorRoutes from './src/routes/proveedorRoutes.js'; // Ensure this is correct
+import proveedorRoutes from './src/routes/proveedorRoutes.js';
+import pagoRoutes from './src/routes/pagoRoutes.js'; // Importa las rutas de pagos
+
 
 import errorLogger from './middleware/errorLogger.js';
 
@@ -150,7 +152,7 @@ app.use('/', vacacionesRoutes);
 
 //Rutas Proveedores
 app.use('/proveedores', proveedorRoutes); // Add routes for proveedores
-
+app.use('/pagos', pagoRoutes);
 //Rutas de Reportes
 app.use('/', reportesRoutes);
 

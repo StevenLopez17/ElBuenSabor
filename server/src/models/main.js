@@ -11,6 +11,8 @@ import GestionFormulaciones from './gestion_formulacionesModel.js';
 import Productos from './productoModel.js';
 import Pedidos from './pedidoModel.js';
 import PedidoDetalle from './pedidoDetalle.js';
+import Proveedores from './proveedorModel.js';
+import Pagos from './pagoModel.js';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -62,7 +64,16 @@ PedidoDetalle.belongsTo(Pedidos, { foreignKey: 'pedidoid', as: 'pedido' });
 PedidoDetalle.belongsTo(Productos, { foreignKey: 'productoId', as: 'producto' });
 
 
+
 Pedidos.belongsTo(Distribuidores, { foreignKey: 'distribuidorId', as: 'Distribuidor' });
+
+
+// Un proveedor puede tener muchos pagos
+Proveedores.hasMany(Pagos, { foreignKey: 'proveedor_id', as: 'pagos' });
+
+// Cada pago pertenece a un proveedor
+Pagos.belongsTo(Proveedores, { foreignKey: 'proveedor_id', as: 'proveedor' });
+
 
 
 Object.keys(db).forEach(modelName => {
