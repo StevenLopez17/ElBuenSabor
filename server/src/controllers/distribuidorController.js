@@ -19,31 +19,30 @@ const printer = new PdfPrinter({
 
 
 //Metodo para agregar un distribuidor
-const insertDistribuidor = async (req, res) => {
+const insertDistribuidor = async (req, res, next) => {
     try {
-        const { usuario_id, empresa, telefono, direccion, zona_cobertura} = req.body;
-
-        if (!usuario_id || !empresa) {
-            return res.status(400).json({ message: "Usuario ID y Empresa son obligatorios" });
-        }
-
-        await Distribuidores.create({
-            usuario_id,
-            empresa,
-            telefono,
-            direccion,
-            zona_cobertura,
-            estado: true
-        });
-
-        console.log('Distribuidor creado con éxito');
-        res.redirect('/distribuidor');
-
+      const { usuario_id, empresa, telefono, direccion, zona_cobertura } = req.body;
+  
+      if (!usuario_id || !empresa) {
+        return res.status(400).json({ message: "Usuario ID y Empresa son obligatorios" });
+      }
+  
+      await Distribuidores.create({
+        usuario_id,
+        empresa,
+        telefono,
+        direccion,
+        zona_cobertura,
+        estado: true
+      });
+  
+      console.log('Distribuidor creado con éxito');
+      res.redirect('/distribuidor?distribuidorAgregado=true');
     } catch (error) {
-        console.error('Error al crear el distribuidor:', error);
-        res.status(500).json({ message: "Error al agregar distribuidor", error: error.message });
+      next(error); 
     }
-};
+  };
+  
 
 //Metodo para cargar la vista de insercion de distribuidores con la lista de clientes
 // const rendInsertDistribuidor = async (req, res) => {
@@ -68,8 +67,12 @@ const insertDistribuidor = async (req, res) => {
 
 //Metodo para obtener los distribuidores almacenados y cargar las direcciones para el select
 
+
 const getDistribuidor = async (req, res) => {
     try {
+        const distribuidorAgregado = req.query.distribuidorAgregado === 'true';
+        const modalEstado = req.query.modalEstado === 'true';
+        const distribuidorEditado = req.query.distribuidorEditado === 'true';
 
         const direcciones = await Distribuidores.findAll({
             attributes: ['direccion'],
@@ -77,36 +80,18 @@ const getDistribuidor = async (req, res) => {
             raw: true
         });
 
-
         const distribuidores = await Distribuidores.findAll();
 
-        // const distribuidores = await Distribuidores.findAll({
-        //     include: [{
-        //         model: Clientes,  // 🔹 Relación con Clientes
-        //         attributes: ['nombre'],  // 🔹 Solo traer el nombre del cliente
-        //     }]
-        // });
-
-        if (distribuidores.length > 0) {
-            console.log(`Se encontraron ${distribuidores.length} distribuidores.`);
-            res.render('distribuidores/distribuidores', {
-                layout: 'layouts/layout',
-                distribuidores,
-                direcciones,
-                filtroDireccion: "",
-                mensaje: null
-            });
-        } else {
-            console.log(`No se encontraron distribuidores.`);
-            res.render('distribuidores/distribuidores', {
-                layout: 'layouts/layout',
-                distribuidores: [],
-                direcciones,
-                filtroDireccion: "",
-                mensaje: "No hay distribuidores registrados."
-            });
-        }
-
+        res.render('distribuidores/distribuidores', {
+            layout: 'layouts/layout',
+            distribuidores,
+            direcciones,
+            filtroDireccion: "",
+            mensaje: null,
+            distribuidorAgregado,
+            modalEstado,
+            distribuidorEditado
+          });
     } catch (error) {
         console.error('Error al obtener distribuidores:', error);
         res.render('distribuidores/distribuidores', {
@@ -114,10 +99,13 @@ const getDistribuidor = async (req, res) => {
             distribuidores: [],
             direcciones: [],
             filtroDireccion: "",
-            mensaje: "Error al cargar los distribuidores."
+            mensaje: "Error al cargar los distribuidores.",
+            distribuidorAgregado: false,
+            modalEstado: false
         });
     }
 };
+
 
 //Metodo para actualizar los datos de un distribuidor
 const updateDistribuidor = async (req, res) => {
@@ -143,7 +131,7 @@ const updateDistribuidor = async (req, res) => {
         });
 
         console.log('Distribuidor actualizado con éxito');
-        res.redirect('/distribuidor');
+        res.redirect('/distribuidor?distribuidorEditado=true');
 
     } catch (error) {
         console.error('Error al actualizar el distribuidor:', error);
@@ -154,45 +142,43 @@ const updateDistribuidor = async (req, res) => {
 //Metodo para renderizar la vista de actualizar los distribuidores y que carga los datos del distribuidor a actualizar
 const rendUpdateDistribuidor = async (req, res) => {
     try {
-        console.log("ID recibido:", req.params.id);
-
-        const distribuidor = await Distribuidores.findByPk(req.params.id);
-
-        if (!distribuidor) {
-            console.log("Distribuidor no encontrado en la base de datos");
-            return res.status(404).send("Distribuidor no encontrado");
-        }
-
-        console.log("Distribuidor seleccionado:", JSON.stringify(distribuidor, null, 2));
-
-        res.render('distribuidores/distribuidoresEditar', {
-            distribuidor: distribuidor
-        });
-
+      console.log("ID recibido:", req.params.id);
+  
+      const distribuidor = await Distribuidores.findByPk(req.params.id);
+  
+      if (!distribuidor) {
+        console.log("Distribuidor no encontrado en la base de datos");
+        return res.status(404).send("Distribuidor no encontrado");
+      }
+  
+      console.log("Distribuidor seleccionado:", JSON.stringify(distribuidor, null, 2));
+  
+      // Renderizar la vista correcta para editar
+      res.render('distribuidores/distribuidoresEditar', {
+        layout: 'layouts/layout',
+        distribuidor, 
+      });
+  
     } catch (error) {
-        console.error("Error al obtener el distribuidor:", error);
-        res.status(500).send("Error interno del servidor");
+      console.error("Error al obtener el distribuidor:", error);
+      res.status(500).send("Error interno del servidor");
     }
-};
+  };
 
 //Metodo para cambiar el estado de un distribuidor
 const cambiarDistribuidorEstado = async (req, res) => {
     try {
         const { id } = req.params;
-
         const distribuidor = await Distribuidores.findByPk(id);
         if (!distribuidor) {
             return res.status(404).json({ message: "Distribuidor no encontrado" });
         }
 
-
         distribuidor.estado = !distribuidor.estado;
         await distribuidor.save();
 
-        console.log(`El distribuidor de ID ${id} está ${distribuidor.estado ? 'Activo' : 'Inactivo'}`);
-
-        res.redirect('/distribuidor');
-
+        console.log(`Distribuidor ID ${id} -> ${distribuidor.estado ? 'Activo' : 'Inactivo'}`);
+        res.redirect('/distribuidor?modalEstado=true');
     } catch (error) {
         console.error("Error al cambiar el estado del distribuidor:", error);
         res.status(500).json({ message: "Error al actualizar estado", error: error.message });
@@ -239,6 +225,9 @@ const filtroDireccionDistribuidores = async (req, res) => {
     }
 };
 
+
+const logoPath = path.join(__dirname, '..', '..', '..', 'public', 'images', 'Logo-Rellenos-El-Buen-Sabor-Version-Naranja.png');
+const logoBase64 = fs.readFileSync(logoPath).toString('base64');
 //Metodo para exportar un PDF con los distribuidores y clientes
 const exportarPDFDist = async (req, res) => {
     try {
@@ -274,6 +263,12 @@ const exportarPDFDist = async (req, res) => {
         const docDefinition = {
             defaultStyle: { font: 'Helvetica' },
             content: [
+                {
+                    image: `data:image/png;base64,${logoBase64}`,
+                    width: 120,
+                    alignment: 'left',
+                    margin: [0, 0, 0, 10]
+                  },
                 { text: 'Reporte de Distribuidores', fontSize: 16, bold: true, margin: [0, 0, 0, 10] },
                 {
                     table: {

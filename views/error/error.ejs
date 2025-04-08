@@ -1,5 +1,7 @@
 
-<div class="container mt-5">
-  <h1 class="text-danger">Ocurrió un error</h1>
-  <p><%= mensaje %></p>
-</div>
+<h1 class="text-danger">Algo salió mal</h1>
+<p class="lead"><%= mensaje || 'Ocurrio un error inesperado.' %></p>
+
+<a href="/" class="btn btn-primary mt-3">
+  Volver al inicio
+</a>

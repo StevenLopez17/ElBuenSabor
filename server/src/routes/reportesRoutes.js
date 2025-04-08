@@ -6,15 +6,20 @@ import {
 
 const router = express.Router();
 
-// Ruta principal que muestra el reporte y maneja descarga si se pasa ?pdf=true
-router.get('/reportes', async (req, res, next) => {
-  if (req.query.pdf === 'true') {
-    return exportarPDFPedidosPorProducto(req, res);
+// Ruta principal con selector de tipo de reporte (?tipo=producto | distribuidor)
+router.get('/reportes', async (req, res) => {
+  const tipo = req.query.tipo || 'producto';
+
+  if (tipo === 'producto') {
+    return getReportePedidosPorProducto(req, res);
+  } else if (tipo === 'distribuidor') {
+    return getReportePedidosPorDistribuidor(req, res);
+  } else {
+    return res.status(400).send('Tipo de reporte inválido');
   }
-  return getReportePedidosPorProducto(req, res);
 });
 
-// Exportar PDF: pedidos por producto
+// Exportaciones PDF (podrían ir por separado si deseas)
 router.get('/reportes/pedidos-producto/pdf', exportarPDFPedidosPorProducto);
-
+// (Más adelante puedes agregar: exportarPDFPedidosPorDistribuidor)
 export default router;

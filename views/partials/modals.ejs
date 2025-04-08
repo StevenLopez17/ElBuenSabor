@@ -1,0 +1,76 @@
+<% if (typeof distribuidorAgregado !== 'undefined' && distribuidorAgregado) { %>
+  <!-- Modal centrado para Distribuidor agregado -->
+  <div class="modal fade" id="modalDistribuidorAgregado" tabindex="-1" aria-labelledby="modalDistribuidorLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalDistribuidorLabel">Distribuidor agregado</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body text-center">
+          <i class="bi bi-check-circle-fill text-success fs-1"></i>
+          <p class="mt-3">El distribuidor se ha agregado correctamente.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const modal = new bootstrap.Modal(document.getElementById('modalDistribuidorAgregado'));
+      modal.show();
+    });
+  </script>
+<% } %>
+
+
+<% if (typeof modalEstado !== 'undefined' && modalEstado) { %>
+  <div class="modal fade" id="modalCambioEstadoExito" tabindex="-1" aria-labelledby="modalCambioEstadoExitoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalCambioEstadoExitoLabel">Cambio de Estado</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body text-center">
+          <i class="bi bi-info-circle-fill text-primary fs-1"></i>
+          <p class="mt-3">El estado del distribuidor ha sido actualizado correctamente.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const modal = new bootstrap.Modal(document.getElementById('modalCambioEstadoExito'));
+      modal.show();
+    });
+  </script>
+<% } %>
+
+
+
+<% if (typeof distribuidorEditado !== 'undefined' && distribuidorEditado) { %>
+  <!-- Modal centrado para Distribuidor editado -->
+  <div class="modal fade" id="modalDistribuidorEditado" tabindex="-1" aria-labelledby="modalDistribuidorEditadoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalDistribuidorEditadoLabel">Distribuidor actualizado</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body text-center">
+          <i class="bi bi-pencil-square text-warning fs-1"></i>
+          <p class="mt-3">Los datos del distribuidor han sido actualizados correctamente.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const modal = new bootstrap.Modal(document.getElementById('modalDistribuidorEditado'));
+      modal.show();
+    });
+  </script>
+<% } %>

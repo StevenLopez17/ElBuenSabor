@@ -147,17 +147,25 @@
         </div>
     </div>
 </header>
-
-<%- include('../partials/navbar') %>
-
-
-    <main>
-        <%- body %>
-    </main>
-
-
+<body>
+    <!-- Contenedor de toda la aplicación -->
+    <div class="container-fluid">
+      <div class="row">
+  
+        <!-- Sidebar (navbar lateral) -->
+        <%- include('../partials/navbar') %>
+  
+        <!-- Contenido principal -->
+        <main class="main-wrapper col-md-9 col-lg-10 ms-sm-auto px-md-4 py-4 ">
+          <%- body %>
+        </main>
+  
+      </div>
+    </div>
+  
+    <%- include('../partials/modals') %>
     <script src="/js/bootstrap.bundle.min.js"></script>
     <script src="/js/apexcharts.min.js"></script>
     <script src="/js/tooplate-mini-finance.js"></script>
-
-</html>
+  </body>
+</html> 

@@ -1,6 +1,6 @@
 <div class="container-fluid">
 
-    <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
+
         <div class="title-group mb-3">
             <h1 class="h2 mb-0">Distribuidores</h1>
         </div>
@@ -65,29 +65,30 @@
                                         </thead>
                                         <tbody>
                                             <% if (distribuidores.length > 0) { %>
-                                                <% distribuidores.forEach(distribuidor => { %>
-                                                    <tr>
-                                                        <td><%= distribuidor.empresa %></td>
-                                                        <td><%= distribuidor.direccion %></td>
-                                                        <td><%= distribuidor.telefono %></td>
-                                                        <td>Pedidos</td>
-                                                        <td><%= distribuidor.estado ? 'Activo' : 'Inactivo' %></td>
-                                                        <td>
-                                                            <a href="distEditar/<%= distribuidor.id %>" class="btn btn-warning">Editar</a>
-                                                            <form action="eliminar/<%= distribuidor.id %>" method="POST" style="display:inline;">
-                                                                <button type="submit" class="btn <%= distribuidor.estado ? 'btn-danger' : 'btn-success' %>">
-                                                                    <%= distribuidor.estado ? 'Desactivar' : 'Activar' %>
-                                                                </button>
-                                                            </form>
-                                                        </td>
-                                                    </tr>
-                                                <% }) %>
-                                            <% } else { %>
+                                              <% distribuidores.forEach(distribuidor => { %>
                                                 <tr>
-                                                    <td colspan="6" class="text-center">No hay distribuidores registrados.</td>
+                                                  <td><%= distribuidor.empresa %></td>
+                                                  <td><%= distribuidor.direccion %></td>
+                                                  <td><%= distribuidor.telefono %></td>
+                                                  <td>Pedidos</td>
+                                                  <td><%= distribuidor.estado ? 'Activo' : 'Inactivo' %></td>
+                                                  <td>
+                                                    <a href="distEditar/<%= distribuidor.id %>" class="btn btn-warning">Editar</a>
+                                                    <form action="eliminar/<%= distribuidor.id %>" method="POST" style="display:inline;">
+                                                      <button type="submit" class="btn <%= distribuidor.estado ? 'btn-danger' : 'btn-success' %>">
+                                                        <%= distribuidor.estado ? 'Desactivar' : 'Activar' %>
+                                                      </button>
+                                                    </form>
+                                                  </td>
                                                 </tr>
+                                              <% }) %>
+                                            <% } else { %>
+                                              <tr>
+                                                <td colspan="6" class="text-center">No hay distribuidores registrados.</td>
+                                              </tr>
                                             <% } %>
-                                        </tbody>
+                                          </tbody>
+                                          
                                     </table>
                                 </div>
                             </div>
@@ -128,7 +129,7 @@
                 </div>
             </div>
         </div>
-    </main>
+
 
 </div>
 </div>
@@ -138,3 +139,7 @@
 <script src="js/bootstrap.bundle.min.js"></script>
 <script src="js/apexcharts.min.js"></script>
 <script src="js/custom.js"></script>
+
+
+  
+
