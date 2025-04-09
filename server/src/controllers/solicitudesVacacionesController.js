@@ -2,6 +2,7 @@ import Usuario from '../models/usuarios.js'
 import { generarId, generarJWT } from '../../helpers/tokens.js'
 import { check, validationResult } from 'express-validator';
 import SolicitudesVacaciones from '../models/solicitudVacaciones.js';
+import { emailAprobacionVacaciones, emailRechazoVacaciones } from '../../helpers/email.js';
 
 const vacacionesView = async (req, res) => {
     const { id } = req.usuario
@@ -107,6 +108,16 @@ const aprobarSolicitud = async (req, res) => {
         await solicitud.update({
             estado: 'Aprobada'
         });
+
+        const usuario = await Usuario.findByPk(solicitud.usuario_id);
+        //Enviar correo confirmacion
+        console.log('Enviando correo..')
+        emailAprobacionVacaciones({
+            nombre: usuario.nombre,
+            email: usuario.correo,
+            fecha_inicio: solicitud.fecha_inicio,
+            fecha_finalizacion: solicitud.fecha_fin
+        })
         return res.redirect('/vacacionesSolicitudes');
     } catch (error) {
         console.error('Error al aprobar solicitud de vacaciones', error);
@@ -124,6 +135,15 @@ const denegarSolicitud = async (req, res) => {
         await solicitud.update({
             estado: 'Rechazada'
         });
+        const usuario = await Usuario.findByPk(solicitud.usuario_id);
+        //Enviar correo confirmacion
+        console.log('Enviando correo..')
+        emailRechazoVacaciones({
+            nombre: usuario.nombre,
+            email: usuario.correo,
+            fecha_inicio: solicitud.fecha_inicio,
+            fecha_finalizacion: solicitud.fecha_fin
+        })
         return res.redirect('/vacacionesSolicitudes');
     } catch (error) {
         console.error('Error al denegar solicitud de vacaciones', error);
