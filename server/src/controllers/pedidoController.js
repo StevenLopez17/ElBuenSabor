@@ -126,10 +126,10 @@ const getPedido = async (req, res) => {
 
       if (pedidos.length > 0) {
         // console.log(`Se encontraron ${pedidos.length} pedidos.`);
-        res.render("pedidos", { pedidos: pedidosWithProductos, mensaje: null });
+        res.render("pedidos/pedidos", { pedidos: pedidosWithProductos, mensaje: null });
       } else {
         console.log("No se encontraron pedidos.");
-        res.render("pedidos", { pedidos: [], mensaje: "No hay pedidos registrados." });
+        res.render("pedidos/pedidos", { pedidos: [], mensaje: "No hay pedidos registrados." });
       }
     }
     else if (rol == 1) {
@@ -158,10 +158,10 @@ const getPedido = async (req, res) => {
 
       if (pedidos.length > 0) {
         console.log(`Se encontraron ${pedidos.length} pedidos.`);
-        res.render("pedidos", { pedidos: pedidosWithProductos, mensaje: null });
+        res.render("pedidos/pedidos", { pedidos: pedidosWithProductos, mensaje: null });
       } else {
         console.log("No se encontraron pedidos.");
-        res.render("pedidos", { pedidos: [], mensaje: "No hay pedidos registrados." });
+        res.render("pedidos/pedidos", { pedidos: [], mensaje: "No hay pedidos registrados." });
       }
     }
     else {
@@ -169,7 +169,7 @@ const getPedido = async (req, res) => {
     }
   } catch (error) {
     console.error("Error al obtener los pedidos:", error);
-    res.render("pedidos", { pedidos: [], mensaje: "Error al cargar los pedidos." });
+    res.render("pedidos/pedidos", { pedidos: [], mensaje: "Error al cargar los pedidos." });
   }
 };
 
@@ -209,7 +209,7 @@ const getTodosPedidos = async (req, res) => {
           cantidad: detalle.cantidad
         }))
       }));
-      res.render("pedidostodos", { pedidos: pedidosWithProductos });
+      res.render("pedidos/pedidostodos", { pedidos: pedidosWithProductos });
     }
     else if (rol == 1) {
       const pedidos = await Pedidos.findAll({
@@ -233,10 +233,10 @@ const getTodosPedidos = async (req, res) => {
 
       if (pedidos.length > 0) {
         console.log(`Se encontraron ${pedidos.length} pedidos.`);
-        res.render("pedidostodos", { pedidos: pedidosWithProductos, mensaje: null });
+        res.render("pedidos/pedidostodos", { pedidos: pedidosWithProductos, mensaje: null });
       } else {
         console.log("No se encontraron pedidos.");
-        res.render("pedidostodos", { pedidos: [], mensaje: "No hay pedidos registrados." });
+        res.render("pedidos/pedidostodos", { pedidos: [], mensaje: "No hay pedidos registrados." });
       }
     }
     else {
@@ -245,7 +245,7 @@ const getTodosPedidos = async (req, res) => {
 
   } catch (error) {
     console.error("Error al obtener todos los pedidos:", error);
-    res.render("pedidostodos", { pedidos: [], mensaje: "Error al cargar los pedidos." });
+    res.render("pedidos/pedidostodos", { pedidos: [], mensaje: "Error al cargar los pedidos." });
   }
 };
 
@@ -348,7 +348,7 @@ const rendUpdatePedido = async (req, res) => {
       return res.status(404).send("Pedido no encontrado");
     }
 
-    res.render("pedidoEditar", { pedido, layout: 'layouts/layout' });
+    res.render("pedidos/pedidoEditar", { pedido, layout: 'layouts/layout' });
   } catch (error) {
     console.error("Error al obtener el pedido:", error);
     res.status(500).send("Error interno del servidor");
@@ -367,18 +367,18 @@ const rendAgregarPedido = async (req, res) => {
         }
       });
       const distribuidorId = distribuidor.id
-      res.render("pedidoAgregarDistribuidor", { productos, distribuidorId /*, distribuidores*/ });
+      res.render("pedidos/pedidoAgregarDistribuidor", { productos, distribuidorId /*, distribuidores*/ });
     }
     else if (rol == 1) {
       const productos = await Productos.findAll();
       const distribuidores = await Distribuidores.findAll();
-      res.render("pedidoAgregarAdmin", { productos, distribuidores /*, admin*/ });
+      res.render("pedidos/pedidoAgregarAdmin", { productos, distribuidores /*, admin*/ });
     } else {
       res.redirect('/')
     }
   } catch (error) {
     console.error("Error al renderizar vista de agregar pedido:", error);
-    res.render("pedidoAgregar", { productos: [], mensaje: "Error al cargar datos para el pedido.", layout: 'layouts/layout' });
+    res.render("pedidos/pedidoAgregar", { productos: [], mensaje: "Error al cargar datos para el pedido.", layout: 'layouts/layout' });
   }
 };
 
