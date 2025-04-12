@@ -32,17 +32,15 @@ const Distribuidores = sequelize.define('Distribuidores', {
         allowNull: false,
         defaultValue: DataTypes.NOW
     },
-    estado: { 
+    estado: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
-        defaultValue: true 
+        defaultValue: true
     }
 }, {
-    tableName: 'distribuidores', 
-    timestamps: false 
+    tableName: 'distribuidores',
+    timestamps: false
 });
-
-
 
 
 export default Distribuidores;

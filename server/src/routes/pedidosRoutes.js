@@ -7,7 +7,8 @@ import {
   rendUpdatePedido,
   rendAgregarPedido,
   getTodosPedidos,
-  exportarPDFPedido, // Add this import
+  exportarPDFPedido,
+  notificarPagoPendiente
 } from "../controllers/pedidoController.js";
 import identificarUsuario from '../../middleware/identificarUsuario.js';
 
@@ -36,5 +37,8 @@ router.get("/pedidos/todos", identificarUsuario, getTodosPedidos);
 
 //Ruta para obtener factura
 router.get('/exportarPDFP/:id', exportarPDFPedido);
+
+// Ruta notificacion pago pendiente
+router.get('/pedido/notificar/:idpedido', notificarPagoPendiente);
 
 export default router;

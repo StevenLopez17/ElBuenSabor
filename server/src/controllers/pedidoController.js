@@ -3,7 +3,10 @@ import PedidoDetalle from "../models/pedidoDetalle.js";
 import Productos from "../models/productoModel.js";
 import sequelize from "../../config/database.js";
 import Distribuidores from '../models/distribuidorModel.js';
+import Usuario from "../models/usuarios.js";
 import PdfPrinter from 'pdfmake';
+import { emailPagoPendiente } from '../../helpers/email.js';
+
 
 import fs from 'fs';
 import path from 'path';
@@ -88,6 +91,7 @@ const insertPedido = async (req, res) => {
 // Función para obtener y renderizar la lista de pedidos
 const getPedido = async (req, res) => {
   try {
+    const notificacionPagoPendiente = req.query.notificacionPagoPendiente === 'true';
     const { id, rol } = req.usuario
     if (rol == 3) {
       const distribuidor = await Distribuidores.findOne({
@@ -126,7 +130,7 @@ const getPedido = async (req, res) => {
 
       if (pedidos.length > 0) {
         // console.log(`Se encontraron ${pedidos.length} pedidos.`);
-        res.render("pedidos/pedidos", { pedidos: pedidosWithProductos, mensaje: null });
+        res.render("pedidos/pedidos", { pedidos: pedidosWithProductos, mensaje: null, rol, notificacionPagoPendiente });
       } else {
         console.log("No se encontraron pedidos.");
         res.render("pedidos/pedidos", { pedidos: [], mensaje: "No hay pedidos registrados." });
@@ -157,8 +161,8 @@ const getPedido = async (req, res) => {
       }));
 
       if (pedidos.length > 0) {
-        console.log(`Se encontraron ${pedidos.length} pedidos.`);
-        res.render("pedidos/pedidos", { pedidos: pedidosWithProductos, mensaje: null });
+        // console.log(`Se encontraron ${pedidos.length} pedidos.`);
+        res.render("pedidos/pedidos", { pedidos: pedidosWithProductos, mensaje: null, rol, notificacionPagoPendiente });
       } else {
         console.log("No se encontraron pedidos.");
         res.render("pedidos/pedidos", { pedidos: [], mensaje: "No hay pedidos registrados." });
@@ -494,8 +498,43 @@ const exportarPDFPedido = async (req, res) => {
   }
 };
 
+//Funcion enviar email pagos pendientes
+const notificarPagoPendiente = async (req, res) => {
+  try {
+    const { idpedido } = req.params;
 
-
+    const pedido = await Pedidos.findByPk(idpedido, {
+      include: [
+        {
+          model: PedidoDetalle,
+          as: 'detalles',
+          include: [{ model: Productos, as: 'producto' }]
+        },
+        {
+          model: Distribuidores,
+          as: 'Distribuidor'
+        }
+      ]
+    });
+    const usuario = await Usuario.findByPk(pedido.Distribuidor.usuario_id)
+    if (!usuario) {
+      res.redirect('/pedido')
+    }
+    emailPagoPendiente({
+      nombre: usuario.nombre,
+      email: usuario.correo,
+      precioTotal: pedido.precioTotal,
+      pendiente: pedido.pendiente,
+      fecha: pedido.fecha,
+      idpedido: pedido.idpedido
+    });
+    console.log('Correo enviado..')
+    res.redirect('/pedido?notificacionPagoPendiente=true');
+    // console.log(JSON.stringify(pedido, null, 2));
+  } catch (error) {
+    console.error('Error al enviar email de pago pendiente:', error);
+  }
+}
 
 export {
   insertPedido,
@@ -505,5 +544,6 @@ export {
   deletePedido,
   rendUpdatePedido,
   rendAgregarPedido,
-  exportarPDFPedido
+  exportarPDFPedido,
+  notificarPagoPendiente
 };

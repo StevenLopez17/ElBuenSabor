@@ -66,6 +66,9 @@ const vacacionesSolicitadas = async (req, res) => {
 
 const vacacionesSolicitadasAdmin = async (req, res) => {
     try {
+        const notificacionVacacionesAprobadas = req.query.notificacionVacacionesAprobadas === 'true';
+        const notificacionVacacionesDenegadas = req.query.notificacionVacacionesDenegadas === 'true';
+
         const { id, rol } = req.usuario
         if (rol != 1) {
             return res.redirect('/')
@@ -91,7 +94,7 @@ const vacacionesSolicitadasAdmin = async (req, res) => {
                 fecha_solicitud: solicitud.fecha_solicitud.toISOString().split('T')[0]
             };
         });
-        return res.render('vacaciones/solicitudesRealizadasAdmin', { vacaciones: vacacionesConFechasFormateadas, mensaje: null });
+        return res.render('vacaciones/solicitudesRealizadasAdmin', { vacaciones: vacacionesConFechasFormateadas, mensaje: null, notificacionVacacionesAprobadas, notificacionVacacionesDenegadas });
     } catch (error) {
         console.error('Error al mostrar solicitudes de vacaciones', error);
         res.status(500).json({ message: "Error al mostrar solicitudes", error: error.message });
@@ -118,7 +121,7 @@ const aprobarSolicitud = async (req, res) => {
             fecha_inicio: solicitud.fecha_inicio,
             fecha_finalizacion: solicitud.fecha_fin
         })
-        return res.redirect('/vacacionesSolicitudes');
+        return res.redirect('/vacacionesSolicitudes?notificacionVacacionesAprobadas=true');
     } catch (error) {
         console.error('Error al aprobar solicitud de vacaciones', error);
         res.status(500).json({ message: "Error al aprobar solicitud", error: error.message });
@@ -144,7 +147,7 @@ const denegarSolicitud = async (req, res) => {
             fecha_inicio: solicitud.fecha_inicio,
             fecha_finalizacion: solicitud.fecha_fin
         })
-        return res.redirect('/vacacionesSolicitudes');
+        return res.redirect('/vacacionesSolicitudes?notificacionVacacionesDenegadas=true');
     } catch (error) {
         console.error('Error al denegar solicitud de vacaciones', error);
         res.status(500).json({ message: "Error al denegar solicitud", error: error.message });

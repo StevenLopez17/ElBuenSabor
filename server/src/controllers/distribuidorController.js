@@ -17,32 +17,31 @@ const printer = new PdfPrinter({
 });
 
 
-
 //Metodo para agregar un distribuidor
 const insertDistribuidor = async (req, res, next) => {
     try {
-      const { usuario_id, empresa, telefono, direccion, zona_cobertura } = req.body;
-  
-      if (!usuario_id || !empresa) {
-        return res.status(400).json({ message: "Usuario ID y Empresa son obligatorios" });
-      }
-  
-      await Distribuidores.create({
-        usuario_id,
-        empresa,
-        telefono,
-        direccion,
-        zona_cobertura,
-        estado: true
-      });
-  
-      console.log('Distribuidor creado con éxito');
-      res.redirect('/distribuidor?distribuidorAgregado=true');
+        const { usuario_id, empresa, telefono, direccion, zona_cobertura } = req.body;
+
+        if (!usuario_id || !empresa) {
+            return res.status(400).json({ message: "Usuario ID y Empresa son obligatorios" });
+        }
+
+        await Distribuidores.create({
+            usuario_id,
+            empresa,
+            telefono,
+            direccion,
+            zona_cobertura,
+            estado: true
+        });
+
+        console.log('Distribuidor creado con éxito');
+        res.redirect('/distribuidor?distribuidorAgregado=true');
     } catch (error) {
-      next(error); 
+        next(error);
     }
-  };
-  
+};
+
 
 //Metodo para cargar la vista de insercion de distribuidores con la lista de clientes
 // const rendInsertDistribuidor = async (req, res) => {
@@ -91,7 +90,7 @@ const getDistribuidor = async (req, res) => {
             distribuidorAgregado,
             modalEstado,
             distribuidorEditado
-          });
+        });
     } catch (error) {
         console.error('Error al obtener distribuidores:', error);
         res.render('distribuidores/distribuidores', {
@@ -142,28 +141,28 @@ const updateDistribuidor = async (req, res) => {
 //Metodo para renderizar la vista de actualizar los distribuidores y que carga los datos del distribuidor a actualizar
 const rendUpdateDistribuidor = async (req, res) => {
     try {
-      console.log("ID recibido:", req.params.id);
-  
-      const distribuidor = await Distribuidores.findByPk(req.params.id);
-  
-      if (!distribuidor) {
-        console.log("Distribuidor no encontrado en la base de datos");
-        return res.status(404).send("Distribuidor no encontrado");
-      }
-  
-      console.log("Distribuidor seleccionado:", JSON.stringify(distribuidor, null, 2));
-  
-      // Renderizar la vista correcta para editar
-      res.render('distribuidores/distribuidoresEditar', {
-        layout: 'layouts/layout',
-        distribuidor, 
-      });
-  
+        console.log("ID recibido:", req.params.id);
+
+        const distribuidor = await Distribuidores.findByPk(req.params.id);
+
+        if (!distribuidor) {
+            console.log("Distribuidor no encontrado en la base de datos");
+            return res.status(404).send("Distribuidor no encontrado");
+        }
+
+        console.log("Distribuidor seleccionado:", JSON.stringify(distribuidor, null, 2));
+
+        // Renderizar la vista correcta para editar
+        res.render('distribuidores/distribuidoresEditar', {
+            layout: 'layouts/layout',
+            distribuidor,
+        });
+
     } catch (error) {
-      console.error("Error al obtener el distribuidor:", error);
-      res.status(500).send("Error interno del servidor");
+        console.error("Error al obtener el distribuidor:", error);
+        res.status(500).send("Error interno del servidor");
     }
-  };
+};
 
 //Metodo para cambiar el estado de un distribuidor
 const cambiarDistribuidorEstado = async (req, res) => {
@@ -268,7 +267,7 @@ const exportarPDFDist = async (req, res) => {
                     width: 120,
                     alignment: 'left',
                     margin: [0, 0, 0, 10]
-                  },
+                },
                 { text: 'Reporte de Distribuidores', fontSize: 16, bold: true, margin: [0, 0, 0, 10] },
                 {
                     table: {

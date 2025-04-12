@@ -1,5 +1,6 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../../config/database.js';
+import Distribuidores from '../models/Distribuidor.js';
 
 const Pedido = sequelize.define('Pedido', {
   id: {
@@ -59,6 +60,11 @@ Pedido.associate = (models) => {
   Pedido.hasMany(models.PedidoDetalle, {
     foreignKey: 'pedidoId',
     as: 'detalles'
+  });
+
+  Pedido.belongsTo(models.Distribuidores, {
+    foreignKey: 'distribuidorid',
+    as: 'Distribuidor'
   });
 };
 
