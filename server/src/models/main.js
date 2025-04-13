@@ -71,6 +71,7 @@ Pedidos.belongsTo(Distribuidores, { foreignKey: 'distribuidorId', as: 'Distribui
 // Un proveedor puede tener muchos pagos
 Proveedores.hasMany(Pagos, { foreignKey: 'proveedor_id', as: 'pagos' });
 
+
 // Cada pago pertenece a un proveedor
 Pagos.belongsTo(Proveedores, { foreignKey: 'proveedor_id', as: 'proveedor' });
 

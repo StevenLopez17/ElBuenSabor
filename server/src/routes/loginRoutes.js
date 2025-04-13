@@ -1,9 +1,12 @@
 import express from 'express'
-import { getUsuario, insertUsuario, profileView, updatePassword, cerrarSesion } from '../controllers/userController.js';
+import { getUsuario, insertUsuario, profileView, updatePassword, cerrarSesion, subirImagenPerfil } from '../controllers/userController.js';
 import identificarUsuario from '../../middleware/identificarUsuario.js';
 import Rol from '../models/rol.js'
+import multer from 'multer';
 
 const router = express.Router()
+
+const upload = multer({ storage: multer.memoryStorage() });
 
 router.get('/login', (req, res) => {
     let success = [];
@@ -30,9 +33,12 @@ router.get('/updateUsuario', (req, res) => {
     res.render('auth/updateUsuario', { layout: false, errores, success })
 });
 
+
 router.post('/updateUsuario', updatePassword)
 
 router.get('/logout', cerrarSesion)
 
-export default router
+router.post('/usuarios/:id/imagen', upload.single('imagen'), subirImagenPerfil);
+
+export default router;
 

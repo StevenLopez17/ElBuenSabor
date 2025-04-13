@@ -1,5 +1,6 @@
 // src/middleware/errorLogger.js
 import GestionError from '../src/models/gestionErrorModel.js';
+import obtenerUsuarioJWT from '../helpers/obtenerDatosJWT.js';
 
 const errorLogger = async (err, req, res, next) => {
   try {
@@ -14,7 +15,7 @@ const errorLogger = async (err, req, res, next) => {
 
   res.status(500).render('error/error', {
     layout: 'layouts/layout_error', 
-    mensaje: 'Error interno del servidor.'
+    mensaje: 'Ocurrió un error inesperado. Por favor, inténtalo de nuevo más tarde.',
   });
 };
 

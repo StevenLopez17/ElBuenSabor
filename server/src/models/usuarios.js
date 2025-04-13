@@ -32,6 +32,10 @@ const Usuario = sequelize.define('Usuario', {
         defaultValue: Sequelize.NOW
     },
     token: DataTypes.STRING,
+    imagen_url: {
+        type: DataTypes.TEXT,
+        allowNull: true
+      },
 }, {
     tableName: 'usuarios',
     timestamps: false,

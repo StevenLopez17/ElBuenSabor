@@ -1,5 +1,7 @@
 import PdfPrinter from 'pdfmake';
 import dayjs from 'dayjs';
+import 'dayjs/locale/es.js';
+dayjs.locale('es'); 
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -61,11 +63,14 @@ const getReportePedidosPorProducto = async (req, res) => {
 
     const totalPagadoMes = pagosDelMes[0]?.totalPagado || 0;
 
+    const mesActual = dayjs().format('MMMM YYYY'); 
+
     res.render('reportes/reportes', {
       layout: 'layouts/layout',
       pedidosPorProducto,
       pedidosPorDistribuidor,
       totalPagadoMes,
+      mesActual, 
       mensaje: pedidosPorProducto.length === 0 ? 'No hay datos de pedidos por producto.' : null
     });
 
@@ -76,6 +81,7 @@ const getReportePedidosPorProducto = async (req, res) => {
       pedidosPorProducto: [],
       pedidosPorDistribuidor: [],
       totalPagadoMes: 0,
+      mesActual: '',
       mensaje: 'Error al generar el reporte'
     });
   }
@@ -92,6 +98,8 @@ const printer = new PdfPrinter({
     }
   });
   
+  const logoPath = path.join(__dirname, '..', '..', '..', 'public', 'images', 'Logo-Rellenos-El-Buen-Sabor-Version-Naranja.png');
+  const logoBase64 = fs.readFileSync(logoPath).toString('base64');
   // Exportar PDF del reporte
   const exportarPDFPedidosPorProducto = async (req, res) => {
     try {
@@ -115,6 +123,12 @@ const printer = new PdfPrinter({
       const docDefinition = {
         defaultStyle: { font: 'Helvetica' },
         content: [
+          {
+            image: `data:image/png;base64,${logoBase64}`,
+            width: 120,
+            alignment: 'left',
+            margin: [0, 0, 0, 10]
+          },
           { text: 'Reporte de Pedidos por Producto', style: 'header' },
           {
             table: {

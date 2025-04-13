@@ -1,12 +1,12 @@
 import Distribuidores from "../models/distribuidorModel.js";
 import Clientes from "../models/clienteModel.js";
+import Pedidos from "../models/pedidoModel.js";
 import PdfPrinter from 'pdfmake';
 import exceljs from 'exceljs';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import path from 'path';
-
-
+import sequelize from '../../config/database.js';
 
 //Variables globales
 const __filename = fileURLToPath(import.meta.url);
@@ -17,31 +17,31 @@ const printer = new PdfPrinter({
 });
 
 
+
 //Metodo para agregar un distribuidor
 const insertDistribuidor = async (req, res, next) => {
     try {
-        const { usuario_id, empresa, telefono, direccion, zona_cobertura } = req.body;
-
-        if (!usuario_id || !empresa) {
-            return res.status(400).json({ message: "Usuario ID y Empresa son obligatorios" });
-        }
-
-        await Distribuidores.create({
-            usuario_id,
-            empresa,
-            telefono,
-            direccion,
-            zona_cobertura,
-            estado: true
-        });
-
-        console.log('Distribuidor creado con éxito');
-        res.redirect('/distribuidor?distribuidorAgregado=true');
+      const { usuario_id, empresa, telefono, direccion, zona_cobertura } = req.body;
+  
+      if (!usuario_id || !empresa) {
+        return res.status(400).json({ message: "Usuario ID y Empresa son obligatorios" });
+      }
+  
+      await Distribuidores.create({
+        usuario_id,
+        empresa,
+        telefono,
+        zona_cobertura,
+        estado: true
+      });
+  
+      console.log('Distribuidor creado con éxito');
+      res.redirect('/distribuidor?distribuidorAgregado=true');
     } catch (error) {
-        next(error);
+      next(error); 
     }
-};
-
+  };
+  
 
 //Metodo para cargar la vista de insercion de distribuidores con la lista de clientes
 // const rendInsertDistribuidor = async (req, res) => {
@@ -69,41 +69,56 @@ const insertDistribuidor = async (req, res, next) => {
 
 const getDistribuidor = async (req, res) => {
     try {
-        const distribuidorAgregado = req.query.distribuidorAgregado === 'true';
-        const modalEstado = req.query.modalEstado === 'true';
-        const distribuidorEditado = req.query.distribuidorEditado === 'true';
-
-        const direcciones = await Distribuidores.findAll({
-            attributes: ['direccion'],
-            group: ['direccion'],
-            raw: true
-        });
-
-        const distribuidores = await Distribuidores.findAll();
-
-        res.render('distribuidores/distribuidores', {
-            layout: 'layouts/layout',
-            distribuidores,
-            direcciones,
-            filtroDireccion: "",
-            mensaje: null,
-            distribuidorAgregado,
-            modalEstado,
-            distribuidorEditado
-        });
+      const distribuidores = await Distribuidores.findAll();
+  
+      // Obtener pedidos pendientes
+      const pedidos = await Pedidos.findAll({
+        where: { estadodeentrega: 'no entregado' }, // Cambiar si usás otro campo o estado
+        raw: true
+      });
+  
+      // Generar mapa de pedidos pendientes por distribuidor
+      const pedidosPendientesMap = {};
+      pedidos.forEach(p => {
+        const id = p.distribuidorId; 
+        pedidosPendientesMap[id] = (pedidosPendientesMap[id] || 0) + 1;
+      });
+  
+      // Lógica para obtener direcciones si es necesaria
+      const direcciones = [...new Set(
+        distribuidores
+          .map(d => d.direccion?.trim()) 
+          .filter(d => d && d !== '')    
+      )];
+      
+  
+      res.render('distribuidores/distribuidores', {
+        layout: 'layouts/layout',
+        distribuidores,
+        direcciones,
+        filtroDireccion: "",
+        mensaje: null,
+        distribuidorAgregado: false,
+        distribuidorEditado: false,
+        modalEstado: false,
+        pedidosPendientesMap 
+      });
+  
     } catch (error) {
-        console.error('Error al obtener distribuidores:', error);
-        res.render('distribuidores/distribuidores', {
-            layout: 'layouts/layout',
-            distribuidores: [],
-            direcciones: [],
-            filtroDireccion: "",
-            mensaje: "Error al cargar los distribuidores.",
-            distribuidorAgregado: false,
-            modalEstado: false
-        });
+      console.error('Error al cargar distribuidores:', error);
+      res.status(500).render('distribuidores/distribuidores', {
+        layout: 'layouts/layout',
+        distribuidores: [],
+        direcciones: [],
+        filtroDireccion: "",
+        mensaje: 'Error al cargar distribuidores',
+        distribuidorAgregado: false,
+        distribuidorEditado: false,
+        modalEstado: false,
+        pedidosPendientesMap: {}
+      });
     }
-};
+  };
 
 
 //Metodo para actualizar los datos de un distribuidor
@@ -141,28 +156,28 @@ const updateDistribuidor = async (req, res) => {
 //Metodo para renderizar la vista de actualizar los distribuidores y que carga los datos del distribuidor a actualizar
 const rendUpdateDistribuidor = async (req, res) => {
     try {
-        console.log("ID recibido:", req.params.id);
-
-        const distribuidor = await Distribuidores.findByPk(req.params.id);
-
-        if (!distribuidor) {
-            console.log("Distribuidor no encontrado en la base de datos");
-            return res.status(404).send("Distribuidor no encontrado");
-        }
-
-        console.log("Distribuidor seleccionado:", JSON.stringify(distribuidor, null, 2));
-
-        // Renderizar la vista correcta para editar
-        res.render('distribuidores/distribuidoresEditar', {
-            layout: 'layouts/layout',
-            distribuidor,
-        });
-
+      console.log("ID recibido:", req.params.id);
+  
+      const distribuidor = await Distribuidores.findByPk(req.params.id);
+  
+      if (!distribuidor) {
+        console.log("Distribuidor no encontrado en la base de datos");
+        return res.status(404).send("Distribuidor no encontrado");
+      }
+  
+      console.log("Distribuidor seleccionado:", JSON.stringify(distribuidor, null, 2));
+  
+      // Renderizar la vista correcta para editar
+      res.render('distribuidores/distribuidoresEditar', {
+        layout: 'layouts/layout',
+        distribuidor, 
+      });
+  
     } catch (error) {
-        console.error("Error al obtener el distribuidor:", error);
-        res.status(500).send("Error interno del servidor");
+      console.error("Error al obtener el distribuidor:", error);
+      res.status(500).send("Error interno del servidor");
     }
-};
+  };
 
 //Metodo para cambiar el estado de un distribuidor
 const cambiarDistribuidorEstado = async (req, res) => {
@@ -187,42 +202,63 @@ const cambiarDistribuidorEstado = async (req, res) => {
 //Metodo para filtrar los distribuidores por direccion
 const filtroDireccionDistribuidores = async (req, res) => {
     try {
-        // Obtener todas las direcciones únicas para el filtro
-        const direcciones = await Distribuidores.findAll({
+        const direccionesRaw = await Distribuidores.findAll({
             attributes: ['direccion'],
             group: ['direccion'],
             raw: true
-        });
+          });
+          
+          const direcciones = [...new Set(
+            direccionesRaw
+              .map(d => d.direccion?.trim())
+              .filter(d => d && d !== '')
+          )];
+  
+      const filtroDireccion = req.query.direccion || "";
+      const whereCondition = filtroDireccion ? { direccion: filtroDireccion } : {};
+  
+      const distribuidores = await Distribuidores.findAll({ where: whereCondition });
+  
+      // Obtener pedidos no entregados
+      const pedidos = await Pedidos.findAll({
+        where: { estadodeentrega: 'no entregado' },
+        raw: true
+      });
+  
+      const pedidosPendientesMap = {};
+      pedidos.forEach(p => {
+        const id = p.distribuidorId;
+        pedidosPendientesMap[id] = (pedidosPendientesMap[id] || 0) + 1;
+      });
+  
 
-        const filtroDireccion = req.query.direccion || "";
-        const whereCondition = filtroDireccion ? { direccion: filtroDireccion } : {};
-
-
-        const distribuidores = await Distribuidores.findAll({
-            where: whereCondition
-        });
-
-        console.log(`Se encontraron ${distribuidores.length} distribuidores con dirección ${filtroDireccion}.`);
-
-        res.render('distribuidores/distribuidores', {
-            layout: 'layouts/layout',
-            distribuidores,
-            direcciones,
-            filtroDireccion,
-            mensaje: distribuidores.length > 0 ? null : "No hay distribuidores con esta dirección."
-        });
-
+      res.render('distribuidores/distribuidores', {
+        layout: 'layouts/layout',
+        distribuidores,
+        direcciones,
+        filtroDireccion,
+        mensaje: distribuidores.length > 0 ? null : "No hay distribuidores con esta dirección.",
+        distribuidorAgregado: false,
+        distribuidorEditado: false,
+        modalEstado: false,
+        pedidosPendientesMap // ✅ se agrega esta línea
+      });
+  
     } catch (error) {
-        console.error('Error al filtrar distribuidores:', error);
-        res.render('distribuidores/distribuidores', {
-            layout: 'layouts/layout',
-            distribuidores: [],
-            direcciones: [],
-            filtroDireccion: "",
-            mensaje: "Error al cargar los distribuidores."
-        });
+      console.error('Error al filtrar distribuidores:', error);
+      res.render('distribuidores/distribuidores', {
+        layout: 'layouts/layout',
+        distribuidores: [],
+        direcciones: [],
+        filtroDireccion: "",
+        mensaje: "Error al cargar los distribuidores.",
+        distribuidorAgregado: false,
+        distribuidorEditado: false,
+        modalEstado: false,
+        pedidosPendientesMap: {} // ✅ también aquí para evitar errores si falla
+      });
     }
-};
+  };
 
 
 const logoPath = path.join(__dirname, '..', '..', '..', 'public', 'images', 'Logo-Rellenos-El-Buen-Sabor-Version-Naranja.png');
@@ -267,7 +303,7 @@ const exportarPDFDist = async (req, res) => {
                     width: 120,
                     alignment: 'left',
                     margin: [0, 0, 0, 10]
-                },
+                  },
                 { text: 'Reporte de Distribuidores', fontSize: 16, bold: true, margin: [0, 0, 0, 10] },
                 {
                     table: {

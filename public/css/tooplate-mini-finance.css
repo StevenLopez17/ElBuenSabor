@@ -864,19 +864,28 @@ strong {
   margin-top: 20px;
 }
 
+/* Estilo base para todos los botones */
+.btn,
 .page-link {
-  border-radius: var(--border-radius-medium);
-  color: var(--p-color);
-  font-size: var(--btn-font-size);
-  margin: 0 5px;
-  padding: 10px 20px;
+  background-color: #FBB800;
+  color: white;
+  border: 1px solid #F49602;
+  border-radius: 12px;
+  padding: 10px 20px; /* ⬅️ Aumentado */
+  font-size: 14px;    /* ⬅️ Más grande */
+  font-weight: var(--font-weight-bold);
+  margin: 0 4px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
 }
 
-.page-link:hover,
-.page-item:first-child .page-link:hover,
-.page-item:last-child .page-link:hover {
-  background-color: var(--custom-btn-bg-color);
-  color: var(--white-color);
+/* Hover para todos los botones */
+.btn:hover,
+.page-link:hover {
+  background-color: #F49602;
+  border-color: #F14B00;
+  color: white;
 }
 
 .page-item:not(:first-child) .page-link {
@@ -894,9 +903,15 @@ strong {
   margin-left: 15px;
 }
 
-.active>.page-link, .page-link.active {
-  background-color: var(--custom-btn-bg-color);
-  border-color: var(--secondary-color);
+/* Botón activo (por ejemplo en paginación) */
+.page-item.active .page-link,
+.btn:active,
+.btn:focus {
+  background-color: #F14B00;
+  border-color: #F49602;
+  color: white;
+  outline: none;
+  box-shadow: none;
 }
 
 

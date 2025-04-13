@@ -3,6 +3,7 @@ import { generarId, generarJWT } from '../../helpers/tokens.js'
 import { check, validationResult } from 'express-validator';
 import bcrypt from 'bcrypt'
 import Rol from '../models/rol.js'
+import supabase from '../../config/supabaseClient.js'
 
 
 const insertUsuario = async (req, res) => {
@@ -165,4 +166,39 @@ const updatePassword = async (req, res, next) => {
 };
 
 
-export { insertUsuario, getUsuario, profileView, updatePassword, cerrarSesion };
+export const subirImagenPerfil = async (req, res) => {
+    const { id } = req.params;
+    const file = req.file;
+  
+    if (!file) return res.status(400).json({ error: 'No se recibió ningún archivo' });
+  
+    const fileName = `${Date.now()}-${file.originalname}`;
+  
+    const { error: uploadError } = await supabase.storage
+      .from('perfiles')
+      .upload(`avatars/${id}/${fileName}`, file.buffer, {
+        contentType: file.mimetype,
+        upsert: true
+      });
+  
+    if (uploadError) {
+      console.error(uploadError);
+      return res.status(500).json({ error: 'Error al subir la imagen' });
+    }
+  
+    const { data } = supabase.storage
+      .from('perfiles')
+      .getPublicUrl(`avatars/${id}/${fileName}`);
+  
+    const imageUrl = data.publicUrl;
+  
+    await supabase
+      .from('usuarios')
+      .update({ imagen_url: imageUrl })
+      .eq('id', id);
+  
+    res.status(200).json({ url: imageUrl });
+  };
+
+
+export { insertUsuario, getUsuario, profileView, updatePassword, cerrarSesion};

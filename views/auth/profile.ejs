@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="row">
 
-        <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
+       
             <div class="title-group mb-3">
                 <h1 class="h2 mb-0">Perfil</h1>
             </div>
@@ -16,12 +16,12 @@
 
                             <div class="col-lg-3 col-12 mb-4 mb-lg-0">
                                 <div class="custom-block-profile-image-wrap">
-                                    <img src="images/medium-shot-happy-man-smiling.jpg"
-                                        class="custom-block-profile-image img-fluid" alt="">
-
-                                    <a href="setting.html" class="bi-pencil-square custom-block-edit-icon"></a>
+                                  <img src="<%= usuario.imagen_url || 'images/medium-shot-happy-man-smiling.jpg' %>" class="custom-block-profile-image img-fluid" alt="Imagen de perfil">
+                                  
+                                  <!-- Botón para abrir el modal -->
+                                  <a href="#" class="bi-pencil-square custom-block-edit-icon" data-bs-toggle="modal" data-bs-target="#modalImagenPerfil"></a>
                                 </div>
-                            </div>
+                              </div>
 
                             <div class="col-lg-9 col-12">
                                 <p class="d-flex flex-wrap mb-2">
@@ -108,7 +108,6 @@
                             <% } %>
 
             </div>
-        </main>
 
     </div>
 </div>

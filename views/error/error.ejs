@@ -1,7 +1,27 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card shadow-lg text-center p-4">
 
-<h1 class="text-danger">Algo salió mal</h1>
-<p class="lead"><%= mensaje || 'Ocurrio un error inesperado.' %></p>
+        <!-- Imagen destacada -->
+        <img src="/images/imgError.png" alt="Error" class="img-fluid mb-3" style="max-height: 180px; object-fit: contain;">
 
-<a href="/" class="btn btn-primary mt-3">
-  Volver al inicio
-</a>
+        <!-- Título más pequeño -->
+        <h2 class="text-danger mb-2" style="font-size: 18px; font-weight: bold;">
+          Algo salió mal!
+        </h2>
+
+        <!-- Mensaje informativo -->
+        <p class="text-muted mb-3" style="font-size: 14px;">
+          <%= mensaje || 'Ocurrió un error inesperado en el servidor. Por favor, intente más tarde.' %>
+        </p>
+
+        <!-- Botón volver -->
+        <a href="/" class="btn" style="background-color: #FBB800; border-color: #F49602; color: white;">
+          Volver al inicio
+        </a>
+
+      </div>
+    </div>
+  </div>
+</div>

@@ -50,7 +50,7 @@
             </div>
 
             <div class="custom-block bg-white mt-4">
-                <h5 class="mb-3">Total Pagado en el Mes</h5>
+                <h5 class="mb-3">Total Pagado en <%= mesActual.charAt(0).toUpperCase() + mesActual.slice(1) %></h5>
                 <p class="fs-4 fw-bold text-success">₡ <%= parseFloat(totalPagadoMes).toLocaleString() %></p>
               </div>
 
