@@ -52,20 +52,77 @@
 <% if (typeof usuario !== 'undefined' && usuario) { %>
   <div class="modal fade" id="modalImagenPerfil" tabindex="-1" aria-labelledby="modalImagenPerfilLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-      <form class="modal-content" action="/usuarios/<%= usuario.id %>/imagen" method="POST" enctype="multipart/form-data">
+      <form id="formImagenPerfil" class="modal-content" action="/usuarios/<%= usuario.id %>/imagen" method="POST" enctype="multipart/form-data">
         <div class="modal-header">
           <h5 class="modal-title" id="modalImagenPerfilLabel">Actualizar imagen de perfil</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
-          <input type="file" name="imagenPerfil" accept="image/*" class="form-control" required>
+          <input type="file" id="imagenPerfil" name="imagenPerfil" accept="image/*" class="form-control" required>
+          <div class="alert alert-danger mt-2 d-none" id="errorImagenPerfil"></div>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn">Subir Imagen</button>
+          <button type="submit" class="btn" id="btnSubirImagen">Subir Imagen</button>
         </div>
       </form>
     </div>
   </div>
+
+  <!-- Script para manejar la subida de imagen con AJAX -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const formImagenPerfil = document.getElementById('formImagenPerfil');
+      const errorImagenPerfil = document.getElementById('errorImagenPerfil');
+      const modalImagenPerfil = document.getElementById('modalImagenPerfil');
+      const btnSubirImagen = document.getElementById('btnSubirImagen');
+      
+      if (formImagenPerfil) {
+        formImagenPerfil.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          errorImagenPerfil.classList.add('d-none');
+          btnSubirImagen.disabled = true;
+          btnSubirImagen.innerHTML = 'Subiendo...';
+          
+          const formData = new FormData(formImagenPerfil);
+          
+          fetch(formImagenPerfil.action, {
+            method: 'POST',
+            body: formData
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.error) {
+              errorImagenPerfil.textContent = data.error;
+              errorImagenPerfil.classList.remove('d-none');
+            } else if (data.url) {
+              // Actualizar todas las imágenes de perfil en la página
+              const profileImages = document.querySelectorAll('.custom-block-profile-image, .profile-image');
+              profileImages.forEach(img => {
+                img.src = data.url;
+              });
+              
+              // Cerrar el modal
+              const modalInstance = bootstrap.Modal.getInstance(modalImagenPerfil);
+              modalInstance.hide();
+              
+              // Mostrar mensaje de éxito
+              alert('Imagen actualizada con éxito');
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            errorImagenPerfil.textContent = 'Error al subir la imagen. Inténtalo de nuevo.';
+            errorImagenPerfil.classList.remove('d-none');
+          })
+          .finally(() => {
+            btnSubirImagen.disabled = false;
+            btnSubirImagen.innerHTML = 'Subir Imagen';
+          });
+        });
+      }
+    });
+  </script>
 <% } %>
 
 

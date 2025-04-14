@@ -8,7 +8,8 @@ const obtenerUsuarioJWT = (token) => {
             correo: decoded.correo,
             nombre: decoded.nombre,
             id: decoded.id,
-            rol: decoded.rol
+            rol: decoded.rol,
+            imagen_url: decoded.imagen_url
         };
     } catch (error) {
         if (error.name === 'TokenExpiredError') {

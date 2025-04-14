@@ -24,6 +24,7 @@ import reportesRoutes from './src/routes/reportesRoutes.js';
 import proveedorRoutes from './src/routes/proveedorRoutes.js';
 import pagoRoutes from './src/routes/pagoRoutes.js'; // Importa las rutas de pagos
 import indexRoutes from './src/routes/indexRoutes.js';
+import Rol from './src/models/rol.js';
 
 import identificarUsuario from './middleware/identificarUsuario.js';
 import errorLogger from './middleware/errorLogger.js';
@@ -61,9 +62,31 @@ db.sequelize.authenticate()
 app.use('/', loginRoutes); 
 
 app.use(identificarUsuario); // Aplica después para proteger el resto
+
+// Middleware global que pasa el objeto usuario a todas las vistas
+app.use(async (req, res, next) => {
+    if (req.usuario) {
+        // Si el usuario está identificado, obtener el nombre del rol
+        try {
+            const rol = await Rol.findOne({
+                where: {
+                    id: req.usuario.rol
+                }
+            });
+            
+            // Configurar las variables locales para todas las vistas
+            res.locals.usuario = req.usuario;
+            res.locals.rol_name = rol ? rol.nombre : 'Usuario';
+        } catch (error) {
+            console.error('Error al obtener el rol:', error);
+            res.locals.usuario = req.usuario;
+            res.locals.rol_name = 'Usuario';
+        }
+    }
+    next();
+});
+
 app.use('/', indexRoutes);
-
-
 
 //Rutas Distribuidores
 

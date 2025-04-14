@@ -24,7 +24,8 @@ const identificarUsuario = async (req, res, next) => {
             correo: datosUsuario.correo,
             nombre: datosUsuario.nombre,
             id: datosUsuario.id,
-            rol: datosUsuario.rol
+            rol: datosUsuario.rol,
+            imagen_url: datosUsuario.imagen_url
         };
         return next();
     } else {

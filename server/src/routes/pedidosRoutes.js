@@ -20,8 +20,8 @@ router.post("/pedido/agregar", insertPedido);
 // Ruta para obtener todos los pedidos
 router.get("/pedido", identificarUsuario, getPedido);
 
-// Ruta para actualizar un pedido
-router.put("/pedido/:id", updatePedido);
+// Ruta para actualizar un pedido - CAMBIADO DE PUT A POST para compatibilidad con formularios HTML
+router.post("/pedido/:id", updatePedido);
 
 // Ruta para eliminar un pedido
 router.delete("/pedido/:id", deletePedido);

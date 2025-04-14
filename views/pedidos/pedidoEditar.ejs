@@ -1,0 +1,131 @@
+<div class="container-fluid">
+    <div class="title-group mb-3 d-flex justify-content-between align-items-center">
+        <h1 class="h2 mb-0">Editar Pedido</h1>
+        <a href="/pedido" class="btn btn-light">Regresar</a>
+    </div>
+
+    <div class="row my-4">
+        <div class="col-lg-12 col-12">
+            <div class="custom-block bg-white p-4">
+                <form action="/pedido/<%= pedido.idpedido %>" method="POST">
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="fecha" class="form-label">Fecha</label>
+                            <input type="date" class="form-control" id="fecha" name="fecha" value="<%= pedido.fecha %>" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="estadoDePago" class="form-label">Estado de Pago</label>
+                            <select class="form-select" id="estadoDePago" name="estadoDePago" required>
+                                <option value="pendiente" <%= pedido.estadoDePago && pedido.estadoDePago.toLowerCase().includes('pendiente') ? 'selected' : '' %>>Pendiente</option>
+                                <option value="en revision" <%= pedido.estadoDePago && pedido.estadoDePago.toLowerCase().includes('revision') ? 'selected' : '' %>>En Revisión</option>
+                                <option value="aprobado" <%= pedido.estadoDePago && pedido.estadoDePago.toLowerCase().includes('aprobado') ? 'selected' : '' %>>Aprobado</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="estadoDeEntrega" class="form-label">Estado de Entrega</label>
+                            <select class="form-select" id="estadoDeEntrega" name="estadoDeEntrega" required>
+                                <option value="no entregado" <%= pedido.estadoDeEntrega && pedido.estadoDeEntrega.toLowerCase().includes('no entregado') ? 'selected' : '' %>>No entregado</option>
+                                <option value="entregado" <%= pedido.estadoDeEntrega && pedido.estadoDeEntrega.toLowerCase().includes('entregado') ? 'selected' : '' %>>Entregado</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="comprobanteDePago" class="form-label">Comprobante de Pago</label>
+                        <input type="text" class="form-control" id="comprobanteDePago" name="comprobanteDePago" value="<%= pedido.comprobanteDePago || '' %>">
+                        <small class="text-muted">Ingrese un número de referencia o identificador del pago</small>
+                    </div>
+
+                    <h4 class="mt-4 mb-3">Detalles del Pedido</h4>
+                    <div class="table-responsive mb-4">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Cantidad (kg)</th>
+                                    <th>Precio Unitario</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% pedido.detalles.forEach((detalle, index) => { %>
+                                    <tr>
+                                        <td><%= detalle.producto?.nombre || 'Producto no disponible' %></td>
+                                        <td>
+                                            <input 
+                                                type="number" 
+                                                class="form-control cantidad-producto" 
+                                                name="productos[<%= index %>][cantidad]" 
+                                                value="<%= detalle.cantidad %>" 
+                                                min="0.1" 
+                                                step="0.1"
+                                                data-precio="<%= (parseFloat(detalle.precioUnitario) || 0) %>"
+                                                data-index="<%= index %>"
+                                            >
+                                            <input type="hidden" name="productos[<%= index %>][id]" value="<%= detalle.id %>">
+                                        </td>
+                                        <td>₡<%= (parseFloat(detalle.precioUnitario) || 0).toFixed(2) %></td>
+                                        <td class="subtotal" data-index="<%= index %>">₡<%= (parseFloat(detalle.subtotal) || 0).toFixed(2) %></td>
+                                    </tr>
+                                <% }); %>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="3" class="text-end">Total:</th>
+                                    <th id="precioTotal">₡<%= (parseFloat(pedido.precioTotal) || 0).toFixed(2) %></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="/exportarPDFP/<%= pedido.idpedido %>" class="btn btn-info" target="_blank">
+                            <i class="bi bi-file-earmark-pdf"></i> Generar PDF
+                        </a>
+                        
+                        <div>
+                            <a href="/pedido" class="btn btn-secondary me-2">Cancelar</a>
+                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Script para actualizar los subtotales y el total cuando cambian las cantidades
+    document.addEventListener('DOMContentLoaded', function() {
+        const cantidadInputs = document.querySelectorAll('.cantidad-producto');
+        
+        cantidadInputs.forEach(input => {
+            input.addEventListener('input', function() {
+                const index = this.getAttribute('data-index');
+                const precio = parseFloat(this.getAttribute('data-precio'));
+                const cantidad = parseFloat(this.value) || 0;
+                const subtotal = precio * cantidad;
+                
+                // Actualiza el subtotal en la tabla
+                const subtotalCell = document.querySelector(`.subtotal[data-index="${index}"]`);
+                if (subtotalCell) {
+                    subtotalCell.textContent = `₡${subtotal.toFixed(2)}`;
+                }
+                
+                // Recalcular el total general
+                let total = 0;
+                document.querySelectorAll('.subtotal').forEach(cell => {
+                    const subtotalText = cell.textContent.replace('₡', '');
+                    total += parseFloat(subtotalText) || 0;
+                });
+                
+                document.getElementById('precioTotal').textContent = `₡${total.toFixed(2)}`;
+            });
+        });
+    });
+</script>

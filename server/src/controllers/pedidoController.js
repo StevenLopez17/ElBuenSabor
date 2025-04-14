@@ -193,7 +193,7 @@ const getTodosPedidos = async (req, res) => {
       const distribuidorId = distribuidor.id
       const pedidos = await Pedidos.findAll({
         where: {
-          distribuidorId: distribuidorId
+          distribuidorId: distribuidor.id
         },
         include: [
           {
@@ -253,13 +253,13 @@ const getTodosPedidos = async (req, res) => {
   }
 };
 
-// Función para actualizar un pedido (incluye actualización de detalles si se envían nuevos ítems)
+// Función para actualizar un pedido
 const updatePedido = async (req, res) => {
   let t;
   try {
     console.log("Datos recibidos para actualizar pedido:", req.body);
     const { id } = req.params; // id del pedido (idPedido)
-    const { fecha, distribuidorId, items, estadoDePago, estadoDeEntrega, comprobanteDePago } = req.body;
+    const { fecha, distribuidorId, estadoDePago, estadoDeEntrega, comprobanteDePago, productos } = req.body;
 
     // Buscar el pedido a actualizar
     const pedido = await Pedidos.findByPk(id);
@@ -272,38 +272,72 @@ const updatePedido = async (req, res) => {
     // Actualizar campos básicos
     pedido.fecha = fecha || pedido.fecha;
     pedido.distribuidorId = distribuidorId || pedido.distribuidorId;
-    pedido.estadoDePago = estadoDePago || pedido.estadoDePago;
-    pedido.estadoDeEntrega = estadoDeEntrega || pedido.estadoDeEntrega;
+    
+    // Usar los valores exactos permitidos por el enum estado_pago
+    if (estadoDePago) {
+      // Asignamos el valor exacto conforme a los valores permitidos en el enum
+      switch(estadoDePago.toLowerCase()) {
+        case 'pendiente':
+          pedido.estadoDePago = 'pendiente';
+          break;
+        case 'en revision':
+        case 'en revisión':
+        case 'revision':
+        case 'revisión':
+          pedido.estadoDePago = 'en revision';
+          break;
+        case 'aprobado':
+        case 'pagado': // Para compatibilidad con el formulario anterior
+          pedido.estadoDePago = 'aprobado';
+          break;
+        default:
+          // Si el valor no coincide con ninguno de los casos, usamos el valor predeterminado
+          pedido.estadoDePago = 'pendiente';
+      }
+    }
+    
+    // Valores para estado de entrega (asumimos que son "entregado" y "no entregado")
+    if (estadoDeEntrega) {
+      if (estadoDeEntrega.toLowerCase().includes('no')) {
+        pedido.estadoDeEntrega = 'no entregado';
+      } else {
+        pedido.estadoDeEntrega = 'entregado';
+      }
+    }
+    
     pedido.comprobanteDePago = comprobanteDePago || pedido.comprobanteDePago;
 
-    let precioTotal = 0;
-    // Si se envían nuevos ítems, se actualizan los detalles
-    if (items && Array.isArray(items) && items.length > 0) {
-      // Eliminar los detalles existentes para el pedido
-      await PedidoDetalle.destroy({ where: { pedidoId: pedido.idpedido }, transaction: t });
-
-      // Crear nuevos detalles y recalcular el precio total
-      for (const item of items) {
-        const { productoId, cantidad } = item;
-        const producto = await Productos.findByPk(productoId);
-        if (!producto) {
-          throw new Error(`Producto con id ${productoId} no encontrado`);
+    // Procesar actualización de cantidades de productos si se envían
+    if (productos && Array.isArray(productos) && productos.length > 0) {
+      let precioTotal = 0;
+      
+      // Actualizar cada detalle del pedido con las nuevas cantidades
+      for (const productoActualizado of productos) {
+        const { id: detalleId, cantidad } = productoActualizado;
+        
+        if (detalleId && cantidad > 0) {
+          // Buscar el detalle específico
+          const detalle = await PedidoDetalle.findByPk(detalleId, { transaction: t });
+          if (detalle) {
+            // Buscar el producto para obtener el precio actualizado
+            const producto = await Productos.findByPk(detalle.productoId, { transaction: t });
+            if (producto) {
+              // Actualizar cantidad y recalcular subtotal
+              detalle.cantidad = cantidad;
+              detalle.subtotal = producto.precio * cantidad;
+              await detalle.save({ transaction: t });
+            }
+          }
         }
-        const precioUnitario = producto.precio;
-        const subtotal = precioUnitario * cantidad;
-        precioTotal += subtotal;
-
-        await PedidoDetalle.create(
-          {
-            pedidoId: pedido.idpedido,
-            productoId,
-            cantidad,
-            precioUnitario,
-            subtotal
-          },
-          { transaction: t }
-        );
       }
+      
+      // Recalcular el precio total del pedido
+      const detallesActualizados = await PedidoDetalle.findAll({
+        where: { pedidoId: id },
+        transaction: t
+      });
+      
+      precioTotal = detallesActualizados.reduce((sum, detalle) => sum + parseFloat(detalle.subtotal), 0);
       pedido.precioTotal = precioTotal;
     }
 
