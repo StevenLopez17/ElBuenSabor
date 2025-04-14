@@ -1,108 +1,103 @@
 <div class="container-fluid">
     <div class="row my-4">
-        <div class="col-lg-12 col-12">
-            <div class="custom-block bg-white">
+      <div class="col-lg-12 col-12">
+        <div class="custom-block bg-white">
+  
+          <div class="row my-4">
+            <div class="col-lg-12 col-12">
+              <div class="custom-block bg-white">
+                <h5 class="mb-5" data-aos="fade-right"> Lista de Distribuidores</h5>
+  
+                <div class="d-flex justify-content-between align-items-center flex-wrap mb-3" data-aos="fade-up" data-aos-delay="100">
 
-                <div class="row my-4">
-                    <div class="col-lg-12 col-12">
-                        <div class="custom-block bg-white ">
-                            <h5 class="mb-5"> Lista de Distribuidores</h5>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <ul class="d-flex list-unstyled mb-0">
-                                    <form method="GET" action="/filtrarDireccion">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                        <label for="filtroDireccion">Filtrar por Dirección:</label>
-                                        <select name="direccion" id="filtroDireccion" class="form-control mb-3">
-                                            <option value="">Todas</option>
-                                            <% if (direcciones && direcciones.length > 0) { %>
-                                              <% direcciones.forEach(d => { %>
-                                                <option value="<%= d %>" <%= filtroDireccion === d ? 'selected' : '' %>><%= d %></option>
-                                              <% }) %>
-                                            <% } else { %>
-                                              <option value="" disabled>No hay direcciones registradas</option>
-                                            <% } %>
-                                          </select>
-                                          
-                                        <ul class="d-flex list-unstyled mb-0">
-                                        <button type="submit" class="btn btn-primary mb-3">Filtrar</button>
-                                        </ul>
-                                        </div>
-                                    </form>
-                                    <li class="me-3">
-                                        <a class="page-link" href="distAgregar" aria-label="Next">
-                                            + Agregar Distribuidor
-                                        </a>
-                                    </li>
-                                    <div class="d-flex justify-content-end mb-3">
-                                        <a href="/exportarExcel" class="btn btn-success me-2">Exportar a Excel</a>
-                                        <a href="/exportarPDF" class="btn btn-danger">Exportar a PDF</a>
-                                    </div>
-                                </ul>
-                            </div>
-                            <div class="table-responsive">
-                                <% if (mensaje) { %>
-                                    <div class="alert alert-warning">
-                                        <%= mensaje %>
-                                    </div>
-                                <% } %>
-                                <table id="tablaDistribuidores" class="table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>Nombre</th>
-                                            <th>Dirección</th>
-                                            <th>Telefono</th>
-                                            <th>Pedidos Pendientes</th>
-                                            <th>Estado</th>
-                                            <th>Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <% if (distribuidores.length > 0) { %>
-                                        <% distribuidores.forEach(distribuidor => { %>
-                                            <tr>
-                                            <td><%= distribuidor.empresa %></td>
-                                            <td><%= distribuidor.direccion %></td>
-                                            <td><%= distribuidor.telefono %></td>
-                                            <td><%= pedidosPendientesMap[distribuidor.id] || 0 %></td>
-                                            <td><%= distribuidor.estado ? 'Activo' : 'Inactivo' %></td>
-                                            <td>
-                                                <div class="d-flex align-items-center gap-2">
-                                                <a href="distEditar/<%= distribuidor.id %>" class="bi bi-pencil-square custom-block-edit-icon"></a>
-                                            
-                                                <form action="eliminar/<%= distribuidor.id %>" method="POST">
-                                                    <div class="form-check form-switch m-0">
-                                                    <input 
-                                                        class="form-check-input" 
-                                                        type="checkbox" 
-                                                        name="estado" 
-                                                        onchange="this.form.submit()" 
-                                                        <%= distribuidor.estado ? 'checked' : '' %>>
-                                                    </div>
-                                                </form>
-                                                </div>
-                                            </td>
-                                            
-                                            </tr>
-                                        <% }) %>
-                                        <% } else { %>
-                                        <tr>
-                                            <td colspan="6" class="text-center">No hay distribuidores registrados.</td>
-                                        </tr>
-                                        <% } %>
-                                    </tbody>
-                                    
-                                </table>
-                            </div>
-                        </div>
+                    <!-- IZQUIERDA: Filtro por Dirección -->
+                    <form method="GET" action="/filtrarDireccion" class="d-flex align-items-center gap-2 mb-2 mb-lg-0">
+                      <label for="filtroDireccion" class="mb-0">Filtrar por Dirección:</label>
+                      <select name="direccion" id="filtroDireccion" class="form-control">
+                        <option value="">Todas</option>
+                        <% if (direcciones && direcciones.length > 0) { %>
+                          <% direcciones.forEach(d => { %>
+                            <option value="<%= d %>" <%= filtroDireccion === d ? 'selected' : '' %>><%= d %></option>
+                          <% }) %>
+                        <% } else { %>
+                          <option value="" disabled>No hay direcciones registradas</option>
+                        <% } %>
+                      </select>
+                      <button type="submit" class="page-link">Filtrar</button>
+                    </form>
+                  
+                    <!-- DERECHA: Botones -->
+                    <div class="d-flex align-items-center gap-2 flex-wrap justify-content-end">
+                      <a href="distAgregar" class="page-link">
+                        + Agregar Distribuidor
+                      </a>
+                      <a href="/exportarExcel" class="page-link">Exportar a Excel</a>
+                      <a href="/exportarPDF" class="page-link">Exportar a PDF</a>
                     </div>
+                  
+                  </div>
+                  
+  
+                <div class="table-responsive" data-aos="fade-up" data-aos-delay="200">
+                  <% if (mensaje) { %>
+                    <div class="alert alert-warning">
+                      <%= mensaje %>
+                    </div>
+                  <% } %>
+                  <table id="tablaDistribuidores" class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Nombre</th>
+                        <th>Dirección</th>
+                        <th>Telefono</th>
+                        <th>Pedidos Pendientes</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% if (distribuidores.length > 0) { %>
+                        <% distribuidores.forEach((distribuidor, index) => { %>
+                          <tr data-aos="fade-up" data-aos-delay="<%= index * 100 %>">
+                            <td><%= distribuidor.empresa %></td>
+                            <td><%= distribuidor.direccion %></td>
+                            <td><%= distribuidor.telefono %></td>
+                            <td><%= pedidosPendientesMap[distribuidor.id] || 0 %></td>
+                            <td><%= distribuidor.estado ? 'Activo' : 'Inactivo' %></td>
+                            <td>
+                              <div class="d-flex align-items-center gap-2">
+                                <a href="distEditar/<%= distribuidor.id %>" class="bi bi-pencil-square custom-block-edit-icon"></a>
+                                <form action="eliminar/<%= distribuidor.id %>" method="POST">
+                                  <div class="form-check form-switch m-0">
+                                    <input 
+                                      class="form-check-input" 
+                                      type="checkbox" 
+                                      name="estado" 
+                                      onchange="this.form.submit()" 
+                                      <%= distribuidor.estado ? 'checked' : '' %>>
+                                  </div>
+                                </form>
+                              </div>
+                            </td>
+                          </tr>
+                        <% }) %>
+                      <% } else { %>
+                        <tr>
+                          <td colspan="6" class="text-center">No hay distribuidores registrados.</td>
+                        </tr>
+                      <% } %>
+                    </tbody>
+                  </table>
                 </div>
+              </div>
             </div>
+          </div>
+  
         </div>
+      </div>
     </div>
-
-
-</div>
-</div>
+  </div>
+  
 
 <!-- JAVASCRIPT FILES -->
 <script src="js/jquery.min.js"></script>

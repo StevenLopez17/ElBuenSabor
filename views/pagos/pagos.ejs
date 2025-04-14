@@ -1,59 +1,69 @@
-<div class="container-fluid mt-4">
-  <div class="row">
+<div class="container-fluid">
+  <div class="row my-4">
     <div class="col-lg-12 col-12">
-      <div class="custom-block bg-white p-4">
+      <div class="custom-block bg-white">
 
-        <h1 class="text-center mb-4">Lista de Pagos</h1>
+        <div class="row my-4">
+          <div class="col-lg-12 col-12">
+            <div class="custom-block bg-white">
+              <h5 class="mb-5 text-center" data-aos="fade-right">Lista de Pagos</h5>
 
-        <% if (mensaje) { %>
-          <div class="alert alert-info text-center">
-            <%= mensaje %>
+              <!-- Botón alineado a la derecha -->
+              <div class="d-flex justify-content-between align-items-center mb-3" data-aos="fade-up" data-aos-delay="100">
+                <div></div>
+                <a href="/pagos/agregar" class="page-link">+ Agregar Pago</a>
+              </div>
+
+              <!-- Tabla animada -->
+              <div class="table-responsive" data-aos="fade-up" data-aos-delay="200">
+                <% if (mensaje) { %>
+                  <div class="alert alert-info text-center">
+                    <%= mensaje %>
+                  </div>
+                <% } %>
+
+                <table id="tablaPagos" class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Proveedor</th>
+                      <th>Fecha de Pago</th>
+                      <th>Precio</th>
+                      <th>Impuesto</th>
+                      <th>Precio Total</th>
+                      <th>Referencia</th>
+                      <th>Notas</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% if (pagos.length > 0) { %>
+                      <% pagos.forEach((pago, index) => { %>
+                        <tr data-aos="fade-up" data-aos-delay="<%= index * 100 %>">
+                          <td><%= index + 1 %></td>
+                          <td><%= pago.proveedor.nombre %></td>
+                          <td><%= pago.fecha_pago %></td>
+                          <td>$<%= pago.precio.toFixed(2) %></td>
+                          <td>$<%= pago.impuesto.toFixed(2) %></td>
+                          <td>$<%= pago.precio_total.toFixed(2) %></td>
+                          <td><%= pago.referencia || 'N/A' %></td>
+                          <td><%= pago.notas || 'N/A' %></td>
+                          <td>
+                            <a href="/pagos/editar/<%= pago.id %>" class="bi bi-pencil-square custom-block-edit-icon"></a>
+                          </td>
+                        </tr>
+                      <% }); %>
+                    <% } else { %>
+                      <tr>
+                        <td colspan="9" class="text-center">No hay pagos registrados.</td>
+                      </tr>
+                    <% } %>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
           </div>
-        <% } %>
-
-        <div class="text-end mb-3">
-          <a href="/pagos/agregar" class="btn btn-primary">Agregar Pago</a>
-        </div>
-
-        <div class="table-responsive">
-          <table id="tablaPagos" class="table table-striped">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Proveedor</th>
-                <th>Fecha de Pago</th>
-                <th>Precio</th>
-                <th>Impuesto</th>
-                <th>Precio Total</th>
-                <th>Referencia</th>
-                <th>Notas</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% if (pagos.length > 0) { %>
-                <% pagos.forEach((pago, index) => { %>
-                  <tr>
-                    <td><%= index + 1 %></td>
-                    <td><%= pago.proveedor.nombre %></td>
-                    <td><%= pago.fecha_pago %></td>
-                    <td>$<%= pago.precio.toFixed(2) %></td>
-                    <td>$<%= pago.impuesto.toFixed(2) %></td>
-                    <td>$<%= pago.precio_total.toFixed(2) %></td>
-                    <td><%= pago.referencia || 'N/A' %></td>
-                    <td><%= pago.notas || 'N/A' %></td>
-                    <td>
-                      <a href="/pagos/editar/<%= pago.id %>" class="bi bi-pencil-square custom-block-edit-icon"></a>
-                    </td>
-                  </tr>
-                <% }); %>
-              <% } else { %>
-                <tr>
-                  <td colspan="9" class="text-center">No hay pagos registrados.</td>
-                </tr>
-              <% } %>
-            </tbody>
-          </table>
         </div>
 
       </div>

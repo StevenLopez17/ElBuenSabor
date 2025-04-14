@@ -5,6 +5,7 @@ import ejsLayouts from 'express-ejs-layouts';
 import { fileURLToPath } from 'url';
 import loginRoutes from './src/routes/loginRoutes.js';
 import distribuidorRoutes from './src/routes/distribuidorRoutes.js';
+import Distribuidores from './src/models/distribuidorModel.js';
 import colaboradorRoutes from './src/routes/colaboradorRoutes.js';
 import clienteRoutes from './src/routes/clienteRoutes.js'; // Import clienteRoutes
 import materiaPrimaRoutes from './src/routes/materiaPrimaRoutes.js'; // Import materiaPrimaRoutes
@@ -22,8 +23,9 @@ import vacacionesRoutes from './src/routes/vacacionesRoutes.js';
 import reportesRoutes from './src/routes/reportesRoutes.js';
 import proveedorRoutes from './src/routes/proveedorRoutes.js';
 import pagoRoutes from './src/routes/pagoRoutes.js'; // Importa las rutas de pagos
+import indexRoutes from './src/routes/indexRoutes.js';
 
-
+import identificarUsuario from './middleware/identificarUsuario.js';
 import errorLogger from './middleware/errorLogger.js';
 
 const app = express();
@@ -56,17 +58,11 @@ db.sequelize.authenticate()
     .catch(err => console.error('Error de conexión a la BD:', err));
 
 //Home
-app.get('/', async (req, res) => {
-    try {
-        const clientes = await Clientes.findAll();
-        res.render('index', { clientes });
-    } catch (error) {
-        console.error('Error fetching clients:', error);
-        res.render('index', { clientes: [], mensaje: 'Error fetching clients' });
-    }
-});
+app.use('/', loginRoutes); 
 
-app.use('/', loginRoutes);
+app.use(identificarUsuario); // Aplica después para proteger el resto
+app.use('/', indexRoutes);
+
 
 
 //Rutas Distribuidores

@@ -1,89 +1,62 @@
+<div class="title-group mb-3" data-aos="fade-right">
+    <h1 class="h2 mb-0">Reportes</h1>
+</div>
 
-    <div class="title-group mb-3">
-        <h1 class="h2 mb-0">Reportes</h1>
-    </div>
+<div class="row my-4">
+    <div class="col-lg-12 col-12">
 
-    <div class="row my-4">
-        <div class="col-lg-12 col-12">
+        <!-- Pedidos por Producto -->
+        <div class="custom-block bg-white p-4 mb-4" data-aos="fade-up">
+            <h5 class="mb-4">Pedidos por Producto</h5>
 
-            <!-- Pedidos por Producto -->
-            <div class="custom-block bg-white p-4 mb-4">
-                <h5 class="mb-4">Pedidos por Producto</h5>
+            <% if (pedidosPorProducto && pedidosPorProducto.length > 0) { %>
+                <div id="pie-chart" data-aos="zoom-in" data-aos-delay="100"></div>
 
-                <% if (pedidosPorProducto && pedidosPorProducto.length > 0) { %>
-                    <div id="pie-chart"></div>
-
-                    <div class="text-center mt-3">
-                        <a href="/reportes/pedidos-producto/pdf" class="btn btn-danger">
-                            <i class="bi bi-file-earmark-pdf-fill me-2"></i>Descargar PDF
-                        </a>
-                    </div>
-                <% } else { %>
-                    <div class="alert alert-warning text-center">No hay datos de pedidos por producto.</div>
-                <% } %>
-            </div>
-
-            <!-- Pedidos por Distribuidor -->
-            <div class="custom-block bg-white p-4 mb-4">
-                <h5 class="mb-4">Pedidos por Distribuidor</h5>
-
-                <% if (pedidosPorDistribuidor && pedidosPorDistribuidor.length > 0) { %>
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Distribuidor</th>
-                                <th>Total de Pedidos</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% pedidosPorDistribuidor.forEach(d => { %>
-                                <tr>
-                                    <td><%= d.empresa %></td>
-                                    <td><%= d.totalPedidos %></td>
-                                </tr>
-                            <% }) %>
-                        </tbody>
-                    </table>
-                <% } else { %>
-                    <div class="alert alert-warning text-center">No hay datos de pedidos por distribuidor.</div>
-                <% } %>
-            </div>
-
-            <div class="custom-block bg-white mt-4">
-                <h5 class="mb-3">Total Pagado en <%= mesActual.charAt(0).toUpperCase() + mesActual.slice(1) %></h5>
-                <p class="fs-4 fw-bold text-success">₡ <%= parseFloat(totalPagadoMes).toLocaleString() %></p>
-              </div>
-
-            <!-- Acciones
-            <div class="custom-block custom-block-bottom d-flex flex-wrap">
-                <div class="custom-block-bottom-item">
-                    <a href="#" class="d-flex flex-column">
-                        <i class="custom-block-icon bi-wallet"></i>
-                        <small>Reportes</small>
+                <div class="text-center mt-3" data-aos="fade-up" data-aos-delay="200">
+                    <a href="/reportes/pedidos-producto/pdf" class="btn btn-danger">
+                        <i class="bi bi-file-earmark-pdf-fill me-2"></i>Descargar PDF
                     </a>
                 </div>
-                <div class="custom-block-bottom-item">
-                    <a href="#" class="d-flex flex-column">
-                        <i class="custom-block-icon bi-upc-scan"></i>
-                        <small>Generar Reporte</small>
-                    </a>
-                </div>
-                <div class="custom-block-bottom-item">
-                    <a href="#" class="d-flex flex-column">
-                        <i class="custom-block-icon bi-send"></i>
-                        <small>Enviar Reportes</small>
-                    </a>
-                </div>
-                <div class="custom-block-bottom-item">
-                    <a href="#" class="d-flex flex-column">
-                        <i class="custom-block-icon bi-arrow-down"></i>
-                        <small>Descargar Reportes</small>
-                    </a>
-                </div>
-            </div> -->
-
+            <% } else { %>
+                <div class="alert alert-warning text-center">No hay datos de pedidos por producto.</div>
+            <% } %>
         </div>
+
+        <!-- Pedidos por Distribuidor -->
+        <div class="custom-block bg-white p-4 mb-4" data-aos="fade-up">
+            <h5 class="mb-4">Pedidos por Distribuidor</h5>
+
+            <% if (pedidosPorDistribuidor && pedidosPorDistribuidor.length > 0) { %>
+                <table class="table table-bordered" data-aos="zoom-in" data-aos-delay="100">
+                    <thead>
+                        <tr>
+                            <th>Distribuidor</th>
+                            <th>Total de Pedidos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% pedidosPorDistribuidor.forEach(d => { %>
+                            <tr>
+                                <td><%= d.empresa %></td>
+                                <td><%= d.totalPedidos %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            <% } else { %>
+                <div class="alert alert-warning text-center">No hay datos de pedidos por distribuidor.</div>
+            <% } %>
+        </div>
+
+        <!-- Total Pagado -->
+        <div class="custom-block bg-white mt-4" data-aos="fade-up" data-aos-delay="100">
+            <h5 class="mb-3">Total Pagado en <%= mesActual.charAt(0).toUpperCase() + mesActual.slice(1) %></h5>
+            <p class="fs-4 fw-bold text-success">₡ <%= parseFloat(totalPagadoMes).toLocaleString() %></p>
+        </div>
+
     </div>
+</div>
+
 
     <!-- Chart Script -->
     <script>

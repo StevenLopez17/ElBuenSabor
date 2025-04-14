@@ -1,62 +1,67 @@
 <div class="container-fluid">
-
-        <div class="row my-4">
-            <div class="col-lg-12 col-12">
-                <div class="custom-block bg-white">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="mb-5"> Lista de Productos</h5>
-                        <ul class="d-flex list-unstyled mb-0">
-                            <li class="me-3">
-                                <a class="page-link" href="/producto/agregar" aria-label="Next">
-                                    + Agregar Producto
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="table-responsive">
-                        <% if (mensaje) { %>
-                            <div class="alert alert-warning">
-                                <%= mensaje %>
-                            </div>
-                        <% } %>
-                        <table id="tablaProductos" class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Nombre</th>
-                                    <th>Precio</th>
-                                    <th>Stock</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% if (productos.length > 0) { %>
-                                    <% productos.forEach(producto => { %>
-                                        <tr>
-                                            <td><%= producto.nombre %></td>
-                                            <td><%= producto.precio %></td>
-                                            <td><%= producto.stock %></td>
-                                            <td>
-                                                <a href="/producto/editar/<%= producto.id %>" class="bi bi-pencil-square custom-block-edit-icon"></a>
-                                                <!-- <form action="/producto/<%= producto.id %>?_method=DELETE" method="POST" style="display:inline;">
-                                                    <button type="submit" class="btn btn-danger">Eliminar</button>
-                                                </form> -->
-                                            </td>
-                                        </tr>
-                                    <% }) %>
-                                <% } else { %>
-                                    <tr>
-                                        <td colspan="4" class="text-center">No hay productos registrados.</td>
-                                    </tr>
-                                <% } %>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="row my-4">
+      <div class="col-lg-12 col-12">
+        <div class="custom-block bg-white">
   
-</div>
+          <div class="row my-4">
+            <div class="col-lg-12 col-12">
+              <div class="custom-block bg-white">
+                <h5 class="mb-5" data-aos="fade-right">Lista de Productos</h5>
+  
+                <!-- Botón a la derecha con animación -->
+                <div class="d-flex justify-content-between align-items-center mb-3" data-aos="fade-up" data-aos-delay="100">
+                  <div></div>
+                  <a href="/producto/agregar" class="page-link">
+                    + Agregar Producto
+                  </a>
+                </div>
+  
+                <!-- Tabla con animación -->
+                <div class="table-responsive" data-aos="fade-up" data-aos-delay="200">
+                  <% if (mensaje) { %>
+                    <div class="alert alert-warning">
+                      <%= mensaje %>
+                    </div>
+                  <% } %>
+                  <table id="tablaProductos" class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
+                        <th>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% if (productos.length > 0) { %>
+                        <% productos.forEach((producto, index) => { %>
+                          <tr data-aos="fade-up" data-aos-delay="<%= index * 100 %>">
+                            <td><%= producto.nombre %></td>
+                            <td><%= producto.precio %></td>
+                            <td><%= producto.stock %></td>
+                            <td>
+                              <a href="/producto/editar/<%= producto.id %>" class="bi bi-pencil-square custom-block-edit-icon"></a>
+                            </td>
+                          </tr>
+                        <% }) %>
+                      <% } else { %>
+                        <tr>
+                          <td colspan="4" class="text-center">No hay productos registrados.</td>
+                        </tr>
+                      <% } %>
+                    </tbody>
+                  </table>
+                </div>
+  
+              </div>
+            </div>
+          </div>
+  
+        </div>
+      </div>
+    </div>
+  </div>
+  
 
 <!-- JAVASCRIPT FILES -->
 <script src="/js/jquery.min.js"></script>

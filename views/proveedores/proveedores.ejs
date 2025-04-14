@@ -1,100 +1,95 @@
 <div class="container-fluid">
-   
-        <div class="title-group mb-3">
-            <h1 class="h2 mb-0">Proveedores</h1>
-        </div>
-
-        <div class="row my-4">
-            <div class="col-lg-12 col-12">
-                <div class="custom-block bg-white">
-                    <div class="row my-4">
-                        <div class="col-lg-12 col-12">
-                            <div class="custom-block bg-white">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <h5 class="mb-5"> Lista de Proveedores</h5>
-                                    <ul class="d-flex list-unstyled mb-0">
-                                        <li class="me-3">
-                                            <a class="page-link" href="/proveedores/agregar" aria-label="Next">
-                                                + Agregar Proveedor
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-
-                                <div class="table-responsive">
-                                    <% if (mensaje) { %>
-                                        <div class="alert alert-warning">
-                                            <%= mensaje %>
-                                        </div>
-                                    <% } %>
-                                    <table id="tablaProveedores" class="table table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>Nombre</th>
-                                                <th>Contacto</th>
-                                                <th>Teléfono</th>
-                                                <th>Correo</th>
-                                                <th>Dirección</th>
-                                                <th>Estado</th>
-                                                <th>Acciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <% if (proveedores.length > 0) { %>
-                                                <% proveedores.forEach(proveedor => { %>
-                                                    <tr>
-                                                        <td><%= proveedor.nombre %></td>
-                                                        <td><%= proveedor.contacto %></td>
-                                                        <td><%= proveedor.telefono %></td>
-                                                        <td><%= proveedor.correo %></td>
-                                                        <td><%= proveedor.direccion %></td>
-                                                        <td><%= proveedor.estado ? 'Activo' : 'Inactivo' %></td>
-                                                        <td>
-                                                            <div class="d-flex align-items-center gap-2">
-                                                                
-                                                                <a href="/proveedores/editar/<%= proveedor.id %>" class="bi bi-pencil-square custom-block-edit-icon"></a>
-                                                        
-                                                                
-                                                                <form action="/proveedores/estado/<%= proveedor.id %>" method="POST">
-                                                                    <div class="form-check form-switch m-0">
-                                                                        <input 
-                                                                            class="form-check-input" 
-                                                                            type="checkbox" 
-                                                                            name="estado" 
-                                                                            onchange="this.form.submit()" 
-                                                                            <%= proveedor.estado ? 'checked' : '' %>>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                <% }) %>
-                                            <% } else { %>
-                                                <tr>
-                                                    <td colspan="7" class="text-center">No hay proveedores registrados.</td>
-                                                </tr>
-                                            <% } %>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    
-                </div>
-            </div>
-        </div>
+    <div class="row my-4">
+      <div class="col-lg-12 col-12">
+        <div class="custom-block bg-white">
   
-</div>
-
-<!-- JAVASCRIPT FILES -->
-<script src="js/jquery.min.js"></script>
-<script src="js/bootstrap.bundle.min.js"></script>
-<script src="js/apexcharts.min.js"></script>
-<script src="js/custom.js"></script>
-
-<script>
+          <div class="row my-4">
+            <div class="col-lg-12 col-12">
+              <div class="custom-block bg-white">
+  
+                <!-- Título con animación -->
+                <h5 class="mb-5" data-aos="fade-right">Lista de Proveedores</h5>
+  
+                <!-- Botón a la derecha con animación -->
+                <div class="d-flex justify-content-between align-items-center mb-3" data-aos="fade-up" data-aos-delay="100">
+                  <div></div>
+                  <a class="page-link" href="/proveedores/agregar">
+                    + Agregar Proveedor
+                  </a>
+                </div>
+  
+                <!-- Tabla con animación -->
+                <div class="table-responsive" data-aos="fade-up" data-aos-delay="200">
+                  <% if (mensaje) { %>
+                    <div class="alert alert-warning">
+                      <%= mensaje %>
+                    </div>
+                  <% } %>
+                  <table id="tablaProveedores" class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Nombre</th>
+                        <th>Contacto</th>
+                        <th>Teléfono</th>
+                        <th>Correo</th>
+                        <th>Dirección</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% if (proveedores.length > 0) { %>
+                        <% proveedores.forEach((proveedor, index) => { %>
+                          <tr data-aos="fade-up" data-aos-delay="<%= index * 100 %>">
+                            <td><%= proveedor.nombre %></td>
+                            <td><%= proveedor.contacto %></td>
+                            <td><%= proveedor.telefono %></td>
+                            <td><%= proveedor.correo %></td>
+                            <td><%= proveedor.direccion %></td>
+                            <td><%= proveedor.estado ? 'Activo' : 'Inactivo' %></td>
+                            <td>
+                              <div class="d-flex align-items-center gap-2">
+                                <a href="/proveedores/editar/<%= proveedor.id %>" class="bi bi-pencil-square custom-block-edit-icon"></a>
+                                <form action="/proveedores/estado/<%= proveedor.id %>" method="POST">
+                                  <div class="form-check form-switch m-0">
+                                    <input 
+                                      class="form-check-input" 
+                                      type="checkbox" 
+                                      name="estado" 
+                                      onchange="this.form.submit()" 
+                                      <%= proveedor.estado ? 'checked' : '' %>>
+                                  </div>
+                                </form>
+                              </div>
+                            </td>
+                          </tr>
+                        <% }) %>
+                      <% } else { %>
+                        <tr>
+                          <td colspan="7" class="text-center">No hay proveedores registrados.</td>
+                        </tr>
+                      <% } %>
+                    </tbody>
+                  </table>
+                </div>
+  
+              </div>
+            </div>
+          </div>
+  
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- JAVASCRIPT FILES -->
+  <script src="js/jquery.min.js"></script>
+  <script src="js/bootstrap.bundle.min.js"></script>
+  <script src="js/apexcharts.min.js"></script>
+  <script src="js/aos.js"></script>
+  <script src="js/custom.js"></script>
+  
+  <script>
     $(document).ready(function () {
       $('#tablaProveedores').DataTable({
         language: {
@@ -104,8 +99,9 @@
         lengthMenu: [5, 10, 25, 50],
         order: [[0, 'asc']],
         columnDefs: [
-          { orderable: false, targets: -1 } // Desactiva ordenación en columna "Acciones"
+          { orderable: false, targets: -1 }
         ]
       });
     });
   </script>
+  

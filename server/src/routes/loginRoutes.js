@@ -38,7 +38,7 @@ router.post('/updateUsuario', updatePassword)
 
 router.get('/logout', cerrarSesion)
 
-router.post('/usuarios/:id/imagen', upload.single('imagen'), subirImagenPerfil);
+router.post('/usuarios/:id/imagen', upload.single('imagenPerfil'), subirImagenPerfil);
 
 export default router;
 

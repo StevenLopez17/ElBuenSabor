@@ -20,27 +20,31 @@ const printer = new PdfPrinter({
 
 //Metodo para agregar un distribuidor
 const insertDistribuidor = async (req, res, next) => {
-    try {
-      const { usuario_id, empresa, telefono, direccion, zona_cobertura } = req.body;
-  
-      if (!usuario_id || !empresa) {
-        return res.status(400).json({ message: "Usuario ID y Empresa son obligatorios" });
-      }
-  
-      await Distribuidores.create({
-        usuario_id,
-        empresa,
-        telefono,
-        zona_cobertura,
-        estado: true
-      });
-  
-      console.log('Distribuidor creado con éxito');
-      res.redirect('/distribuidor?distribuidorAgregado=true');
-    } catch (error) {
-      next(error); 
+  try {
+    const usuario_id = req.usuario.id; // ✅ se toma desde el middleware
+    const { empresa, telefono, direccion, zona_cobertura } = req.body;
+
+    if (!usuario_id || !empresa) {
+      return res.status(400).json({ message: "Usuario ID y Empresa son obligatorios" });
     }
-  };
+
+    await Distribuidores.create({
+      usuario_id,
+      empresa,
+      telefono,
+      direccion,
+      zona_cobertura,
+      estado: true
+    });
+
+    console.log('Distribuidor creado con éxito');
+    res.redirect('/distribuidor?distribuidorAgregado=true');
+
+  } catch (error) {
+    next(error);
+  }
+};
+
   
 
 //Metodo para cargar la vista de insercion de distribuidores con la lista de clientes
@@ -68,57 +72,62 @@ const insertDistribuidor = async (req, res, next) => {
 
 
 const getDistribuidor = async (req, res) => {
-    try {
-      const distribuidores = await Distribuidores.findAll();
-  
-      // Obtener pedidos pendientes
-      const pedidos = await Pedidos.findAll({
-        where: { estadodeentrega: 'no entregado' }, // Cambiar si usás otro campo o estado
-        raw: true
-      });
-  
-      // Generar mapa de pedidos pendientes por distribuidor
-      const pedidosPendientesMap = {};
-      pedidos.forEach(p => {
-        const id = p.distribuidorId; 
-        pedidosPendientesMap[id] = (pedidosPendientesMap[id] || 0) + 1;
-      });
-  
-      // Lógica para obtener direcciones si es necesaria
-      const direcciones = [...new Set(
-        distribuidores
-          .map(d => d.direccion?.trim()) 
-          .filter(d => d && d !== '')    
-      )];
-      
-  
-      res.render('distribuidores/distribuidores', {
-        layout: 'layouts/layout',
-        distribuidores,
-        direcciones,
-        filtroDireccion: "",
-        mensaje: null,
-        distribuidorAgregado: false,
-        distribuidorEditado: false,
-        modalEstado: false,
-        pedidosPendientesMap 
-      });
-  
-    } catch (error) {
-      console.error('Error al cargar distribuidores:', error);
-      res.status(500).render('distribuidores/distribuidores', {
-        layout: 'layouts/layout',
-        distribuidores: [],
-        direcciones: [],
-        filtroDireccion: "",
-        mensaje: 'Error al cargar distribuidores',
-        distribuidorAgregado: false,
-        distribuidorEditado: false,
-        modalEstado: false,
-        pedidosPendientesMap: {}
-      });
-    }
-  };
+  try {
+   
+    const modalEstado = req.query.modalEstado === 'true';
+    const distribuidorAgregado = req.query.distribuidorAgregado === 'true';
+    const distribuidorEditado = req.query.distribuidorEditado === 'true';
+
+    const distribuidores = await Distribuidores.findAll();
+
+    // Obtener pedidos pendientes
+    const pedidos = await Pedidos.findAll({
+      where: { estadodeentrega: 'no entregado' }, 
+      raw: true
+    });
+
+    const pedidosPendientesMap = {};
+    pedidos.forEach(p => {
+      const id = p.distribuidorId;
+      pedidosPendientesMap[id] = (pedidosPendientesMap[id] || 0) + 1;
+    });
+
+    // Obtener direcciones únicas (opcional)
+    const direcciones = [...new Set(
+      distribuidores
+        .map(d => d.direccion?.trim())
+        .filter(d => d && d !== '')
+    )];
+
+   
+    res.render('distribuidores/distribuidores', {
+      layout: 'layouts/layout',
+      distribuidores,
+      direcciones,
+      filtroDireccion: "",
+      mensaje: null,
+      distribuidorAgregado,
+      distribuidorEditado,
+      modalEstado,
+      pedidosPendientesMap
+    });
+
+  } catch (error) {
+    console.error('Error al cargar distribuidores:', error);
+    res.status(500).render('distribuidores/distribuidores', {
+      layout: 'layouts/layout',
+      distribuidores: [],
+      direcciones: [],
+      filtroDireccion: "",
+      mensaje: 'Error al cargar distribuidores',
+      distribuidorAgregado: false,
+      distribuidorEditado: false,
+      modalEstado: false,
+      pedidosPendientesMap: {}
+    });
+  }
+};
+
 
 
 //Metodo para actualizar los datos de un distribuidor

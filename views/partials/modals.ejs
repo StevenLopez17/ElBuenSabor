@@ -1,7 +1,5 @@
 <% if (typeof distribuidorAgregado !=='undefined' && distribuidorAgregado) { %>
-  <!-- Modal centrado para Distribuidor agregado -->
-  <div class="modal fade" id="modalDistribuidorAgregado" tabindex="-1" aria-labelledby="modalDistribuidorLabel"
-    aria-hidden="true">
+  <div class="modal fade" id="modalDistribuidorAgregado" tabindex="-1" aria-labelledby="modalDistribuidorLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
@@ -15,150 +13,137 @@
       </div>
     </div>
   </div>
+<% } %>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const modal = new bootstrap.Modal(document.getElementById('modalDistribuidorAgregado'));
-      modal.show();
-    });
-  </script>
-  <% } %>
-
-
-    <% if (typeof modalEstado !=='undefined' && modalEstado) { %>
-      <div class="modal fade" id="modalCambioEstadoExito" tabindex="-1" aria-labelledby="modalCambioEstadoExitoLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="modalCambioEstadoExitoLabel">Cambio de Estado</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-            </div>
-            <div class="modal-body text-center">
-              <i class="bi bi-info-circle-fill text-primary fs-1"></i>
-              <p class="mt-3">El estado del distribuidor ha sido actualizado correctamente.</p>
-            </div>
-          </div>
+<% if (typeof modalEstado !=='undefined' && modalEstado) { %>
+  <div class="modal fade" id="modalCambioEstadoExito" tabindex="-1" aria-labelledby="modalCambioEstadoExitoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalCambioEstadoExitoLabel">Cambio de Estado</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body text-center">
+          <i class="bi bi-info-circle-fill text-primary fs-1"></i>
+          <p class="mt-3">El estado del distribuidor ha sido actualizado correctamente.</p>
         </div>
       </div>
+    </div>
+  </div>
+<% } %>
 
-      <script>
-        document.addEventListener('DOMContentLoaded', function () {
-          const modal = new bootstrap.Modal(document.getElementById('modalCambioEstadoExito'));
-          modal.show();
-        });
-      </script>
-      <% } %>
+<% if (typeof distribuidorEditado !=='undefined' && distribuidorEditado) { %>
+  <div class="modal fade" id="modalDistribuidorEditado" tabindex="-1" aria-labelledby="modalDistribuidorEditadoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalDistribuidorEditadoLabel">Distribuidor actualizado</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body text-center">
+          <i class="bi bi-pencil-square text-warning fs-1"></i>
+          <p class="mt-3">Los datos del distribuidor han sido actualizados correctamente.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+<% } %>
+
+<% if (typeof usuario !== 'undefined' && usuario) { %>
+  <div class="modal fade" id="modalImagenPerfil" tabindex="-1" aria-labelledby="modalImagenPerfilLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <form class="modal-content" action="/usuarios/<%= usuario.id %>/imagen" method="POST" enctype="multipart/form-data">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalImagenPerfilLabel">Actualizar imagen de perfil</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <input type="file" name="imagenPerfil" accept="image/*" class="form-control" required>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn">Subir Imagen</button>
+        </div>
+      </form>
+    </div>
+  </div>
+<% } %>
 
 
+<% if (typeof notificacionPagoPendiente !=='undefined' && notificacionPagoPendiente) { %>
+  <div class="modal fade" id="modalNotificacionPago" tabindex="-1" aria-labelledby="modalNotificacionPagoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalNotificacionPagoLabel">Correo enviado exitosamente</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body text-center">
+          <i class="bi bi-check-circle-fill text-success fs-1"></i>
+          <p class="mt-3">Se ha enviado una notificación de pago pendiente al cliente.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+<% } %>
 
-        <% if (typeof distribuidorEditado !=='undefined' && distribuidorEditado) { %>
-          <!-- Modal centrado para Distribuidor editado -->
-          <div class="modal fade" id="modalDistribuidorEditado" tabindex="-1"
-            aria-labelledby="modalDistribuidorEditadoLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="modalDistribuidorEditadoLabel">Distribuidor actualizado</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <div class="modal-body text-center">
-                  <i class="bi bi-pencil-square text-warning fs-1"></i>
-                  <p class="mt-3">Los datos del distribuidor han sido actualizados correctamente.</p>
-                </div>
-              </div>
-            </div>
-          </div>
+<% if (typeof notificacionVacacionesAprobadas !=='undefined' && notificacionVacacionesAprobadas) { %>
+  <div class="modal fade" id="modalNotificacionVacaciones" tabindex="-1" aria-labelledby="modalNotificacionVacacionesLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalNotificacionVacacionesLabel">Solicitud aprobada</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body text-center">
+          <i class="bi bi-check-circle-fill text-success fs-1"></i>
+          <p class="mt-3">La solicitud de vacaciones ha sido aprobada y el colaborador ha sido notificado por correo electrónico.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+<% } %>
 
-          <script>
-            document.addEventListener('DOMContentLoaded', function () {
-              const modal = new bootstrap.Modal(document.getElementById('modalDistribuidorEditado'));
-              modal.show();
-            });
-          </script>
-          <% } %>
+<% if (typeof notificacionVacacionesDenegadas !=='undefined' && notificacionVacacionesDenegadas) { %>
+  <div class="modal fade" id="modalNotificacionVacacionesDenegadas" tabindex="-1" aria-labelledby="modalNotificacionVacacionesDenegadasLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalNotificacionVacacionesDenegadasLabel">Solicitud denegada</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body text-center">
+          <i class="bi bi-x-circle-fill text-danger fs-1"></i>
+          <p class="mt-3">La solicitud de vacaciones ha sido denegada y el colaborador ha sido notificado por correo electrónico.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+<% } %>
 
+<!-- ✅ Script unificado -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const modales = [
+      'modalDistribuidorAgregado',
+      'modalCambioEstadoExito',
+      'modalDistribuidorEditado',
+      'modalNotificacionPago',
+      'modalNotificacionVacaciones',
+      'modalNotificacionVacacionesDenegadas'
+    ];
 
+    modales.forEach(id => {
+      const modalEl = document.getElementById(id);
+      if (modalEl) {
+        const modal = new bootstrap.Modal(modalEl);
+        modal.show();
 
-            <% if (typeof notificacionPagoPendiente !=='undefined' && notificacionPagoPendiente) { %>
-              <!-- Modal centrado para notificación de pago pendiente -->
-              <div class="modal fade" id="modalNotificacionPago" tabindex="-1"
-                aria-labelledby="modalNotificacionPagoLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="modalNotificacionPagoLabel">Correo enviado exitosamente</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                    </div>
-                    <div class="modal-body text-center">
-                      <i class="bi bi-check-circle-fill text-success fs-1"></i>
-                      <p class="mt-3">Se ha enviado una notificación de pago pendiente al cliente.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                  const modal = new bootstrap.Modal(document.getElementById('modalNotificacionPago'));
-                  modal.show();
-                });
-              </script>
-              <% } %>
-
-                <% if (typeof notificacionVacacionesAprobadas !=='undefined' && notificacionVacacionesAprobadas) { %>
-                  <!-- Modal centrado para notificación de aprobación de vacaciones -->
-                  <div class="modal fade" id="modalNotificacionVacaciones" tabindex="-1"
-                    aria-labelledby="modalNotificacionVacacionesLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title" id="modalNotificacionVacacionesLabel">Solicitud aprobada</h5>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                        </div>
-                        <div class="modal-body text-center">
-                          <i class="bi bi-check-circle-fill text-success fs-1"></i>
-                          <p class="mt-3">La solicitud de vacaciones ha sido aprobada y el colaborador ha sido
-                            notificado por correo electrónico.</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <script>
-                    document.addEventListener('DOMContentLoaded', function () {
-                      const modal = new bootstrap.Modal(document.getElementById('modalNotificacionVacaciones'));
-                      modal.show();
-                    });
-                  </script>
-                  <% } %>
-
-                    <% if (typeof notificacionVacacionesDenegadas !=='undefined' && notificacionVacacionesDenegadas) {
-                      %>
-                      <!-- Modal centrado para notificación de denegación de vacaciones -->
-                      <div class="modal fade" id="modalNotificacionVacacionesDenegadas" tabindex="-1"
-                        aria-labelledby="modalNotificacionVacacionesDenegadasLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h5 class="modal-title" id="modalNotificacionVacacionesDenegadasLabel">Solicitud denegada
-                              </h5>
-                              <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Cerrar"></button>
-                            </div>
-                            <div class="modal-body text-center">
-                              <i class="bi bi-x-circle-fill text-danger fs-1"></i>
-                              <p class="mt-3">La solicitud de vacaciones ha sido denegada y el colaborador ha sido
-                                notificado por correo electrónico.</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <script>
-                        document.addEventListener('DOMContentLoaded', function () {
-                          const modal = new bootstrap.Modal(document.getElementById('modalNotificacionVacacionesDenegadas'));
-                          modal.show();
-                        });
-                      </script>
-                      <% } %>
+        // Auto cierre después de 4 segundos
+        setTimeout(() => {
+          const instance = bootstrap.Modal.getInstance(modalEl);
+          if (instance) instance.hide();
+        }, 4000);
+      }
+    });
+  });
+</script>

@@ -1,55 +1,37 @@
-    <div class="title-group mb-3">
-        <h1 class="h2 mb-0">Distribuidores</h1>
-    </div>
-
-
+<div class="container-fluid">
     <div class="row my-4">
-        <div class="col-lg-12 col-12">
-            <div class="custom-block bg-white">
-                <ul class="nav nav-tabs" id="employeeTab" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="add-employee-tab" data-bs-toggle="tab"
-                            data-bs-target="#add-employee-tab-pane" type="button" role="tab"
-                            aria-controls="add-employee-tab-pane" aria-selected="true">Agregar Distribuidor</button>
-                    </li>
-
-                </ul>
-
-                <div class="tab-content" id="employeeTabContent">
-                    <!-- Agregar Empleado -->
-                    <div class="tab-pane fade show active" id="add-employee-tab-pane" role="tabpanel"
-                        aria-labelledby="add-employee-tab">
-                        <h6 class="mb-4">Agregar Distribuidor</h6>
-                        <form class="custom-form add-employee-form" action="/agregar" method="POST">
-                            <input class="form-control mb-3" type="number" name="usuario_id" id="usuario_id" placeholder="ID del Usuario" required>
-                            <input class="form-control mb-3" type="text" name="empresa" id="empresa" placeholder="Empresa" required>
-                            <input class="form-control mb-3" type="text" name="telefono" id="telefono" placeholder="Teléfono" required>
-                            <input class="form-control mb-3" type="text" name="direccion" id="direccion" placeholder="Dirección" required>
-                            <input class="form-control mb-3" type="text" name="zona_cobertura" id="zona_cobertura" placeholder="Zona de Cobertura" required>
-                        
-                            
-                            <a href="/distribuidor" class="custom-btn custom-btn-light ms-2">
-                                <i class="bi-arrow-left me-2"></i>Volver
-                            </a>
-                            <button type="submit" class="btn btn-primary">Guardar</button>
-                        </form>
-                    </div>
-                    
-
-                </div>
+      <div class="col-lg-12 col-12">
+        <div class="custom-block bg-white">
+          <ul class="nav nav-tabs" id="employeeTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="add-employee-tab" data-bs-toggle="tab"
+                data-bs-target="#add-employee-tab-pane" type="button" role="tab"
+                aria-controls="add-employee-tab-pane" aria-selected="true">Agregar Distribuidor</button>
+            </li>
+          </ul>
+  
+          <div class="tab-content" id="employeeTabContent">
+            <div class="tab-pane fade show active" id="add-employee-tab-pane" role="tabpanel"
+              aria-labelledby="add-employee-tab">
+              <h6 class="mb-4">Agregar Distribuidor</h6>
+  
+              <!-- ✅ Se elimina el campo usuario_id -->
+              <form class="custom-form add-employee-form" action="/agregar" method="POST">
+                <input class="form-control mb-3" type="text" name="empresa" placeholder="Empresa" required>
+                <input class="form-control mb-3" type="text" name="telefono" placeholder="Teléfono" required>
+                <input class="form-control mb-3" type="text" name="direccion" placeholder="Dirección" required>
+                <input class="form-control mb-3" type="text" name="zona_cobertura" placeholder="Zona de Cobertura" required>
+  
+                <a href="/distribuidor" class="custom-btn custom-btn-light ms-2">
+                  <i class="bi-arrow-left me-2"></i>Volver
+                </a>
+                <button type="submit" class="btn btn-primary">Guardar</button>
+              </form>
             </div>
+          </div>
+  
         </div>
+      </div>
     </div>
-
-    <footer class="site-footer">
-        <div class="container">
-            <div class="row">
-
-                <div class="col-lg-12 col-12">
-                    <p class="copyright-text">Copyright © Mini Finance 2048
-                        - Design: <a rel="sponsored" href="https://www.tooplate.com" target="_blank">Tooplate</a></p>
-                </div>
-
-            </div>
-        </div>
-    </footer>
+  </div>
+  

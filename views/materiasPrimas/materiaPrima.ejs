@@ -1,69 +1,68 @@
 <div class="container-fluid">
-
-        <div class="row my-4">
+    <div class="row my-4">
+      <div class="col-lg-12 col-12">
+        <div class="custom-block bg-white">
+  
+          <div class="row my-4">
             <div class="col-lg-12 col-12">
-                <div class="custom-block bg-white">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="mb-5"> Lista de Materias Primas</h5>
-                        <ul class="d-flex list-unstyled mb-0">
-                            <li class="me-3">
-                                <a class="page-link" href="/materiaPrima/agregar" aria-label="Next">
-                                    + Agregar Materia Prima
-                                </a>
-                            </li>
-                        </ul>
-                        <ul class="d-flex list-unstyled mb-0">
-                            <li class="me-3">
-                                <a class="page-link" href="/agregarForms" aria-label="Next">
-                                    + Agregar Formulacion
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="table-responsive">
-                        <% if (mensaje) { %>
-                            <div class="alert alert-warning">
-                                <%= mensaje %>
-                            </div>
-                        <% } %>
-                        <table id="tablaMaterias" class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Nombre</th>
-                                    <th>Precio</th>
-                                    <th>Stock</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% if (materiasPrimas.length > 0) { %>
-                                    <% materiasPrimas.forEach(materiaPrima => { %>
-                                        <tr>
-                                            <td><%= materiaPrima.nombre %></td>
-                                            <td><%= materiaPrima.precio %></td>
-                                            <td><%= materiaPrima.stock %></td>
-                                            <td>
-                                                <a href="/materiaPrima/editar/<%= materiaPrima.id %>" class="bi bi-pencil-square custom-block-edit-icon"></a>
-                                                <!-- <form action="/materiaPrima/<%= materiaPrima.id %>?_method=DELETE" method="POST" style="display:inline;">
-                                                    <button type="submit" class="btn btn-danger">Eliminar</button>
-                                                </form> -->
-                                            </td>
-                                        </tr>
-                                    <% }) %>
-                                <% } else { %>
-                                    <tr>
-                                        <td colspan="4" class="text-center">No hay materias primas registradas.</td>
-                                    </tr>
-                                <% } %>
-                            </tbody>
-                        </table>
-                    </div>
+              <div class="custom-block bg-white">
+                <h5 class="mb-5" data-aos="fade-right">Lista de Materias Primas</h5>
+  
+                <!-- Botones a la derecha con AOS -->
+                <div class="d-flex justify-content-end gap-3 mb-3" data-aos="fade-up" data-aos-delay="100">
+                  <a href="/materiaPrima/agregar" class="page-link">
+                    + Agregar Materia Prima
+                  </a>
+                  <a href="/agregarForms" class="page-link">
+                    + Agregar Formulación
+                  </a>
                 </div>
+  
+                <!-- Tabla con animación -->
+                <div class="table-responsive" data-aos="fade-up" data-aos-delay="200">
+                  <% if (mensaje) { %>
+                    <div class="alert alert-warning">
+                      <%= mensaje %>
+                    </div>
+                  <% } %>
+                  <table id="tablaMaterias" class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
+                        <th>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% if (materiasPrimas.length > 0) { %>
+                        <% materiasPrimas.forEach((materiaPrima, index) => { %>
+                          <tr data-aos="fade-up" data-aos-delay="<%= index * 100 %>">
+                            <td><%= materiaPrima.nombre %></td>
+                            <td><%= materiaPrima.precio %></td>
+                            <td><%= materiaPrima.stock %></td>
+                            <td>
+                              <a href="/materiaPrima/editar/<%= materiaPrima.id %>" class="bi bi-pencil-square custom-block-edit-icon"></a>
+                            </td>
+                          </tr>
+                        <% }) %>
+                      <% } else { %>
+                        <tr>
+                          <td colspan="4" class="text-center">No hay materias primas registradas.</td>
+                        </tr>
+                      <% } %>
+                    </tbody>
+                  </table>
+                </div>
+  
+              </div>
             </div>
+          </div>
+  
         </div>
- 
-</div>
+      </div>
+    </div>
+  </div>
 
 <!-- JAVASCRIPT FILES -->
 <script src="/js/jquery.min.js"></script>

@@ -30,3 +30,12 @@
   
   })(window.jQuery);
 
+
+  // Forzar inicialización de dropdowns manualmente
+document.addEventListener('DOMContentLoaded', function () {
+  const dropdownTriggerList = [].slice.call(document.querySelectorAll('.dropdown-toggle'));
+  dropdownTriggerList.map(function (dropdownToggleEl) {
+      return new bootstrap.Dropdown(dropdownToggleEl);
+  });
+});
+

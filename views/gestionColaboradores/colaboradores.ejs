@@ -1,97 +1,81 @@
-
-    <div class="title-group mb-3">
-        <h1 class="h2 mb-0">Colaboradores</h1>
-    </div>
-
+<div class="container-fluid">
     <div class="row my-4">
-        <div class="col-lg-12 col-12">
-            <div class="custom-block bg-white">
-
-                <div class="row my-4">
-                    <div class="col-lg-12 col-12">
-                        <div class="custom-block bg-white ">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h5 class="mb-5"> Lista de Colaboradores</h5>
-                                <ul class="d-flex list-unstyled mb-0">
-                                    <li class="me-3">
-                                        <a class="page-link" href="colabAgregar" aria-label="Next">
-                                            + Agregar Colaborador
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-
-
-                            <div class="table-responsive">
-                                <% if (mensaje) { %>
-                                    <div class="alert alert-warning">
-                                        <%= mensaje %>
-                                    </div>
-                                    <% } %>
-                                        <table id="tablaColaboradores" class="table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>Identificación</th>
-                                                    <th>Cargo</th>
-                                                    <th>Horario</th>
-                                                    <th>Fecha_Ingreso</th>
-                                                    <th>Estado</th>
-                                                    <th>Acciones</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <% if (colaboradores.length> 0) { %>
-                                                    <% colaboradores.forEach(colaborador=> { %>
-                                                        <tr>
-                                                            <td>
-                                                                <%= colaborador.usuario_id %>
-                                                            </td>
-                                                            <td>
-                                                                <%= colaborador.cargo %>
-                                                            </td>
-                                                            <td>
-                                                                <%= colaborador.Horario ?
-                                                                    colaborador.Horario.descripcion : 'Sin horario' %>
-                                                            </td>
-                                                            <td>
-                                                                <%= colaborador.fecha_ingreso %>
-                                                            </td>
-                                                            <td>
-                                                                <%= colaborador.estado ? 'Activo' : 'Inactivo' %>
-                                                            </td>
-                                                            <td>
-                                                                <div class="d-flex align-items-center gap-2">
-                                                                    <a href="colabEditar/<%= colaborador.id %>" class="bi bi-pencil-square custom-block-edit-icon"></a>
-                                                                    <form action="estadoColaborador/<%= colaborador.id %>" method="POST">
-                                                                        <div class="form-check form-switch m-0 switch-action">
-                                                                            <input 
-                                                                                class="form-check-input" 
-                                                                                type="checkbox" 
-                                                                                name="estado" 
-                                                                                onchange="this.form.submit()" 
-                                                                                <%= colaborador.estado ? 'checked' : '' %>>
-                                                                        </div>
-                                                                    </form>
-                                                                </div>
-                                                            </td>
-
-                                                        </tr>
-                                                        <% }) %>
-                                                            <% } else { %>
-                                                                <tr>
-                                                                    <td colspan="4" class="text-center">No hay
-                                                                        colaboradores registrados.</td>
-                                                                </tr>
-                                                                <% } %>
-                                            </tbody>
-                                        </table>
-                            </div>
-                        </div>
-                    </div>
+      <div class="col-lg-12 col-12">
+        <div class="custom-block bg-white">
+  
+          <div class="row my-4">
+            <div class="col-lg-12 col-12">
+              <div class="custom-block bg-white">
+                <h5 class="mb-5" data-aos="fade-right">Lista de Colaboradores</h5>
+  
+                <div class="d-flex justify-content-between align-items-center mb-3" data-aos="fade-up" data-aos-delay="100">
+                  <div></div>
+                  <a href="colabAgregar" class="page-link">
+                    + Agregar Colaborador
+                  </a>
                 </div>
+  
+                <div class="table-responsive" data-aos="fade-up" data-aos-delay="200">
+                  <% if (mensaje) { %>
+                    <div class="alert alert-warning">
+                      <%= mensaje %>
+                    </div>
+                  <% } %>
+  
+                  <table id="tablaColaboradores" class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Identificación</th>
+                        <th>Cargo</th>
+                        <th>Horario</th>
+                        <th>Fecha Ingreso</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% if (colaboradores.length > 0) { %>
+                        <% colaboradores.forEach((colaborador, index) => { %>
+                          <tr data-aos="fade-up" data-aos-delay="<%= index * 100 %>">
+                            <td><%= colaborador.usuario_id %></td>
+                            <td><%= colaborador.cargo %></td>
+                            <td><%= colaborador.Horario ? colaborador.Horario.descripcion : 'Sin horario' %></td>
+                            <td><%= colaborador.fecha_ingreso %></td>
+                            <td><%= colaborador.estado ? 'Activo' : 'Inactivo' %></td>
+                            <td>
+                              <div class="d-flex align-items-center gap-2">
+                                <a href="colabEditar/<%= colaborador.id %>" class="bi bi-pencil-square custom-block-edit-icon"></a>
+                                <form action="estadoColaborador/<%= colaborador.id %>" method="POST">
+                                  <div class="form-check form-switch m-0 switch-action">
+                                    <input 
+                                      class="form-check-input" 
+                                      type="checkbox" 
+                                      name="estado" 
+                                      onchange="this.form.submit()" 
+                                      <%= colaborador.estado ? 'checked' : '' %>>
+                                  </div>
+                                </form>
+                              </div>
+                            </td>
+                          </tr>
+                        <% }) %>
+                      <% } else { %>
+                        <tr>
+                          <td colspan="6" class="text-center">No hay colaboradores registrados.</td>
+                        </tr>
+                      <% } %>
+                    </tbody>
+                  </table>
+                </div>
+  
+              </div>
             </div>
+          </div>
+  
         </div>
-</div>
+      </div>
+    </div>
+  </div>
 
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.bundle.min.js"></script>

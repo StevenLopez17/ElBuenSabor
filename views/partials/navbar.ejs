@@ -33,57 +33,57 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-nowrap" href="colaboradores">
+                    <a class="nav-link text-nowrap" href="/colaboradores">
                         <i class="bi-people-fill me-3"></i>
                         <strong>Colaboradores</strong>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-nowrap" href="cliente">
+                    <a class="nav-link text-nowrap" href="/cliente">
                         <i class="bi-person-circle me-3"></i>
                         <strong>Clientes</strong>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-nowrap" href="proveedores">
+                    <a class="nav-link text-nowrap" href="/proveedores">
                         <i class="bi-truck me-3"></i>
                         <strong>Proveedores</strong>
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link text-nowrap" href="pagos">
+                    <a class="nav-link text-nowrap" href="/pagos">
                         <i class="bi-credit-card me-3"></i>
                         <strong>Pagos</strong>
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link text-nowrap" aria-current="page" href="distribuidor">
+                    <a class="nav-link text-nowrap" aria-current="page" href="/distribuidor">
                         <i class="bi-box-seam me-3"></i>
                         <strong>Distribuidores</strong>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-nowrap" href="producto">
+                    <a class="nav-link text-nowrap" href="/producto">
                         <i class="bi-basket-fill me-3"></i>
                         <strong>Productos</strong>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-nowrap" href="materiaPrima">
+                    <a class="nav-link text-nowrap" href="/materiaPrima">
                         <i class="bi-tools me-3"></i>
                         <strong>Materias Primas</strong>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-nowrap" href="reportes">
+                    <a class="nav-link text-nowrap" href="/reportes">
                         <i class="bi-bar-chart-fill me-3"></i>
                         <strong>Reportes</strong>
                     </a>
                 </li>
                 <li class="nav-item border-top mt-auto pt-2">
-                    <a class="nav-link text-nowrap" href="logout">
+                    <a class="nav-link text-nowrap" href="/logout">
                         <i class="bi-box-arrow-right me-3"></i>
                         <strong>Logout</strong>
                     </a>
@@ -92,3 +92,44 @@
         </div>
     </nav>
 </div>
+
+<header class="navbar sticky-top flex-md-nowrap">
+    <div class="col-md-3 col-lg-3 me-0 px-3 fs-6 d-flex align-items-center">
+      <a class="navbar-brand d-flex align-items-center" href="/">
+        <img src="/images/LogoEBS.webp" alt="EL BUEN SABOR" class="img-fluid" style="max-height: 70px;">
+        <span class="ms-2 fw-bold">El Buen Sabor</span>
+      </a>
+    </div>
+  
+    <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
+      data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="navbar-nav me-lg-2">
+      <div class="dropdown px-3">
+        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+          aria-expanded="false">
+          <img src="/images/medium-shot-happy-man-smiling.jpg" class="profile-image img-fluid" alt="">
+        </a>
+        <ul class="dropdown-menu bg-white shadow">
+          <li>
+            <div class="dropdown-menu-profile-thumb d-flex">
+              <img src="/images/medium-shot-happy-man-smiling.jpg" class="profile-image img-fluid me-3" alt="">
+              <div class="d-flex flex-column">
+                <small>Thomas</small>
+                <a href="#">thomas@site.com</a>
+                <small><strong>Administrador</strong></small>
+              </div>
+            </div>
+          </li>
+          <li><a class="dropdown-item" href="/profile"><i class="bi-person me-2"></i>Mi Perfil</a></li>
+          <li><a class="dropdown-item" href="/configuracion"><i class="bi-gear me-2"></i>Configuración</a></li>
+          <li><a class="dropdown-item" href="/ayuda"><i class="bi-question-circle me-2"></i>Ayuda</a></li>
+          <li class="border-top mt-3 pt-2 mx-4">
+            <a class="dropdown-item ms-0 me-0" href="/login">LOGIN</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </header>
