@@ -6,6 +6,7 @@ import Distribuidores from '../models/distribuidorModel.js';
 import Usuario from "../models/usuarios.js";
 import PdfPrinter from 'pdfmake';
 import { emailPagoPendiente } from '../../helpers/email.js';
+import supabase, { supabaseAdmin } from '../../config/supabaseClient.js';
 
 
 import fs from 'fs';
@@ -116,12 +117,17 @@ const getPedido = async (req, res) => {
             include: [
               { model: Productos, as: 'producto' }
             ]
+          },
+          {
+            model: Distribuidores,
+            as: 'Distribuidor',
+            attributes: ['id', 'empresa']
           }
         ]
       });
-
       const pedidosWithProductos = pedidos.map(pedido => ({
         ...pedido.toJSON(),
+        empresa: pedido.Distribuidor ? pedido.Distribuidor.empresa : 'No disponible',
         productos: pedido.detalles.map(detalle => ({
           nombre: detalle.producto.nombre,
           cantidad: detalle.cantidad
@@ -149,11 +155,17 @@ const getPedido = async (req, res) => {
             include: [
               { model: Productos, as: 'producto' }
             ]
+          },
+          {
+            model: Distribuidores,
+            as: 'Distribuidor',
+            attributes: ['id', 'empresa']
           }
         ]
       });
       const pedidosWithProductos = pedidos.map(pedido => ({
         ...pedido.toJSON(),
+        empresa: pedido.Distribuidor ? pedido.Distribuidor.empresa : 'No disponible',
         productos: pedido.detalles.map(detalle => ({
           nombre: detalle.producto.nombre,
           cantidad: detalle.cantidad
@@ -202,12 +214,18 @@ const getTodosPedidos = async (req, res) => {
             include: [
               { model: Productos, as: 'producto' }
             ]
+          },
+          {
+            model: Distribuidores,
+            as: 'Distribuidor',
+            attributes: ['id', 'empresa']
           }
         ]
       });
 
       const pedidosWithProductos = pedidos.map(pedido => ({
         ...pedido.toJSON(),
+        empresa: pedido.Distribuidor ? pedido.Distribuidor.empresa : 'No disponible',
         productos: pedido.detalles.map(detalle => ({
           nombre: detalle.producto.nombre,
           cantidad: detalle.cantidad
@@ -224,11 +242,17 @@ const getTodosPedidos = async (req, res) => {
             include: [
               { model: Productos, as: 'producto' }
             ]
+          },
+          {
+            model: Distribuidores,
+            as: 'Distribuidor',
+            attributes: ['id', 'empresa']
           }
         ]
       });
       const pedidosWithProductos = pedidos.map(pedido => ({
         ...pedido.toJSON(),
+        empresa: pedido.Distribuidor ? pedido.Distribuidor.empresa : 'No disponible',
         productos: pedido.detalles.map(detalle => ({
           nombre: detalle.producto.nombre,
           cantidad: detalle.cantidad
@@ -570,6 +594,81 @@ const notificarPagoPendiente = async (req, res) => {
   }
 }
 
+// Función para subir un comprobante de pago
+const subirComprobantePago = async (req, res) => {
+  const { id } = req.params;
+  const file = req.file;
+  
+  if (!file) return res.status(400).json({ error: 'No se recibió ningún archivo' });
+  
+  const fileName = `${Date.now()}-${file.originalname}`;
+  const bucketName = 'Comprobantes Pedidos';
+  
+  try {
+    // Verificar si el bucket existe, si no, crearlo
+    const { data: buckets, error: listError } = await supabaseAdmin
+      .storage
+      .listBuckets();
+
+    if (listError) {
+      console.error('Error al listar buckets:', listError);
+      return res.status(500).json({ error: 'Error al verificar buckets de almacenamiento' });
+    }
+
+    // Verificar si el bucket "Comprobantes Pedidos" existe
+    const bucketExists = buckets.some(bucket => bucket.name === bucketName);
+    
+    // Si el bucket no existe, crearlo
+    if (!bucketExists) {
+      console.log(`El bucket "${bucketName}" no existe. Creándolo...`);
+      const { error: createError } = await supabaseAdmin.storage.createBucket(bucketName, {
+        public: true, // Hacer el bucket público para que las URLs sean accesibles
+        fileSizeLimit: 5242880, // Límite de 5MB por archivo
+      });
+
+      if (createError) {
+        console.error('Error al crear el bucket:', createError);
+        return res.status(500).json({ error: 'Error al crear el bucket de almacenamiento' });
+      }
+      console.log(`Bucket "${bucketName}" creado exitosamente.`);
+    }
+    
+    // Paso 1: Subir la imagen a Supabase utilizando supabaseAdmin
+    const { error: uploadError } = await supabaseAdmin.storage
+      .from(bucketName)
+      .upload(`pedidos/${id}/${fileName}`, file.buffer, {
+        contentType: file.mimetype,
+        upsert: true
+      });
+  
+    if (uploadError) {
+      console.error('Error al subir el comprobante:', uploadError);
+      return res.status(500).json({ error: 'Error al subir el comprobante: ' + JSON.stringify(uploadError) });
+    }
+    
+    // Paso 2: Obtener la URL pública de la imagen
+    const { data } = supabaseAdmin.storage
+      .from(bucketName)
+      .getPublicUrl(`pedidos/${id}/${fileName}`);
+  
+    const imageUrl = data.publicUrl;
+    
+    // Paso 3: Actualizar el registro del pedido con la URL
+    const pedido = await Pedidos.findByPk(id);
+    if (!pedido) {
+      return res.status(404).json({ error: 'Pedido no encontrado' });
+    }
+    
+    pedido.comprobanteDePago = imageUrl;
+    await pedido.save();
+    
+    return res.status(200).json({ url: imageUrl });
+  } catch (error) {
+    console.error('Error general en subirComprobantePago:', error);
+    res.status(500).json({ error: 'Error en el servidor', detalles: error.message });
+  }
+};
+
 export {
   insertPedido,
   getPedido,
@@ -579,5 +678,6 @@ export {
   rendUpdatePedido,
   rendAgregarPedido,
   exportarPDFPedido,
-  notificarPagoPendiente
+  notificarPagoPendiente,
+  subirComprobantePago
 };

@@ -7,7 +7,7 @@
     <div class="row my-4">
         <div class="col-lg-12 col-12">
             <div class="custom-block bg-white p-4">
-                <form action="/pedido/<%= pedido.idpedido %>" method="POST">
+                <form action="/pedido/<%= pedido.idpedido %>" method="POST" id="formPedido" enctype="multipart/form-data">
                     
                     <div class="row">
                         <div class="col-md-6 mb-3">
@@ -37,8 +37,16 @@
 
                     <div class="mb-4">
                         <label for="comprobanteDePago" class="form-label">Comprobante de Pago</label>
-                        <input type="text" class="form-control" id="comprobanteDePago" name="comprobanteDePago" value="<%= pedido.comprobanteDePago || '' %>">
-                        <small class="text-muted">Ingrese un número de referencia o identificador del pago</small>
+                        <div class="input-group">
+                            <% if (pedido.comprobanteDePago && pedido.comprobanteDePago.startsWith('http')) { %>
+                                <div class="mb-2 d-block w-100">
+                                    <img src="<%= pedido.comprobanteDePago %>" alt="Comprobante de pago" class="img-thumbnail" style="max-height: 200px;">
+                                </div>
+                            <% } %>
+                            <input type="file" class="form-control" id="imagenComprobante" name="imagenComprobante" accept="image/*">
+                            <input type="hidden" id="comprobanteDePago" name="comprobanteDePago" value="<%= pedido.comprobanteDePago || '' %>">
+                        </div>
+                        <small class="text-muted">Suba una imagen del comprobante de pago</small>
                     </div>
 
                     <h4 class="mt-4 mb-3">Detalles del Pedido</h4>
@@ -127,5 +135,62 @@
                 document.getElementById('precioTotal').textContent = `₡${total.toFixed(2)}`;
             });
         });
+
+        // Manejo de subida de imagen de comprobante
+        const imagenComprobante = document.getElementById('imagenComprobante');
+        const comprobanteDePagoInput = document.getElementById('comprobanteDePago');
+        const formPedido = document.getElementById('formPedido');
+
+        if (imagenComprobante && comprobanteDePagoInput) {
+            imagenComprobante.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const file = this.files[0];
+                    const formData = new FormData();
+                    formData.append('imagenComprobante', file);
+
+                    // Deshabilitar el botón de submit durante la subida
+                    const submitBtn = formPedido.querySelector('button[type="submit"]');
+                    if (submitBtn) submitBtn.disabled = true;
+
+                    fetch(`/pedido/${encodeURIComponent('<%= pedido.idpedido %>')}/comprobante`, {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            alert('Error al subir imagen: ' + data.error);
+                        } else if (data.url) {
+                            // Actualizar el input hidden con la URL de la imagen
+                            comprobanteDePagoInput.value = data.url;
+                            
+                            // Si ya hay una imagen previa, actualizarla, sino crearla
+                            let imgElement = formPedido.querySelector('img.img-thumbnail');
+                            if (!imgElement) {
+                                imgElement = document.createElement('img');
+                                imgElement.classList.add('img-thumbnail');
+                                imgElement.style.maxHeight = '200px';
+                                imgElement.alt = 'Comprobante de pago';
+                                const parentDiv = document.createElement('div');
+                                parentDiv.classList.add('mb-2', 'd-block', 'w-100');
+                                parentDiv.appendChild(imgElement);
+                                imagenComprobante.parentElement.prepend(parentDiv);
+                            }
+                            imgElement.src = data.url;
+                            
+                            alert('Imagen subida correctamente');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error al subir la imagen. Inténtalo de nuevo.');
+                    })
+                    .finally(() => {
+                        // Volver a habilitar el botón de submit
+                        if (submitBtn) submitBtn.disabled = false;
+                    });
+                }
+            });
+        }
     });
 </script>

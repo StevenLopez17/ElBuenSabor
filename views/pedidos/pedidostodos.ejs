@@ -1,68 +1,91 @@
-
-
-    <div class="row my-3">
-        <div class="container">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h1>Todos los Pedidos</h1>
-                <div>
-                    <a href="/pedido/agregar" class="btn btn-primary me-2">Agregar Pedido</a>
-                    <a href="javascript:history.back()" class="btn btn-secondary">Ver Pedidos Pendientes</a>
-                </div>
-            </div>
-            <div class="row row-cols-1 row-cols-md-3 g-4">
-                <% pedidos.forEach(pedido=> { %>
-                    <div class="col">
-                        <div class="custom-block custom-block-profile-front custom-block-profile text-center bg-white">
-                            <p class="d-flex flex-wrap mb-2">
-                                <strong>Fecha:</strong>
-                                <span>
-                                    <%= pedido.fecha %>
-                                </span>
-                            </p>
-                            <p class="d-flex flex-wrap mb-2">
-                                <strong>Distribuidor ID:</strong>
-                                <span>
-                                    <%= pedido.distribuidorId %>
-                                </span>
-                            </p>
-                            <p class="d-flex flex-wrap mb-2">
-                                <strong>Precio Total:</strong>
-                                <span>$<%= typeof pedido.precioTotal==='number' ? pedido.precioTotal.toFixed(2) : '0.00'
-                                        %></span>
-                            </p>
-                            <p class="d-flex flex-wrap mb-2">
-                                <strong>Estado de Pago:</strong>
-                                <span>
-                                    <%= pedido.estadoDePago %>
-                                </span>
-                            </p>
-                            <p class="d-flex flex-wrap mb-2">
-                                <strong>Estado de Entrega:</strong>
-                                <span>
-                                    <%= pedido.estadoDeEntrega %>
-                                </span>
-                            </p>
-                            <p class="d-flex flex-wrap mb-2">
-                                <strong>Comprobante de Pago:</strong>
-                                <span>
-                                    <%= pedido.comprobanteDePago || 'N/A' %>
-                                </span>
-                            </p>
-                            <p class="d-flex flex-wrap mb-2">
-                                <strong>Productos:</strong>
-                            </p>
-                            <ul>
-                                <% pedido.productos.forEach(producto=> { %>
-                                    <li>
-                                        <%= producto.nombre %> - Cantidad: <%= producto.cantidad %>
-                                    </li>
-                                    <% }); %>
-                            </ul>
-                            <a href="/pedido/editar/<%= pedido.id %>" class="btn btn-warning mt-3">Editar Pedido</a>
-                        </div>
-                    </div>
-                    <% }); %>
+<div class="row my-3">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1>Todos los Pedidos</h1>
+            <div class="d-flex justify-content-end mb-3">
+                <a href="/pedido/agregar" class="btn btn-primary me-2">Agregar Pedido</a>
+                <a href="javascript:history.back()" class="btn btn-secondary">Ver Pedidos Pendientes</a>
             </div>
         </div>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <% pedidos.forEach(pedido => { %>
+                <div class="col">
+                    <div class="custom-block custom-block-profile-front custom-block-profile bg-white rounded shadow-sm border-0" style="overflow: hidden;">
+                        <!-- Encabezado de la tarjeta con color según estado de pago -->
+                        <div class="card-header text-white p-3 text-center <%= pedido.estadoDePago === 'pendiente' ? 'bg-warning' : pedido.estadoDePago === 'en revision' ? 'bg-warning-light' : 'bg-success' %>" style="border-bottom: 0;">
+                            <h5 class="mb-0">Pedido #<%= pedido.idpedido %></h5>
+                            <small><%= pedido.fecha %></small>
+                        </div>
+                        
+                        <div class="card-body p-4">
+                            <div class="info-section mb-3">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="fw-bold">Distribuidor:</span>
+                                    <span class="text-end"><%= pedido.empresa || pedido.distribuidorId %></span>
+                                </div>
+                                
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="fw-bold">Precio Total:</span>
+                                    <span class="badge bg-success px-3 py-2" style="font-size: 14px; font-weight: 600; color: white;">₡<%= typeof pedido.precioTotal==='number' ? pedido.precioTotal.toFixed(2) : '0.00' %></span>
+                                </div>
+                                
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="fw-bold">Estado de Pago:</span>
+                                    <span class="badge <%= pedido.estadoDePago === 'pendiente' ? 'bg-danger' : pedido.estadoDePago === 'en revision' ? 'bg-warning' : 'bg-success' %> px-3 py-2" style="font-size: 14px; font-weight: 600; color: white;"><%= pedido.estadoDePago %></span>
+                                </div>
+                                
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="fw-bold">Estado de Entrega:</span>
+                                    <span class="badge <%= pedido.estadoDeEntrega === 'no entregado' ? 'bg-secondary' : 'bg-info' %> px-3 py-2" style="font-size: 14px; font-weight: 600; color: white;"><%= pedido.estadoDeEntrega %></span>
+                                </div>
+                                
+                                <% if (pedido.comprobanteDePago && pedido.comprobanteDePago.startsWith('http')) { %>
+                                <div class="d-flex justify-content-center align-items-center mb-2">
+                                    <a href="<%= pedido.comprobanteDePago %>" target="_blank" class="btn btn-sm btn-info">
+                                        <i class="bi bi-image"></i> Ver comprobante
+                                    </a>
+                                </div>
+                                <% } %>
+                            </div>
+                            
+                            <div class="productos-section">
+                                <h6 class="fw-bold border-bottom pb-2 mb-2">Productos</h6>
+                                <ul class="list-unstyled mb-0">
+                                    <% pedido.productos.forEach(producto => { %>
+                                        <li class="d-flex justify-content-between align-items-center py-1 border-bottom">
+                                            <span><%= producto.nombre %></span>
+                                            <span class="badge bg-light text-dark px-2"><%= producto.cantidad %></span>
+                                        </li>
+                                    <% }); %>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="card-footer bg-light p-3 d-flex flex-column gap-2">
+                            <% if(pedido.estadoDePago === 'pendiente') { %>
+                            <a href="/pedido/notificar/<%= pedido.idpedido %>" class="btn btn-warning w-100">
+                                <i class="bi bi-envelope"></i> Notificar Pago Pendiente
+                            </a>
+                            <% } %>
+                            <div class="d-flex justify-content-between gap-2">
+                                <a href="/pedido/editar/<%= pedido.idpedido %>" class="btn btn-primary flex-grow-1">
+                                    <i class="bi bi-pencil"></i> Editar
+                                </a>
+                                <a href="/exportarPDFP/<%= pedido.idpedido %>" class="btn btn-danger flex-grow-1">
+                                    <i class="bi bi-file-pdf"></i> PDF
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
     </div>
+</div>
+
+<!-- JAVASCRIPT FILES -->
+<script src="/js/jquery.min.js"></script>
+<script src="/js/bootstrap.bundle.min.js"></script>
+<script src="/js/apexcharts.min.js"></script>
+<script src="/js/custom.js"></script>
 

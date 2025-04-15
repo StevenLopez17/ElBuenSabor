@@ -8,11 +8,14 @@ import {
   rendAgregarPedido,
   getTodosPedidos,
   exportarPDFPedido,
-  notificarPagoPendiente
+  notificarPagoPendiente,
+  subirComprobantePago
 } from "../controllers/pedidoController.js";
 import identificarUsuario from '../../middleware/identificarUsuario.js';
+import multer from 'multer';
 
 const router = express.Router();
+const upload = multer({ storage: multer.memoryStorage() });
 
 // Ruta para agregar un pedido
 router.post("/pedido/agregar", insertPedido);
@@ -34,6 +37,9 @@ router.get("/pedido/agregar", identificarUsuario, rendAgregarPedido);
 
 // Ruta para obtener todos los pedidos sin filtro
 router.get("/pedidos/todos", identificarUsuario, getTodosPedidos);
+
+// Ruta para subir comprobante de pago
+router.post("/pedido/:id/comprobante", upload.single('imagenComprobante'), subirComprobantePago);
 
 //Ruta para obtener factura
 router.get('/exportarPDFP/:id', exportarPDFPedido);
