@@ -20,26 +20,24 @@
                     <div class="tab-pane fade show active" id="add-employee-tab-pane" role="tabpanel"
                         aria-labelledby="add-employee-tab">
                         <h6 class="mb-4">Editar Distribuidor</h6>
-
                         
 
                         <form class="custom-form add-employee-form" action="/actualizar/<%= distribuidor.id %>" method="POST">
-                        
-                            <input class="form-control mb-3" type="number" name="usuario_id" id="usuario_id"
-                                value="<%= distribuidor.usuario_id %>" placeholder="ID del Usuario" required>
+  
+                            <!-- Campo oculto para el ID del distribuidor -->
+                            <input type="hidden" name="id" value="<%= distribuidor.id %>">
+                          
                             <input class="form-control mb-3" type="text" name="empresa" id="empresa"
                                 value="<%= distribuidor.empresa %>" placeholder="Empresa" required>
                             <input class="form-control mb-3" type="text" name="telefono" id="telefono"
-                                value="<%= distribuidor.telefono %>" placeholder="Telefono" required>
+                                value="<%= distribuidor.telefono %>" placeholder="Teléfono" required>
                             <input class="form-control mb-3" type="text" name="direccion" id="direccion"
-                                value="<%= distribuidor.direccion %>" placeholder="Direccion" required>
+                                value="<%= distribuidor.direccion %>" placeholder="Dirección" required>
                             <input class="form-control mb-3" type="text" name="zona_cobertura" id="zona_cobertura"
                                 value="<%= distribuidor.zona_cobertura %>" placeholder="Zona de Cobertura" required>
-                        
+                          
                             <button type="submit" class="btn btn-primary">Actualizar</button>
-                        </form>
-                        
-
+                          </form>
 
 
 

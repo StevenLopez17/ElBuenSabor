@@ -14,7 +14,7 @@ const router = express.Router();
 
 router.get('/distribuidor', getDistribuidor);
 router.post('/agregar', insertDistribuidor);
-router.get('/distEditar/:id', rendUpdateDistribuidor);
+router.post('/distEditar', rendUpdateDistribuidor);
 router.post('/actualizar/:id', updateDistribuidor);
 router.post('/eliminar/:id', cambiarDistribuidorEstado);
 router.get('/filtrarDireccion', filtroDireccionDistribuidores);
