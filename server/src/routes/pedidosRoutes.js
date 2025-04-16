@@ -9,7 +9,8 @@ import {
   getTodosPedidos,
   exportarPDFPedido,
   notificarPagoPendiente,
-  subirComprobantePago
+  subirComprobantePago,
+  getHistorialPedidos
 } from "../controllers/pedidoController.js";
 import identificarUsuario from '../../middleware/identificarUsuario.js';
 import multer from 'multer';
@@ -37,6 +38,9 @@ router.get("/pedido/agregar", identificarUsuario, rendAgregarPedido);
 
 // Ruta para obtener todos los pedidos sin filtro
 router.get("/pedidos/todos", identificarUsuario, getTodosPedidos);
+
+// Ruta para obtener historial completo de pedidos
+router.get("/pedidos/historial", identificarUsuario, getHistorialPedidos);
 
 // Ruta para subir comprobante de pago
 router.post("/pedido/:id/comprobante", upload.single('imagenComprobante'), subirComprobantePago);

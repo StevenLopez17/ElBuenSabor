@@ -1,13 +1,12 @@
 import Pedidos from "../models/pedidoModel.js";
 import PedidoDetalle from "../models/pedidoDetalle.js";
 import Productos from "../models/productoModel.js";
-import sequelize from "../../config/database.js";
+import sequelize, { Op } from "../../config/database.js";
 import Distribuidores from '../models/distribuidorModel.js';
 import Usuario from "../models/usuarios.js";
 import PdfPrinter from 'pdfmake';
 import { emailPagoPendiente } from '../../helpers/email.js';
 import supabase, { supabaseAdmin } from '../../config/supabaseClient.js';
-
 
 import fs from 'fs';
 import path from 'path';
@@ -125,14 +124,22 @@ const getPedido = async (req, res) => {
           }
         ]
       });
-      const pedidosWithProductos = pedidos.map(pedido => ({
-        ...pedido.toJSON(),
-        empresa: pedido.Distribuidor ? pedido.Distribuidor.empresa : 'No disponible',
-        productos: pedido.detalles.map(detalle => ({
-          nombre: detalle.producto.nombre,
-          cantidad: detalle.cantidad
-        }))
-      }));
+      const pedidosWithProductos = pedidos.map(pedido => {
+        const pedidoJSON = pedido.toJSON();
+        // Calcular el precio total sumando los subtotales de todos los detalles
+        const precioTotal = pedidoJSON.detalles.reduce((total, detalle) => 
+          total + parseFloat(detalle.subtotal || 0), 0);
+        
+        return {
+          ...pedidoJSON,
+          precioTotal: precioTotal, // Asegurar que precioTotal se establece correctamente
+          empresa: pedido.Distribuidor ? pedido.Distribuidor.empresa : 'No disponible',
+          productos: pedidoJSON.detalles.map(detalle => ({
+            nombre: detalle.producto.nombre,
+            cantidad: detalle.cantidad
+          }))
+        };
+      });
 
       if (pedidos.length > 0) {
         // console.log(`Se encontraron ${pedidos.length} pedidos.`);
@@ -163,14 +170,22 @@ const getPedido = async (req, res) => {
           }
         ]
       });
-      const pedidosWithProductos = pedidos.map(pedido => ({
-        ...pedido.toJSON(),
-        empresa: pedido.Distribuidor ? pedido.Distribuidor.empresa : 'No disponible',
-        productos: pedido.detalles.map(detalle => ({
-          nombre: detalle.producto.nombre,
-          cantidad: detalle.cantidad
-        }))
-      }));
+      const pedidosWithProductos = pedidos.map(pedido => {
+        const pedidoJSON = pedido.toJSON();
+        // Calcular el precio total sumando los subtotales de todos los detalles
+        const precioTotal = pedidoJSON.detalles.reduce((total, detalle) => 
+          total + parseFloat(detalle.subtotal || 0), 0);
+        
+        return {
+          ...pedidoJSON,
+          precioTotal: precioTotal, // Asegurar que precioTotal se establece correctamente
+          empresa: pedido.Distribuidor ? pedido.Distribuidor.empresa : 'No disponible',
+          productos: pedidoJSON.detalles.map(detalle => ({
+            nombre: detalle.producto.nombre,
+            cantidad: detalle.cantidad
+          }))
+        };
+      });
 
       if (pedidos.length > 0) {
         // console.log(`Se encontraron ${pedidos.length} pedidos.`);
@@ -193,6 +208,12 @@ const getPedido = async (req, res) => {
 const getTodosPedidos = async (req, res) => {
   try {
     const { id, rol } = req.usuario
+    
+    // Get current month's start and end dates
+    const today = new Date();
+    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+    
     if (rol == 3) {
       const distribuidor = await Distribuidores.findOne({
         where: {
@@ -205,7 +226,11 @@ const getTodosPedidos = async (req, res) => {
       const distribuidorId = distribuidor.id
       const pedidos = await Pedidos.findAll({
         where: {
-          distribuidorId: distribuidor.id
+          distribuidorId: distribuidor.id,
+          // Add date filter for current month
+          fecha: {
+            [Op.between]: [startOfMonth, endOfMonth]
+          }
         },
         include: [
           {
@@ -223,18 +248,32 @@ const getTodosPedidos = async (req, res) => {
         ]
       });
 
-      const pedidosWithProductos = pedidos.map(pedido => ({
-        ...pedido.toJSON(),
-        empresa: pedido.Distribuidor ? pedido.Distribuidor.empresa : 'No disponible',
-        productos: pedido.detalles.map(detalle => ({
-          nombre: detalle.producto.nombre,
-          cantidad: detalle.cantidad
-        }))
-      }));
-      res.render("pedidos/pedidostodos", { pedidos: pedidosWithProductos });
+      const pedidosWithProductos = pedidos.map(pedido => {
+        const pedidoJSON = pedido.toJSON();
+        // Calcular el precio total sumando los subtotales de todos los detalles
+        const precioTotal = pedidoJSON.detalles.reduce((total, detalle) => 
+          total + parseFloat(detalle.subtotal || 0), 0);
+        
+        return {
+          ...pedidoJSON,
+          precioTotal: precioTotal, // Asegurar que precioTotal se establece correctamente
+          empresa: pedido.Distribuidor ? pedido.Distribuidor.empresa : 'No disponible',
+          productos: pedidoJSON.detalles.map(detalle => ({
+            nombre: detalle.producto.nombre,
+            cantidad: detalle.cantidad
+          }))
+        };
+      });
+      res.render("pedidos/pedidostodos", { pedidos: pedidosWithProductos, mes: today.toLocaleString('es-ES', { month: 'long' }) });
     }
     else if (rol == 1) {
       const pedidos = await Pedidos.findAll({
+        where: {
+          // Add date filter for current month
+          fecha: {
+            [Op.between]: [startOfMonth, endOfMonth]
+          }
+        },
         include: [
           {
             model: PedidoDetalle,
@@ -250,21 +289,29 @@ const getTodosPedidos = async (req, res) => {
           }
         ]
       });
-      const pedidosWithProductos = pedidos.map(pedido => ({
-        ...pedido.toJSON(),
-        empresa: pedido.Distribuidor ? pedido.Distribuidor.empresa : 'No disponible',
-        productos: pedido.detalles.map(detalle => ({
-          nombre: detalle.producto.nombre,
-          cantidad: detalle.cantidad
-        }))
-      }));
+      const pedidosWithProductos = pedidos.map(pedido => {
+        const pedidoJSON = pedido.toJSON();
+        // Calcular el precio total sumando los subtotales de todos los detalles
+        const precioTotal = pedidoJSON.detalles.reduce((total, detalle) => 
+          total + parseFloat(detalle.subtotal || 0), 0);
+        
+        return {
+          ...pedidoJSON,
+          precioTotal: precioTotal, // Asegurar que precioTotal se establece correctamente
+          empresa: pedido.Distribuidor ? pedido.Distribuidor.empresa : 'No disponible',
+          productos: pedidoJSON.detalles.map(detalle => ({
+            nombre: detalle.producto.nombre,
+            cantidad: detalle.cantidad
+          }))
+        };
+      });
 
       if (pedidos.length > 0) {
         console.log(`Se encontraron ${pedidos.length} pedidos.`);
-        res.render("pedidos/pedidostodos", { pedidos: pedidosWithProductos, mensaje: null });
+        res.render("pedidos/pedidostodos", { pedidos: pedidosWithProductos, mensaje: null, mes: today.toLocaleString('es-ES', { month: 'long' }) });
       } else {
         console.log("No se encontraron pedidos.");
-        res.render("pedidos/pedidostodos", { pedidos: [], mensaje: "No hay pedidos registrados." });
+        res.render("pedidos/pedidostodos", { pedidos: [], mensaje: "No hay pedidos registrados.", mes: today.toLocaleString('es-ES', { month: 'long' }) });
       }
     }
     else {
@@ -669,6 +716,111 @@ const subirComprobantePago = async (req, res) => {
   }
 };
 
+// Función para obtener y renderizar historial de pedidos
+const getHistorialPedidos = async (req, res) => {
+  try {
+    const { id, rol } = req.usuario
+    
+    if (rol == 3) {
+      const distribuidor = await Distribuidores.findOne({
+        where: {
+          usuario_id: id
+        }
+      });
+      if (!distribuidor) {
+        return res.redirect('/');
+      }
+      const distribuidorId = distribuidor.id
+      const pedidos = await Pedidos.findAll({
+        where: {
+          distribuidorId: distribuidor.id
+        },
+        include: [
+          {
+            model: PedidoDetalle,
+            as: 'detalles',
+            include: [
+              { model: Productos, as: 'producto' }
+            ]
+          },
+          {
+            model: Distribuidores,
+            as: 'Distribuidor',
+            attributes: ['id', 'empresa']
+          }
+        ],
+        order: [['fecha', 'DESC']]
+      });
+
+      const pedidosWithProductos = pedidos.map(pedido => {
+        const pedidoJSON = pedido.toJSON();
+        // Calcular el precio total sumando los subtotales de todos los detalles
+        const precioTotal = pedidoJSON.detalles.reduce((total, detalle) => 
+          total + parseFloat(detalle.subtotal || 0), 0);
+        
+        return {
+          ...pedidoJSON,
+          precioTotal: precioTotal,
+          empresa: pedido.Distribuidor ? pedido.Distribuidor.empresa : 'No disponible',
+          productos: pedidoJSON.detalles.map(detalle => ({
+            nombre: detalle.producto.nombre,
+            cantidad: detalle.cantidad
+          }))
+        };
+      });
+      res.render("pedidos/historialPedidos", { pedidos: pedidosWithProductos, mensaje: null });
+    }
+    else if (rol == 1) {
+      const pedidos = await Pedidos.findAll({
+        include: [
+          {
+            model: PedidoDetalle,
+            as: 'detalles',
+            include: [
+              { model: Productos, as: 'producto' }
+            ]
+          },
+          {
+            model: Distribuidores,
+            as: 'Distribuidor',
+            attributes: ['id', 'empresa']
+          }
+        ],
+        order: [['fecha', 'DESC']]
+      });
+      const pedidosWithProductos = pedidos.map(pedido => {
+        const pedidoJSON = pedido.toJSON();
+        // Calcular el precio total sumando los subtotales de todos los detalles
+        const precioTotal = pedidoJSON.detalles.reduce((total, detalle) => 
+          total + parseFloat(detalle.subtotal || 0), 0);
+        
+        return {
+          ...pedidoJSON,
+          precioTotal: precioTotal,
+          empresa: pedido.Distribuidor ? pedido.Distribuidor.empresa : 'No disponible',
+          productos: pedidoJSON.detalles.map(detalle => ({
+            nombre: detalle.producto.nombre,
+            cantidad: detalle.cantidad
+          }))
+        };
+      });
+
+      if (pedidos.length > 0) {
+        res.render("pedidos/historialPedidos", { pedidos: pedidosWithProductos, mensaje: null });
+      } else {
+        res.render("pedidos/historialPedidos", { pedidos: [], mensaje: "No hay pedidos registrados." });
+      }
+    }
+    else {
+      res.redirect('/')
+    }
+
+  } catch (error) {
+    console.error("Error al obtener el historial de pedidos:", error);
+    res.render("pedidos/historialPedidos", { pedidos: [], mensaje: "Error al cargar los pedidos." });
+  }
+};
+
 export {
   insertPedido,
   getPedido,
@@ -679,5 +831,6 @@ export {
   rendAgregarPedido,
   exportarPDFPedido,
   notificarPagoPendiente,
-  subirComprobantePago
+  subirComprobantePago,
+  getHistorialPedidos
 };

@@ -1,8 +1,9 @@
 <div class="row my-3">
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h1>Todos los Pedidos</h1>
+            <h3 class="mb-0">Pedidos del mes de <%= mes %></h3>
             <div class="d-flex justify-content-end mb-3">
+                <a href="/pedidos/historial" class="btn btn-info me-2">Ver historial completo</a>
                 <a href="/pedido/agregar" class="btn btn-primary me-2">Agregar Pedido</a>
                 <a href="javascript:history.back()" class="btn btn-secondary">Ver Pedidos Pendientes</a>
             </div>

@@ -1,5 +1,11 @@
-
-    <h1>Agregar Pedido</h1>
+<div class="py-3">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h3 class="mb-0">Agregar Pedido</h3>
+      <div class="d-flex justify-content-end mb-3">
+          <a href="/pedido" class="btn btn-secondary">Volver a Pedidos</a>
+      </div>
+    </div>
     <form action="/pedido/agregar" method="POST">
         <div class="mb-3">
             <label for="fecha" class="form-label">Fecha</label>
@@ -25,8 +31,7 @@
                             <input type="checkbox" id="producto-<%= producto.id %>"
                                 name="items[<%= producto.id %>][productoId]" value="<%= producto.id %>">
                             <label for="producto-<%= producto.id %>">
-                                <%= producto.nombre %> ($<%= (typeof producto.precio==='number' ?
-                                        producto.precio.toFixed(2) : '0.00' ) %>)
+                                <%= producto.nombre %> ($<%= (typeof producto.precio==='number' ? producto.precio.toFixed(2) : '0.00' ) %>)
                             </label>
                         </div>
                         <div class="col-md-6">
@@ -39,4 +44,5 @@
         </div>
         <button type="submit" class="btn btn-primary">Agregar Pedido</button>
     </form>
-    <a href="/pedido" class="btn btn-secondary mt-3">Regresar a Pedidos</a>
+  </div>
+</div>

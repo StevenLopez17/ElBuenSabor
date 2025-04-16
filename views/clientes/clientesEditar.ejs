@@ -1,59 +1,45 @@
-
-    <div class="title-group mb-3">
+<div class="title-group mb-3 d-flex justify-content-between align-items-center">
         <h1 class="h2 mb-0">Clientes</h1>
+        <a href="/clientes" class="btn btn-light">Regresar</a>
     </div>
 
     <div class="row my-4">
         <div class="col-lg-12 col-12">
-            <div class="custom-block bg-white">
-                <ul class="nav nav-tabs" id="clientTab" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="edit-client-tab" data-bs-toggle="tab"
-                            data-bs-target="#edit-client-tab-pane" type="button" role="tab"
-                            aria-controls="edit-client-tab-pane" aria-selected="true">Editar Cliente</button>
-                    </li>
-                </ul>
+            <div class="custom-block bg-white p-4">
+                <h6 class="mb-4">Editar Cliente</h6>
 
-                <div class="tab-content" id="clientTabContent">
-                    <!-- Editar Cliente -->
-                    <div class="tab-pane fade show active" id="edit-client-tab-pane" role="tabpanel"
-                        aria-labelledby="edit-client-tab">
-                        <h6 class="mb-4">Editar Cliente</h6>
+                <form class="custom-form edit-client-form" action="/actualizar1/<%= cliente.id %>"
+                    method="POST" role="form">                            
+                    <input class="form-control mb-3" type="text" name="nombre" id="nombre"
+                        value="<%= cliente.nombre %>" placeholder="Nombre" required>
+                    <input class="form-control mb-3" type="text" name="representante" id="representante"
+                        value="<%= cliente.representante %>" placeholder="Representante" required>
+                    <input class="form-control mb-3" type="text" name="numero" id="numero"
+                        value="<%= cliente.numero %>" placeholder="Teléfono" required>
+                    <input class="form-control mb-3" type="email" name="correo" id="correo"
+                        value="<%= cliente.correo %>" placeholder="Correo" required>
+                    <input class="form-control mb-3" type="text" name="direccion" id="direccion"
+                        value="<%= cliente.direccion %>" placeholder="Dirección" required>
 
-                        <form class="custom-form edit-client-form" action="/actualizar1/<%= cliente.id %>"
-                            method="POST" role="form">                            
-                            <input class="form-control mb-3" type="text" name="nombre" id="nombre"
-                                value="<%= cliente.nombre %>" placeholder="Nombre" required>
-                            <input class="form-control mb-3" type="text" name="representante" id="representante"
-                                value="<%= cliente.representante %>" placeholder="Representante" required>
-                            <input class="form-control mb-3" type="text" name="numero" id="numero"
-                                value="<%= cliente.numero %>" placeholder="Teléfono" required>
-                            <input class="form-control mb-3" type="email" name="correo" id="correo"
-                                value="<%= cliente.correo %>" placeholder="Correo" required>
-                            <input class="form-control mb-3" type="text" name="direccion" id="direccion"
-                                value="<%= cliente.direccion %>" placeholder="Dirección" required>
+                    <label for="distribuidor_id">Seleccionar Distribuidor:</label>
+                    <select name="distribuidor_id" id="distribuidor_id" class="form-control mb-3" required>
+                        <option value="">Seleccione un Distribuidor</option>
+                        <% if (distribuidores && distribuidores.length > 0) { %>
+                            <% distribuidores.forEach(distribuidor => { %>
+                                <option value="<%= distribuidor.id %>" <%= cliente.Distribuidor && cliente.Distribuidor.id === distribuidor.id ? 'selected' : '' %>>
+                                    <%= distribuidor.empresa %>
+                                </option>                                            
+                            <% }) %>
+                        <% } else { %>
+                            <option value="" disabled>No hay distribuidores disponibles</option>
+                        <% } %>
+                    </select>
 
-                                <label for="distribuidor_id">Seleccionar Distribuidor:</label>
-                                <select name="distribuidor_id" id="distribuidor_id" class="form-control mb-3" required>
-                                    <option value="">Seleccione un Distribuidor</option>
-                                    <% if (distribuidores && distribuidores.length > 0) { %>
-                                        <% distribuidores.forEach(distribuidor => { %>
-                                            <option value="<%= distribuidor.id %>" <%= cliente.Distribuidor && cliente.Distribuidor.id === distribuidor.id ? 'selected' : '' %>>
-                                                <%= distribuidor.empresa %>
-                                            </option>                                            
-                                        <% }) %>
-                                    <% } else { %>
-                                        <option value="" disabled>No hay distribuidores disponibles</option>
-                                    <% } %>
-                                </select>
-
-                            <div class="d-flex">
-                                <button type="submit" class="form-control ms-2">Guardar</button>
-                            </div>
-                        </form>
-
+                    <div class="mt-3">
+                        <button type="submit" class="btn" style="background-color: #96C700; color: white;">Guardar Cambios</button>
+                        <a href="/clientes" class="btn btn-secondary">Cancelar</a>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>

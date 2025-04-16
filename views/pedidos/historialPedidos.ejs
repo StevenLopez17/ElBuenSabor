@@ -1,0 +1,136 @@
+<div class="container-fluid">
+  <div class="row my-4">
+    <div class="col-lg-12 col-12">
+      <div class="custom-block bg-white">
+        <h4 class="mb-4">Historial Completo de Pedidos</h4>
+
+        <!-- Botones de acción -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <a href="/pedidos/todos" class="btn btn-secondary me-2">
+              <i class="bi bi-calendar-month"></i> Ver pedidos del mes actual
+            </a>
+          </div>
+          <div>
+            <a href="/pedido/agregar" class="btn btn-primary">
+              <i class="bi bi-plus-circle"></i> Agregar Pedido
+            </a>
+          </div>
+        </div>
+
+        <!-- Tabla de pedidos -->
+        <div class="table-responsive">
+          <% if (mensaje) { %>
+            <div class="alert alert-info text-center">
+              <%= mensaje %>
+            </div>
+          <% } %>
+
+          <table id="tablaPedidos" class="table table-striped">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Fecha</th>
+                <th>Distribuidor</th>
+                <th>Precio Total</th>
+                <th>Estado de Pago</th>
+                <th>Estado de Entrega</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (pedidos.length > 0) { %>
+                <% pedidos.forEach((pedido, index) => { %>
+                  <tr>
+                    <td><%= pedido.idpedido %></td>
+                    <td><%= pedido.fecha %></td>
+                    <td><%= pedido.empresa %></td>
+                    <td>₡<%= typeof pedido.precioTotal==='number' ? pedido.precioTotal.toFixed(2) : '0.00' %></td>
+                    <td>
+                      <span class="badge <%= pedido.estadoDePago === 'pendiente' ? 'bg-danger' : pedido.estadoDePago === 'en revision' ? 'bg-warning' : 'bg-success' %>">
+                        <%= pedido.estadoDePago %>
+                      </span>
+                    </td>
+                    <td>
+                      <span class="badge <%= pedido.estadoDeEntrega === 'no entregado' ? 'bg-secondary' : 'bg-info' %>">
+                        <%= pedido.estadoDeEntrega %>
+                      </span>
+                    </td>
+                    <td>
+                      <div class="btn-group btn-group-sm" role="group">
+                        <a href="/pedido/editar/<%= pedido.idpedido %>" class="btn btn-outline-primary" title="Editar">
+                          <i class="bi bi-pencil"></i>
+                        </a>
+                        <a href="/exportarPDFP/<%= pedido.idpedido %>" class="btn btn-outline-danger" title="PDF">
+                          <i class="bi bi-file-pdf"></i>
+                        </a>
+                        <% if(pedido.estadoDePago === 'pendiente') { %>
+                          <a href="/pedido/notificar/<%= pedido.idpedido %>" class="btn btn-outline-warning" title="Notificar">
+                            <i class="bi bi-envelope"></i>
+                          </a>
+                        <% } %>
+                        <% if (pedido.comprobanteDePago && pedido.comprobanteDePago.startsWith('http')) { %>
+                          <a href="<%= pedido.comprobanteDePago %>" target="_blank" class="btn btn-outline-info" title="Ver comprobante">
+                            <i class="bi bi-image"></i>
+                          </a>
+                        <% } %>
+                      </div>
+                    </td>
+                  </tr>
+                <% }); %>
+              <% } else { %>
+                <tr>
+                  <td colspan="7" class="text-center">No hay pedidos registrados.</td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Modal para ver detalles del pedido -->
+        <div class="modal fade" id="detallesPedidoModal" tabindex="-1" aria-labelledby="detallesPedidoModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="detallesPedidoModalLabel">Detalles del Pedido</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body" id="detallesPedidoModalBody">
+                <!-- El contenido se cargará dinámicamente -->
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JAVASCRIPT FILES -->
+<script src="/js/jquery.min.js"></script>
+<script src="/js/bootstrap.bundle.min.js"></script>
+<script src="/js/apexcharts.min.js"></script>
+<script src="/js/custom.js"></script>
+
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+  $(document).ready(function () {
+    $('#tablaPedidos').DataTable({
+      language: {
+        url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
+      },
+      pageLength: 10,
+      lengthMenu: [5, 10, 25, 50, 100],
+      order: [[0, 'desc']], // Ordenar por ID de pedido de forma descendente
+      columnDefs: [
+        { orderable: false, targets: 6 } // Desactiva ordenación en columna "Acciones"
+      ]
+    });
+  });
+</script>

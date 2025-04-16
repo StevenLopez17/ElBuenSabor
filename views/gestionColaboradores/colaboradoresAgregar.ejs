@@ -1,53 +1,35 @@
-
-    <div class="title-group mb-3">
+<div class="container-fluid">
+    <div class="title-group mb-3 d-flex justify-content-between align-items-center">
         <h1 class="h2 mb-0">Colaboradores</h1>
+        <a href="/colaboradores" class="btn btn-light">Regresar</a>
     </div>
-
 
     <div class="row my-4">
         <div class="col-lg-12 col-12">
-            <div class="custom-block bg-white">
-                <ul class="nav nav-tabs" id="employeeTab" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="add-employee-tab" data-bs-toggle="tab"
-                            data-bs-target="#add-employee-tab-pane" type="button" role="tab"
-                            aria-controls="add-employee-tab-pane" aria-selected="true">Agregar Colaborador</button>
-                    </li>
+            <div class="custom-block bg-white p-4">
+                <h6 class="mb-4">Agregar Colaborador</h6>
+                <form class="custom-form add-employee-form" action="insertColaborador" method="POST"
+                    role="form">
+                    <input class="form-control mb-3" type="number" name="usuario_id" id="usuario_id"
+                        placeholder="ID del Colaborador" required>
+                    <input class="form-control mb-3" type="text" name="cargo" id="cargo" placeholder="Cargo"
+                        required>
+                    <select class="form-control mb-3" name="horario_id" id="horario" required>
+                        <option value="" disabled selected>Seleccione un horario</option>
+                        <% horarios.forEach(horario=> { %>
+                            <option value="<%= horario.id %>">
+                                <%= horario.descripcion %>
+                            </option>
+                            <% }); %>
+                    </select>
+                    <input class="form-control mb-3" type="date" name="fecha_ingreso" id="fecha_ingreso"
+                        required>
 
-                </ul>
-
-                <div class="tab-content" id="employeeTabContent">
-                    <!-- Agregar Empleado -->
-                    <div class="tab-pane fade show active" id="add-employee-tab-pane" role="tabpanel"
-                        aria-labelledby="add-employee-tab">
-                        <h6 class="mb-4">Agregar Colaborador</h6>
-                        <form class="custom-form add-employee-form" action="insertColaborador" method="POST"
-                            role="form">
-                            <input class="form-control mb-3" type="number" name="usuario_id" id="usuario_id"
-                                placeholder="ID del Colaborador" required>
-                            <input class="form-control mb-3" type="text" name="cargo" id="cargo" placeholder="Cargo"
-                                required>
-                            <select class="form-control mb-3" name="horario_id" id="horario" required>
-                                <option value="" disabled selected>Seleccione un horario</option>
-                                <% horarios.forEach(horario=> { %>
-                                    <option value="<%= horario.id %>">
-                                        <%= horario.descripcion %>
-                                    </option>
-                                    <% }); %>
-                            </select>
-                            <input class="form-control mb-3" type="date" name="fecha_ingreso" id="fecha_ingreso"
-                                required>
-
-                            <div class="d-flex">
-                                <!-- <button type="reset" class="form-control me-3">Restablecer</button> -->
-                                <button type="submit" class="form-control ms-2">Guardar</button>
-                            </div>
-                        </form>
-                        <div class="card-footer text-center mt-3">
-                            <small class="text-muted">Regresar <a href="/colaboradores">Módulo Colaboradores</a></small>
-                        </div>
+                    <div class="mt-3">
+                        <button type="submit" class="btn" style="background-color: #96C700; color: white;">Guardar</button>
+                        <a href="/colaboradores" class="btn btn-secondary">Cancelar</a>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
@@ -64,3 +46,4 @@
             </div>
         </div>
     </footer>
+</div>
