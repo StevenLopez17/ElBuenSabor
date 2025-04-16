@@ -127,9 +127,9 @@ const getPedido = async (req, res) => {
       const pedidosWithProductos = pedidos.map(pedido => {
         const pedidoJSON = pedido.toJSON();
         // Calcular el precio total sumando los subtotales de todos los detalles
-        const precioTotal = pedidoJSON.detalles.reduce((total, detalle) => 
+        const precioTotal = pedidoJSON.detalles.reduce((total, detalle) =>
           total + parseFloat(detalle.subtotal || 0), 0);
-        
+
         return {
           ...pedidoJSON,
           precioTotal: precioTotal, // Asegurar que precioTotal se establece correctamente
@@ -173,9 +173,55 @@ const getPedido = async (req, res) => {
       const pedidosWithProductos = pedidos.map(pedido => {
         const pedidoJSON = pedido.toJSON();
         // Calcular el precio total sumando los subtotales de todos los detalles
-        const precioTotal = pedidoJSON.detalles.reduce((total, detalle) => 
+        const precioTotal = pedidoJSON.detalles.reduce((total, detalle) =>
           total + parseFloat(detalle.subtotal || 0), 0);
-        
+
+        return {
+          ...pedidoJSON,
+          precioTotal: precioTotal, // Asegurar que precioTotal se establece correctamente
+          empresa: pedido.Distribuidor ? pedido.Distribuidor.empresa : 'No disponible',
+          productos: pedidoJSON.detalles.map(detalle => ({
+            nombre: detalle.producto.nombre,
+            cantidad: detalle.cantidad
+          }))
+        };
+      });
+
+      if (pedidos.length > 0) {
+        // console.log(`Se encontraron ${pedidos.length} pedidos.`);
+        res.render("pedidos/pedidos", { pedidos: pedidosWithProductos, mensaje: null, rol, notificacionPagoPendiente });
+      } else {
+        console.log("No se encontraron pedidos.");
+        res.render("pedidos/pedidos", { pedidos: [], mensaje: "No hay pedidos registrados." });
+      }
+    }
+    else if (rol == 2) {
+      const pedidos = await Pedidos.findAll({
+        where: {
+          estadoDeEntrega: "no entregado",
+          estadoDePago: "pendiente"
+        },
+        include: [
+          {
+            model: PedidoDetalle,
+            as: 'detalles',
+            include: [
+              { model: Productos, as: 'producto' }
+            ]
+          },
+          {
+            model: Distribuidores,
+            as: 'Distribuidor',
+            attributes: ['id', 'empresa']
+          }
+        ]
+      });
+      const pedidosWithProductos = pedidos.map(pedido => {
+        const pedidoJSON = pedido.toJSON();
+        // Calcular el precio total sumando los subtotales de todos los detalles
+        const precioTotal = pedidoJSON.detalles.reduce((total, detalle) =>
+          total + parseFloat(detalle.subtotal || 0), 0);
+
         return {
           ...pedidoJSON,
           precioTotal: precioTotal, // Asegurar que precioTotal se establece correctamente
@@ -208,12 +254,12 @@ const getPedido = async (req, res) => {
 const getTodosPedidos = async (req, res) => {
   try {
     const { id, rol } = req.usuario
-    
+
     // Get current month's start and end dates
     const today = new Date();
     const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
     const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-    
+
     if (rol == 3) {
       const distribuidor = await Distribuidores.findOne({
         where: {
@@ -251,9 +297,9 @@ const getTodosPedidos = async (req, res) => {
       const pedidosWithProductos = pedidos.map(pedido => {
         const pedidoJSON = pedido.toJSON();
         // Calcular el precio total sumando los subtotales de todos los detalles
-        const precioTotal = pedidoJSON.detalles.reduce((total, detalle) => 
+        const precioTotal = pedidoJSON.detalles.reduce((total, detalle) =>
           total + parseFloat(detalle.subtotal || 0), 0);
-        
+
         return {
           ...pedidoJSON,
           precioTotal: precioTotal, // Asegurar que precioTotal se establece correctamente
@@ -292,9 +338,9 @@ const getTodosPedidos = async (req, res) => {
       const pedidosWithProductos = pedidos.map(pedido => {
         const pedidoJSON = pedido.toJSON();
         // Calcular el precio total sumando los subtotales de todos los detalles
-        const precioTotal = pedidoJSON.detalles.reduce((total, detalle) => 
+        const precioTotal = pedidoJSON.detalles.reduce((total, detalle) =>
           total + parseFloat(detalle.subtotal || 0), 0);
-        
+
         return {
           ...pedidoJSON,
           precioTotal: precioTotal, // Asegurar que precioTotal se establece correctamente
@@ -343,11 +389,11 @@ const updatePedido = async (req, res) => {
     // Actualizar campos básicos
     pedido.fecha = fecha || pedido.fecha;
     pedido.distribuidorId = distribuidorId || pedido.distribuidorId;
-    
+
     // Usar los valores exactos permitidos por el enum estado_pago
     if (estadoDePago) {
       // Asignamos el valor exacto conforme a los valores permitidos en el enum
-      switch(estadoDePago.toLowerCase()) {
+      switch (estadoDePago.toLowerCase()) {
         case 'pendiente':
           pedido.estadoDePago = 'pendiente';
           break;
@@ -366,7 +412,7 @@ const updatePedido = async (req, res) => {
           pedido.estadoDePago = 'pendiente';
       }
     }
-    
+
     // Valores para estado de entrega (asumimos que son "entregado" y "no entregado")
     if (estadoDeEntrega) {
       if (estadoDeEntrega.toLowerCase().includes('no')) {
@@ -375,17 +421,17 @@ const updatePedido = async (req, res) => {
         pedido.estadoDeEntrega = 'entregado';
       }
     }
-    
+
     pedido.comprobanteDePago = comprobanteDePago || pedido.comprobanteDePago;
 
     // Procesar actualización de cantidades de productos si se envían
     if (productos && Array.isArray(productos) && productos.length > 0) {
       let precioTotal = 0;
-      
+
       // Actualizar cada detalle del pedido con las nuevas cantidades
       for (const productoActualizado of productos) {
         const { id: detalleId, cantidad } = productoActualizado;
-        
+
         if (detalleId && cantidad > 0) {
           // Buscar el detalle específico
           const detalle = await PedidoDetalle.findByPk(detalleId, { transaction: t });
@@ -401,13 +447,13 @@ const updatePedido = async (req, res) => {
           }
         }
       }
-      
+
       // Recalcular el precio total del pedido
       const detallesActualizados = await PedidoDetalle.findAll({
         where: { pedidoId: id },
         transaction: t
       });
-      
+
       precioTotal = detallesActualizados.reduce((sum, detalle) => sum + parseFloat(detalle.subtotal), 0);
       pedido.precioTotal = precioTotal;
     }
@@ -645,12 +691,12 @@ const notificarPagoPendiente = async (req, res) => {
 const subirComprobantePago = async (req, res) => {
   const { id } = req.params;
   const file = req.file;
-  
+
   if (!file) return res.status(400).json({ error: 'No se recibió ningún archivo' });
-  
+
   const fileName = `${Date.now()}-${file.originalname}`;
   const bucketName = 'Comprobantes Pedidos';
-  
+
   try {
     // Verificar si el bucket existe, si no, crearlo
     const { data: buckets, error: listError } = await supabaseAdmin
@@ -664,7 +710,7 @@ const subirComprobantePago = async (req, res) => {
 
     // Verificar si el bucket "Comprobantes Pedidos" existe
     const bucketExists = buckets.some(bucket => bucket.name === bucketName);
-    
+
     // Si el bucket no existe, crearlo
     if (!bucketExists) {
       console.log(`El bucket "${bucketName}" no existe. Creándolo...`);
@@ -679,7 +725,7 @@ const subirComprobantePago = async (req, res) => {
       }
       console.log(`Bucket "${bucketName}" creado exitosamente.`);
     }
-    
+
     // Paso 1: Subir la imagen a Supabase utilizando supabaseAdmin
     const { error: uploadError } = await supabaseAdmin.storage
       .from(bucketName)
@@ -687,28 +733,28 @@ const subirComprobantePago = async (req, res) => {
         contentType: file.mimetype,
         upsert: true
       });
-  
+
     if (uploadError) {
       console.error('Error al subir el comprobante:', uploadError);
       return res.status(500).json({ error: 'Error al subir el comprobante: ' + JSON.stringify(uploadError) });
     }
-    
+
     // Paso 2: Obtener la URL pública de la imagen
     const { data } = supabaseAdmin.storage
       .from(bucketName)
       .getPublicUrl(`pedidos/${id}/${fileName}`);
-  
+
     const imageUrl = data.publicUrl;
-    
+
     // Paso 3: Actualizar el registro del pedido con la URL
     const pedido = await Pedidos.findByPk(id);
     if (!pedido) {
       return res.status(404).json({ error: 'Pedido no encontrado' });
     }
-    
+
     pedido.comprobanteDePago = imageUrl;
     await pedido.save();
-    
+
     return res.status(200).json({ url: imageUrl });
   } catch (error) {
     console.error('Error general en subirComprobantePago:', error);
@@ -720,7 +766,7 @@ const subirComprobantePago = async (req, res) => {
 const getHistorialPedidos = async (req, res) => {
   try {
     const { id, rol } = req.usuario
-    
+
     if (rol == 3) {
       const distribuidor = await Distribuidores.findOne({
         where: {
@@ -755,9 +801,9 @@ const getHistorialPedidos = async (req, res) => {
       const pedidosWithProductos = pedidos.map(pedido => {
         const pedidoJSON = pedido.toJSON();
         // Calcular el precio total sumando los subtotales de todos los detalles
-        const precioTotal = pedidoJSON.detalles.reduce((total, detalle) => 
+        const precioTotal = pedidoJSON.detalles.reduce((total, detalle) =>
           total + parseFloat(detalle.subtotal || 0), 0);
-        
+
         return {
           ...pedidoJSON,
           precioTotal: precioTotal,
@@ -791,9 +837,9 @@ const getHistorialPedidos = async (req, res) => {
       const pedidosWithProductos = pedidos.map(pedido => {
         const pedidoJSON = pedido.toJSON();
         // Calcular el precio total sumando los subtotales de todos los detalles
-        const precioTotal = pedidoJSON.detalles.reduce((total, detalle) => 
+        const precioTotal = pedidoJSON.detalles.reduce((total, detalle) =>
           total + parseFloat(detalle.subtotal || 0), 0);
-        
+
         return {
           ...pedidoJSON,
           precioTotal: precioTotal,

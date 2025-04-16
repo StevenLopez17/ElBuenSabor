@@ -39,6 +39,8 @@ const rendInsertProveedor = async (req, res) => {
 // Método para obtener y renderizar la lista de proveedores
 const getProveedores = async (req, res) => {
   try {
+    const { id, rol } = req.usuario;
+    if (rol != 1) return res.redirect('/')
     const proveedores = await Proveedores.findAll();
 
     if (proveedores.length > 0) {

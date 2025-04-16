@@ -3,12 +3,23 @@ import {
   getReportePedidosPorProducto,
   exportarPDFPedidosPorProducto
 } from '../controllers/reportesController.js';
+import obtenerUsuarioJWT from '../../helpers/obtenerDatosJWT.js';
 
 const router = express.Router();
 
 // Ruta principal con selector de tipo de reporte (?tipo=producto | distribuidor)
 router.get('/reportes', async (req, res) => {
   const tipo = req.query.tipo || 'producto';
+
+  const { _token } = req.cookies;
+
+  if (!_token) {
+    return res.redirect('/login');
+  }
+
+  const datosUsuario = obtenerUsuarioJWT(_token);
+
+  if (datosUsuario.rol != 1) res.redirect('/');
 
   if (tipo === 'producto') {
     return getReportePedidosPorProducto(req, res);

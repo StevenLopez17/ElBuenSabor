@@ -63,8 +63,10 @@ const insertProducto = async (req, res) => {
 // Método para obtener los productos
 const getProducto = async (req, res) => {
   try {
-    const productos = await Productos.findAll();
+    const { id, rol } = req.usuario;
+    if (rol != 1) return res.redirect('/')
 
+    const productos = await Productos.findAll();
     if (productos.length > 0) {
       console.log(`Se encontraron ${productos.length} productos.`);
       res.render("productos/producto", {
@@ -168,13 +170,13 @@ const rendUpdateProducto = async (req, res) => {
 
 // Método para renderizar la vista de agregar un producto
 const rendAgregarProducto = async (req, res) => {
-    try {
-        const formulaciones = await Formulaciones.findAll();
-        res.render("productos/productoAgregar", { formulaciones });
-    } catch (error) {
-        console.error("Error al obtener las formulaciones:", error);
-        res.render("productos/productoAgregar", { formulaciones: [], mensaje: "Error al cargar las formulaciones." });
-    }
+  try {
+    const formulaciones = await Formulaciones.findAll();
+    res.render("productos/productoAgregar", { formulaciones });
+  } catch (error) {
+    console.error("Error al obtener las formulaciones:", error);
+    res.render("productos/productoAgregar", { formulaciones: [], mensaje: "Error al cargar las formulaciones." });
+  }
 };
 
 

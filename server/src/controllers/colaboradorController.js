@@ -25,6 +25,8 @@ const insertColaborador = async (req, res) => {
 //Metodo para obtener los Colaboradores almacenados
 const getColaboradores = async (req, res) => {
     try {
+        const { id, rol } = req.usuario;
+        if (rol != 1) return res.redirect('/')
         const colaboradores = await Colaboradores.findAll({
             include: {
                 model: Horarios,

@@ -1,12 +1,13 @@
 import express from "express";
-import { 
-  insertProducto, 
-  getProducto, 
-  updateProducto, 
-  deleteProducto, 
-  rendUpdateProducto, 
-  rendAgregarProducto 
+import {
+  insertProducto,
+  getProducto,
+  updateProducto,
+  deleteProducto,
+  rendUpdateProducto,
+  rendAgregarProducto
 } from "../controllers/productoController.js";
+import identificarUsuario from '../../middleware/identificarUsuario.js';
 
 const router = express.Router();
 
@@ -14,7 +15,7 @@ const router = express.Router();
 router.post("/producto/agregar", insertProducto);
 
 // Ruta para obtener todos los productos
-router.get("/producto", getProducto);
+router.get("/producto", identificarUsuario, getProducto);
 
 // Ruta para actualizar un producto
 router.post("/producto/:id", updateProducto);

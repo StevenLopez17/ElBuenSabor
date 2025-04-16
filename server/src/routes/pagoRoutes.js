@@ -1,5 +1,5 @@
 import express from 'express';
-
+import identificarUsuario from '../../middleware/identificarUsuario.js';
 
 import {
   insertPago,
@@ -18,7 +18,7 @@ router.get('/agregar', rendInsertPago);
 router.post('/agregar', insertPago);
 
 // Ruta para obtener y renderizar la lista de pagos
-router.get('/', getPagos);
+router.get('/', identificarUsuario, getPagos);
 
 // Ruta para renderizar la vista de edición de un pago
 router.get('/editar/:id', rendUpdatePago);

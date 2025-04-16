@@ -32,28 +32,30 @@ const insertCliente = async (req, res) => {
 
 const rendInsertCliente = async (req, res) => {
   try {
-      
-      const distribuidores = await Distribuidores.findAll();
 
-      res.render('clientes/clientesAgregar', {
-          layout: 'layouts/layout',
-          distribuidores
-      });
+    const distribuidores = await Distribuidores.findAll();
+
+    res.render('clientes/clientesAgregar', {
+      layout: 'layouts/layout',
+      distribuidores
+    });
 
   } catch (error) {
-      console.error("Error al obtener los Distribuidores:", error);
-      res.render('clientes/clientesAgregar', {
-          layout: 'layouts/layout',
-          clientes: [],
-          mensaje: "Error al cargar los Distribuidores"
-      });
+    console.error("Error al obtener los Distribuidores:", error);
+    res.render('clientes/clientesAgregar', {
+      layout: 'layouts/layout',
+      clientes: [],
+      mensaje: "Error al cargar los Distribuidores"
+    });
   }
 };
 
 const getCliente = async (req, res) => {
   try {
+    const { id, rol } = req.usuario;
+    if (rol != 1) return res.redirect('/')
     const clientes = await Clientes.findAll({
-      include:[{
+      include: [{
         model: Distribuidores,
         attributes: ['empresa'],
         as: 'Distribuidor'
@@ -119,7 +121,7 @@ const rendUpdateCliente = async (req, res) => {
     console.log("ID recibido:", req.params.id);
 
     const cliente = await Clientes.findByPk(req.params.id, {
-      include: [{ model: Distribuidores,as: 'Distribuidor', attributes: ['id', 'empresa'] }]
+      include: [{ model: Distribuidores, as: 'Distribuidor', attributes: ['id', 'empresa'] }]
     });
 
     if (!cliente) {

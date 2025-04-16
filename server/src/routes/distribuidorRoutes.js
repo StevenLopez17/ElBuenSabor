@@ -9,10 +9,11 @@ import {
   exportarPDFDist,
   exportarExcelDist
 } from '../controllers/distribuidorController.js';
+import identificarUsuario from '../../middleware/identificarUsuario.js';
 
 const router = express.Router();
 
-router.get('/distribuidor', getDistribuidor);
+router.get('/distribuidor', identificarUsuario, getDistribuidor);
 router.post('/agregar', insertDistribuidor);
 router.post('/distEditar', rendUpdateDistribuidor);
 router.post('/actualizar/:id', updateDistribuidor);

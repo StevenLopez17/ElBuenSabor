@@ -28,6 +28,8 @@ export const insertMateriaPrima = async (req, res) => {
 // Método para obtener las materias primas
 export const getMateriaPrima = async (req, res) => {
   try {
+    const { id, rol } = req.usuario;
+    if (rol != 1) return res.redirect('/')
     const materiasPrimas = await MateriaPrima.findAll({
       attributes: ['id', 'nombre', 'precio', 'stock'] // Remove createdAt and updatedAt
     });

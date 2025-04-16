@@ -47,6 +47,9 @@ const rendInsertPago = async (req, res) => {
 // Método para obtener y renderizar la lista de pagos
 const getPagos = async (req, res) => {
   try {
+    const { id, rol } = req.usuario;
+    if (rol != 1) return res.redirect('/')
+
     const pagos = await Pagos.findAll({
       include: [{
         model: Proveedores,

@@ -1,10 +1,11 @@
 import express from 'express'
 import { insertColaborador, getColaboradores, agregarVista, rendUpdateColaborador, updateColaborador, cambiarColaboradorEstado } from '../controllers/colaboradorController.js'
+import identificarUsuario from '../../middleware/identificarUsuario.js';
 
 const router = express.Router()
 
 //Ruta para visualizar los colaboradores
-router.get('/colaboradores', getColaboradores);
+router.get('/colaboradores', identificarUsuario, getColaboradores);
 
 //Ruta para agregar un colaborador
 router.post('/insertColaborador', insertColaborador);
