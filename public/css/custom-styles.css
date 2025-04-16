@@ -68,5 +68,39 @@
 .dataTables_wrapper .dataTables_filter {
     float: right;
     text-align: right;
-  }
+}
+
+/* Typography Settings */
+body {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+}
+
+h1, .h1, h2, .h2 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700; /* Bold */
+    margin-bottom: 1rem;
+}
+
+h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600; /* Semi Bold */
+    margin-bottom: 0.75rem;
+}
+
+.title-group h1 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+}
+
+.custom-block h6, .custom-block .h6 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+}
+
+.btn, button {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+}
 
