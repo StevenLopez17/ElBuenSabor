@@ -1,5 +1,6 @@
 import Pagos from "../models/pagoModel.js";
 import Proveedores from "../models/proveedorModel.js";
+import { Op } from "sequelize";
 
 // Método para registrar un pago
 const insertPago = async (req, res) => {
@@ -48,9 +49,54 @@ const rendInsertPago = async (req, res) => {
 const getPagos = async (req, res) => {
   try {
     const { id, rol } = req.usuario;
-    if (rol != 1) return res.redirect('/')
+    if (rol != 1) return res.redirect('/');
+
+    // Extraer parámetros de filtro de la solicitud
+    const { proveedor_id, fecha_desde, fecha_hasta, monto_min, monto_max } = req.query;
+    
+    // Definir las opciones de consulta para Sequelize
+    let whereClause = {};
+    
+    // Filtrar por proveedor si se proporciona el ID
+    if (proveedor_id && proveedor_id !== '') {
+      whereClause.proveedor_id = proveedor_id;
+    }
+    
+    // Filtrar por fecha si se proporcionan los rangos
+    if (fecha_desde && fecha_hasta) {
+      whereClause.fecha_pago = {
+        [Op.between]: [fecha_desde, fecha_hasta]
+      };
+    } else if (fecha_desde) {
+      whereClause.fecha_pago = {
+        [Op.gte]: fecha_desde
+      };
+    } else if (fecha_hasta) {
+      whereClause.fecha_pago = {
+        [Op.lte]: fecha_hasta
+      };
+    }
+    
+    // Filtrar por monto total si se proporcionan los valores
+    if (monto_min && monto_max) {
+      whereClause.precio_total = {
+        [Op.between]: [parseFloat(monto_min), parseFloat(monto_max)]
+      };
+    } else if (monto_min) {
+      whereClause.precio_total = {
+        [Op.gte]: parseFloat(monto_min)
+      };
+    } else if (monto_max) {
+      whereClause.precio_total = {
+        [Op.lte]: parseFloat(monto_max)
+      };
+    }
+
+    // Obtener todos los proveedores para el filtro del formulario
+    const proveedores = await Proveedores.findAll({ attributes: ['id', 'nombre'] });
 
     const pagos = await Pagos.findAll({
+      where: whereClause,
       include: [{
         model: Proveedores,
         as: 'proveedor',
@@ -68,14 +114,32 @@ const getPagos = async (req, res) => {
 
     if (pagosFormateados.length > 0) {
       console.log(`Se encontraron ${pagosFormateados.length} pagos.`);
-      res.render("pagos/pagos", { pagos: pagosFormateados, mensaje: null, layout: 'layouts/layout' });
+      res.render("pagos/pagos", { 
+        pagos: pagosFormateados, 
+        proveedores, 
+        filtros: { proveedor_id, fecha_desde, fecha_hasta, monto_min, monto_max },
+        mensaje: null, 
+        layout: 'layouts/layout' 
+      });
     } else {
       console.log("No se encontraron pagos.");
-      res.render("pagos/pagos", { pagos: [], mensaje: "No hay pagos registrados.", layout: 'layouts/layout' });
+      res.render("pagos/pagos", { 
+        pagos: [], 
+        proveedores, 
+        filtros: { proveedor_id, fecha_desde, fecha_hasta, monto_min, monto_max },
+        mensaje: "No hay pagos registrados con los filtros aplicados.", 
+        layout: 'layouts/layout' 
+      });
     }
   } catch (error) {
     console.error("Error al obtener los pagos:", error);
-    res.render("pagos/pagos", { pagos: [], mensaje: "Error al cargar los pagos.", layout: 'layouts/layout' });
+    res.render("pagos/pagos", { 
+      pagos: [], 
+      proveedores: [],
+      filtros: {},
+      mensaje: "Error al cargar los pagos.", 
+      layout: 'layouts/layout' 
+    });
   }
 };
 

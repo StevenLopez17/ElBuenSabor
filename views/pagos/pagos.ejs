@@ -8,6 +8,61 @@
             <div class="custom-block bg-white">
               <h5 class="mb-5 text-center" data-aos="fade-right">Lista de Pagos</h5>
 
+              <!-- Sección de filtros -->
+              <div class="card mb-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="card-header">
+                  <h6 class="mb-0">Filtros</h6>
+                </div>
+                <div class="card-body">
+                  <form action="/pagos" method="GET" id="filtroForm">
+                    <div class="row g-3">
+                      <!-- Filtro por proveedor -->
+                      <div class="col-md-4">
+                        <label for="proveedor_id" class="form-label">Proveedor</label>
+                        <select class="form-select" id="proveedor_id" name="proveedor_id">
+                          <option value="">Todos los proveedores</option>
+                          <% if(locals.proveedores && proveedores.length > 0) { %>
+                            <% proveedores.forEach(prov => { %>
+                              <option value="<%= prov.id %>" <%= locals.filtros && filtros.proveedor_id == prov.id ? 'selected' : '' %>><%= prov.nombre %></option>
+                            <% }) %>
+                          <% } %>
+                        </select>
+                      </div>
+                      
+                      <!-- Filtro por rango de fechas -->
+                      <div class="col-md-4">
+                        <label for="fecha_desde" class="form-label">Fecha desde</label>
+                        <input type="date" class="form-control" id="fecha_desde" name="fecha_desde" 
+                               value="<%= locals.filtros && filtros.fecha_desde ? filtros.fecha_desde : '' %>">
+                      </div>
+                      <div class="col-md-4">
+                        <label for="fecha_hasta" class="form-label">Fecha hasta</label>
+                        <input type="date" class="form-control" id="fecha_hasta" name="fecha_hasta"
+                               value="<%= locals.filtros && filtros.fecha_hasta ? filtros.fecha_hasta : '' %>">
+                      </div>
+                      
+                      <!-- Filtro por rango de montos -->
+                      <div class="col-md-4">
+                        <label for="monto_min" class="form-label">Monto mínimo</label>
+                        <input type="number" class="form-control" id="monto_min" name="monto_min" step="0.01" min="0"
+                               value="<%= locals.filtros && filtros.monto_min ? filtros.monto_min : '' %>">
+                      </div>
+                      <div class="col-md-4">
+                        <label for="monto_max" class="form-label">Monto máximo</label>
+                        <input type="number" class="form-control" id="monto_max" name="monto_max" step="0.01" min="0"
+                               value="<%= locals.filtros && filtros.monto_max ? filtros.monto_max : '' %>">
+                      </div>
+                      
+                      <!-- Botones de filtrar y resetear -->
+                      <div class="col-md-4 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary me-2">Filtrar</button>
+                        <button type="button" id="resetFiltros" class="btn btn-secondary">Limpiar filtros</button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+
               <!-- Botón alineado a la derecha -->
               <div class="d-flex justify-content-between align-items-center mb-3" data-aos="fade-up" data-aos-delay="100">
                 <div></div>
@@ -78,6 +133,7 @@
 
 <script>
   $(document).ready(function () {
+    // Inicializar DataTable
     $('#tablaPagos').DataTable({
       language: {
         url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
@@ -88,6 +144,19 @@
       columnDefs: [
         { orderable: false, targets: -1 } // Desactiva ordenación en columna "Acciones"
       ]
+    });
+    
+    // Manejar el botón de limpiar filtros
+    $('#resetFiltros').on('click', function() {
+      // Limpiar todos los campos del formulario
+      $('#proveedor_id').val('');
+      $('#fecha_desde').val('');
+      $('#fecha_hasta').val('');
+      $('#monto_min').val('');
+      $('#monto_max').val('');
+      
+      // Enviar el formulario
+      $('#filtroForm').submit();
     });
   });
 </script>
