@@ -1,6 +1,8 @@
 import Colaboradores from "../models/colaboradorModel.js";
 import Horarios from "../models/horarioModel.js"
 // import GestionColaboradores from "../models/colaboradorModel.js";
+import Usuario from '../models/usuarios.js';
+import Rol from '../models/rol.js';
 
 //Metodo para agregar un colaborador
 const insertColaborador = async (req, res) => {
@@ -65,25 +67,29 @@ const getColaboradores = async (req, res) => {
 
 const agregarVista = async (req, res) => {
     try {
-        const horarios = await Horarios.findAll();
-
-        // if (!horarios || horarios.length === 0) {
-        //     res.render('gestionColaboradores/colaboradores', {
-        //         horarios: [],
-        //         mensaje: "Error al mostrar horarios disponibles"
-        //     });
-        // }
-
-        res.render('gestionColaboradores/colaboradoresAgregar', {
-            horarios: horarios,
-            mensaje: null
-        });
-
+      const horarios = await Horarios.findAll();
+  
+      const usuarios = await Usuario.findAll({
+        attributes: ['id', 'nombre'],
+        where: { estado: true },
+        include: {
+          model: Rol,
+          as: 'rol',
+          where: { nombre: 'Colaborador de Planta' },
+          attributes: [] // para no traer las columnas del rol
+        }
+      });
+  
+      res.render('gestionColaboradores/colaboradoresAgregar', {
+        horarios,
+        usuarios,
+        mensaje: null
+      });
     } catch (error) {
-        console.error('Error:', error);
-        res.status(500).json({ message: "Error al renderizar agregar colaborador", error: error.message });
+      console.error('Error al renderizar agregar colaborador:', error);
+      res.status(500).json({ message: "Error al renderizar vista", error: error.message });
     }
-};
+  };
 
 //Metodo para actualizar los datos de un distribuidor
 const updateColaborador = async (req, res) => {

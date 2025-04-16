@@ -179,108 +179,68 @@ export const subirImagenPerfil = async (req, res) => {
     if (!file) return res.status(400).json({ error: 'No se recibió ningún archivo' });
   
     const fileName = `${Date.now()}-${file.originalname}`;
-    
-    console.log(`Intentando subir imagen para usuario con id: ${id}`);
+    const nuevoPath = `avatars/${id}/${fileName}`;
   
     try {
-      // Paso 1: Subir la imagen al almacenamiento utilizando supabaseAdmin
-      console.log('Subiendo imagen a Supabase storage...');
+      // 1. Obtener usuario actual
+      const usuario = await Usuario.findByPk(id);
+      if (!usuario) return res.status(404).json({ error: 'Usuario no encontrado' });
+  
+      // 2. Extraer nombre del archivo anterior (si existe)
+      const rutaAnterior = usuario.imagen_url || '';
+      const basePath = `https://uerxbwntfwyvkspdtlaq.supabase.co/storage/v1/object/public/perfiles/`;
+      const imagenAntigua = rutaAnterior.startsWith(basePath)
+        ? rutaAnterior.replace(basePath, '')
+        : null;
+  
+      // 3. Eliminar imagen anterior
+      if (imagenAntigua) {
+        const { error: deleteError } = await supabaseAdmin.storage
+          .from('perfiles')
+          .remove([imagenAntigua]);
+  
+        if (deleteError) console.warn("No se pudo eliminar imagen anterior:", deleteError.message);
+      }
+  
+      // 4. Subir nueva imagen
       const { error: uploadError } = await supabaseAdmin.storage
         .from('perfiles')
-        .upload(`avatars/${id}/${fileName}`, file.buffer, {
+        .upload(nuevoPath, file.buffer, {
           contentType: file.mimetype,
           upsert: true
         });
-    
+  
       if (uploadError) {
-        console.error('Error al subir la imagen:', uploadError);
+        console.error('Error al subir imagen:', uploadError);
         return res.status(500).json({ error: 'Error al subir la imagen' });
       }
-      
-      console.log('Imagen subida correctamente, obteniendo URL pública...');
+  
+      // 5. Obtener nueva URL pública
       const { data } = supabaseAdmin.storage
         .from('perfiles')
-        .getPublicUrl(`avatars/${id}/${fileName}`);
-    
-      const imageUrl = data.publicUrl;
-      console.log('URL de la imagen:', imageUrl);
-      
-      // Paso 2: Intentar ambos métodos de actualización
-      console.log('Intentando actualizar el registro del usuario...');
-      
-      // Método 1: Usando Sequelize
-      try {
-        console.log('Método 1: Actualizando con Sequelize...');
-        const usuario = await Usuario.findByPk(id);
-        if (!usuario) {
-          console.error('No se encontró el usuario con id:', id);
-          return res.status(404).json({ error: 'Usuario no encontrado' });
-        }
-        
-        usuario.imagen_url = imageUrl;
-        await usuario.save();
-        console.log('Usuario actualizado correctamente con Sequelize');
-        
-        // Generar un nuevo token con la imagen actualizada
-        const token = generarJWT({ 
-          id: usuario.id, 
-          nombre: usuario.nombre, 
-          rol: usuario.rol_id, 
-          correo: usuario.correo,
-          imagen_url: imageUrl
-        });
-        
-        // Establecer la nueva cookie con el token actualizado
-        res.cookie('_token', token, {
-          httpOnly: true
-          //secure: true,
-          //sameSite: true
-        });
-        
-        return res.status(200).json({ url: imageUrl });
-      } catch (seqError) {
-        console.error('Error al actualizar con Sequelize:', seqError);
-        
-        // Método 2: Usando Supabase directamente como respaldo
-        console.log('Método 2: Intentando actualizar con Supabase...');
-        const { error: updateError, data: updateData } = await supabaseAdmin
-          .from('usuarios')
-          .update({ imagen_url: imageUrl })
-          .eq('id', id)
-          .select();
-        
-        if (updateError) {
-          console.error('Error al actualizar con Supabase:', updateError);
-          return res.status(500).json({ error: 'Error al actualizar la información del usuario', detalles: updateError });
-        }
-        
-        console.log('Usuario actualizado correctamente con Supabase:', updateData);
-        
-        // Obtener datos del usuario para generar nuevo token
-        const usuarioActualizado = await Usuario.findByPk(id);
-        if (usuarioActualizado) {
-          // Generar un nuevo token con la imagen actualizada
-          const token = generarJWT({ 
-            id: usuarioActualizado.id, 
-            nombre: usuarioActualizado.nombre, 
-            rol: usuarioActualizado.rol_id, 
-            correo: usuarioActualizado.correo,
-            imagen_url: imageUrl
-          });
-          
-          // Establecer la nueva cookie con el token actualizado
-          res.cookie('_token', token, {
-            httpOnly: true
-            //secure: true,
-            //sameSite: true
-          });
-        }
-        
-        return res.status(200).json({ url: imageUrl });
-      }
+        .getPublicUrl(nuevoPath);
+  
+      const nuevaUrl = data.publicUrl;
+  
+      // 6. Actualizar la ruta en la base de datos
+      usuario.imagen_url = nuevaUrl;
+      await usuario.save();
+  
+      // 7. Actualizar token en cookie (opcional si lo usás)
+      const token = generarJWT({ 
+        id: usuario.id,
+        nombre: usuario.nombre,
+        rol: usuario.rol_id,
+        correo: usuario.correo,
+        imagen_url: nuevaUrl
+      });
+  
+      res.cookie('_token', token, { httpOnly: true });
+      return res.status(200).json({ url: nuevaUrl });
+  
     } catch (error) {
-      console.error('Error general en subirImagenPerfil:', error);
-      res.status(500).json({ error: 'Error en el servidor', detalles: error.message });
+      console.error("Error general:", error);
+      return res.status(500).json({ error: 'Error interno del servidor', detalles: error.message });
     }
   };
 

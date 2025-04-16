@@ -67,62 +67,6 @@
       </form>
     </div>
   </div>
-
-  <!-- Script para manejar la subida de imagen con AJAX -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const formImagenPerfil = document.getElementById('formImagenPerfil');
-      const errorImagenPerfil = document.getElementById('errorImagenPerfil');
-      const modalImagenPerfil = document.getElementById('modalImagenPerfil');
-      const btnSubirImagen = document.getElementById('btnSubirImagen');
-      
-      if (formImagenPerfil) {
-        formImagenPerfil.addEventListener('submit', function(e) {
-          e.preventDefault();
-          
-          errorImagenPerfil.classList.add('d-none');
-          btnSubirImagen.disabled = true;
-          btnSubirImagen.innerHTML = 'Subiendo...';
-          
-          const formData = new FormData(formImagenPerfil);
-          
-          fetch(formImagenPerfil.action, {
-            method: 'POST',
-            body: formData
-          })
-          .then(response => response.json())
-          .then(data => {
-            if (data.error) {
-              errorImagenPerfil.textContent = data.error;
-              errorImagenPerfil.classList.remove('d-none');
-            } else if (data.url) {
-              // Actualizar todas las imágenes de perfil en la página
-              const profileImages = document.querySelectorAll('.custom-block-profile-image, .profile-image');
-              profileImages.forEach(img => {
-                img.src = data.url;
-              });
-              
-              // Cerrar el modal
-              const modalInstance = bootstrap.Modal.getInstance(modalImagenPerfil);
-              modalInstance.hide();
-              
-              // Mostrar mensaje de éxito
-              alert('Imagen actualizada con éxito');
-            }
-          })
-          .catch(error => {
-            console.error('Error:', error);
-            errorImagenPerfil.textContent = 'Error al subir la imagen. Inténtalo de nuevo.';
-            errorImagenPerfil.classList.remove('d-none');
-          })
-          .finally(() => {
-            btnSubirImagen.disabled = false;
-            btnSubirImagen.innerHTML = 'Subir Imagen';
-          });
-        });
-      }
-    });
-  </script>
 <% } %>
 
 
@@ -177,9 +121,37 @@
   </div>
 <% } %>
 
-<!-- ✅ Script unificado -->
+
+
+<% if (typeof usuario !== 'undefined' && usuario) { %>
+  ...
+  <!-- Modal de confirmación de imagen -->
+  <div class="modal fade" id="modalImagenConfirmacion" tabindex="-1" aria-labelledby="modalImagenConfirmacionLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalImagenConfirmacionLabel">Imagen actualizada</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body text-center">
+          <i class="bi bi-check-circle-fill text-success fs-1"></i>
+          <p class="mt-3">Tu imagen de perfil se ha actualizado correctamente.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+<% } %>
+
+
+
 <script>
   document.addEventListener('DOMContentLoaded', function () {
+    const formImagenPerfil = document.getElementById('formImagenPerfil');
+    const errorImagenPerfil = document.getElementById('errorImagenPerfil');
+    const modalImagenPerfil = document.getElementById('modalImagenPerfil');
+    const btnSubirImagen = document.getElementById('btnSubirImagen');
+
+
     const modales = [
       'modalDistribuidorAgregado',
       'modalCambioEstadoExito',
@@ -189,18 +161,74 @@
       'modalNotificacionVacacionesDenegadas'
     ];
 
+ 
     modales.forEach(id => {
       const modalEl = document.getElementById(id);
       if (modalEl) {
         const modal = new bootstrap.Modal(modalEl);
         modal.show();
 
-        // Auto cierre después de 4 segundos
+        // Auto cerrar a los 4 segundos
         setTimeout(() => {
           const instance = bootstrap.Modal.getInstance(modalEl);
           if (instance) instance.hide();
         }, 4000);
       }
     });
+
+
+    if (formImagenPerfil) {
+      formImagenPerfil.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        errorImagenPerfil.classList.add('d-none');
+        btnSubirImagen.disabled = true;
+        btnSubirImagen.innerHTML = 'Subiendo...';
+
+        const formData = new FormData(formImagenPerfil);
+
+        fetch(formImagenPerfil.action, {
+          method: 'POST',
+          body: formData
+        })
+          .then(response => response.json())
+          .then(data => {
+  if (data.error) {
+    errorImagenPerfil.textContent = data.error;
+    errorImagenPerfil.classList.remove('d-none');
+  } else if (data.url) {
+    const profileImages = document.querySelectorAll('.custom-block-profile-image, .profile-image');
+    profileImages.forEach(img => {
+      img.src = data.url;
+    });
+
+    const modalInstance = bootstrap.Modal.getInstance(modalImagenPerfil);
+    if (modalInstance) modalInstance.hide();
+
+    // ✅ Mostrar solo en éxito
+    const confirmModal = document.getElementById('modalImagenConfirmacion');
+    if (confirmModal) {
+      const modalConfirmacion = new bootstrap.Modal(confirmModal);
+      modalConfirmacion.show();
+
+      // Auto cerrar solo si fue llamado
+      setTimeout(() => {
+        modalConfirmacion.hide();
+      }, 4000);
+    }
+  }
+})
+          .catch(error => {
+            console.error('Error:', error);
+            errorImagenPerfil.textContent = 'Error al subir la imagen. Inténtalo de nuevo.';
+            errorImagenPerfil.classList.remove('d-none');
+          })
+          .finally(() => {
+            btnSubirImagen.disabled = false;
+            btnSubirImagen.innerHTML = 'Subir Imagen';
+          });
+      });
+    }
   });
 </script>
+

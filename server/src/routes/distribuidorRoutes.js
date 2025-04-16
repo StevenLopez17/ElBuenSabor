@@ -1,6 +1,7 @@
 import express from 'express';
 import {
   insertDistribuidor,
+  rendInsertDistribuidor,
   getDistribuidor,
   updateDistribuidor,
   rendUpdateDistribuidor,
@@ -14,6 +15,7 @@ import identificarUsuario from '../../middleware/identificarUsuario.js';
 const router = express.Router();
 
 router.get('/distribuidor', identificarUsuario, getDistribuidor);
+router.get('/distAgregar', identificarUsuario, rendInsertDistribuidor);
 router.post('/agregar', insertDistribuidor);
 router.post('/distEditar', rendUpdateDistribuidor);
 router.post('/actualizar/:id', updateDistribuidor);

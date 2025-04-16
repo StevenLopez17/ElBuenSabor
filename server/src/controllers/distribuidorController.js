@@ -1,6 +1,8 @@
 import Distribuidores from "../models/distribuidorModel.js";
 import Clientes from "../models/clienteModel.js";
 import Pedidos from "../models/pedidoModel.js";
+import Usuario from '../models/usuarios.js';
+import Rol from '../models/rol.js';
 import PdfPrinter from 'pdfmake';
 import exceljs from 'exceljs';
 import fs from 'fs';
@@ -21,7 +23,7 @@ const printer = new PdfPrinter({
 //Metodo para agregar un distribuidor
 const insertDistribuidor = async (req, res, next) => {
   try {
-    const usuario_id = req.usuario.id; // ✅ se toma desde el middleware
+    const usuario_id = req.usuario.id; 
     const { empresa, telefono, direccion, zona_cobertura } = req.body;
 
     if (!usuario_id || !empresa) {
@@ -48,25 +50,28 @@ const insertDistribuidor = async (req, res, next) => {
 
 
 //Metodo para cargar la vista de insercion de distribuidores con la lista de clientes
-// const rendInsertDistribuidor = async (req, res) => {
-//     try {
-//         // Obtener todos los clientes registrados
-//         const clientes = await Clientes.findAll();
+const rendInsertDistribuidor = async (req, res) => {
+  try {
+    const usuarios = await Usuario.findAll({
+      attributes: ['id', 'nombre'],
+      where: { estado: true },
+      include: {
+        model: Rol,
+        as: 'rol',
+        where: { id: 3 }, // ID del rol "Distribuidor"
+        attributes: []
+      }
+    });
 
-//         res.render('distribuidoresAgregar', {
-//             layout: 'layouts/layout',
-//             clientes
-//         });
-
-//     } catch (error) {
-//         console.error("Error al obtener los clientes:", error);
-//         res.render('distribuidoresAgregar', {
-//             layout: 'layouts/layout',
-//             clientes: [],
-//             mensaje: "Error al cargar los clientes"
-//         });
-//     }
-// };
+    res.render('distribuidores/distribuidoresAgregar', {
+      layout: 'layouts/layout',
+      usuarios
+    });
+  } catch (error) {
+    console.error('Error al cargar la vista de agregar distribuidor:', error);
+    res.status(500).send('Error al cargar la vista');
+  }
+};
 
 //Metodo para obtener los distribuidores almacenados y cargar las direcciones para el select
 
@@ -166,21 +171,23 @@ const updateDistribuidor = async (req, res) => {
 //Metodo para renderizar la vista de actualizar los distribuidores y que carga los datos del distribuidor a actualizar
 const rendUpdateDistribuidor = async (req, res) => {
   try {
-    console.log("ID recibido:", req.params.id);
+    const { id } = req.body;
+    console.log("ID recibido:", id);
 
-    const distribuidor = await Distribuidores.findByPk(req.params.id);
+    if (!id) {
+      return res.status(400).send("No se recibió el ID del distribuidor");
+    }
+
+    const distribuidor = await Distribuidores.findByPk(id);
 
     if (!distribuidor) {
       console.log("Distribuidor no encontrado en la base de datos");
       return res.status(404).send("Distribuidor no encontrado");
     }
 
-    console.log("Distribuidor seleccionado:", JSON.stringify(distribuidor, null, 2));
-
-    // Renderizar la vista correcta para editar
     res.render('distribuidores/distribuidoresEditar', {
       layout: 'layouts/layout',
-      distribuidor,
+      distribuidor
     });
 
   } catch (error) {
@@ -188,6 +195,7 @@ const rendUpdateDistribuidor = async (req, res) => {
     res.status(500).send("Error interno del servidor");
   }
 };
+
 
 //Metodo para cambiar el estado de un distribuidor
 const cambiarDistribuidorEstado = async (req, res) => {
@@ -409,6 +417,7 @@ const exportarExcelDist = async (req, res) => {
 export {
   insertDistribuidor,
   getDistribuidor,
+  rendInsertDistribuidor,
   updateDistribuidor,
   rendUpdateDistribuidor,
   cambiarDistribuidorEstado,

@@ -9,8 +9,14 @@
         <div class="custom-block bg-white p-4">
           <h6 class="mb-4">Agregar Distribuidor</h6>
   
-          <!-- ✅ Se elimina el campo usuario_id -->
+         
           <form class="custom-form add-employee-form" action="/agregar" method="POST">
+            <select class="form-control mb-3" name="usuario_id" id="usuario_id" required>
+              <option value="" disabled selected>Seleccione un distribuidor</option>
+              <% usuarios.forEach(usuario => { %>
+                <option value="<%= usuario.id %>"><%= usuario.nombre %></option>
+              <% }) %>
+            </select>
             <input class="form-control mb-3" type="text" name="empresa" placeholder="Empresa" required>
             <input class="form-control mb-3" type="text" name="telefono" placeholder="Teléfono" required>
             <input class="form-control mb-3" type="text" name="direccion" placeholder="Dirección" required>

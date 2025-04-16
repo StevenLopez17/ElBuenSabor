@@ -10,8 +10,12 @@
                 <h6 class="mb-4">Agregar Colaborador</h6>
                 <form class="custom-form add-employee-form" action="insertColaborador" method="POST"
                     role="form">
-                    <input class="form-control mb-3" type="number" name="usuario_id" id="usuario_id"
-                        placeholder="ID del Colaborador" required>
+                    <select class="form-control mb-3" name="usuario_id" id="usuario_id" required>
+                        <option value="" disabled selected>Seleccione un colaborador</option>
+                        <% usuarios.forEach(usuario => { %>
+                            <option value="<%= usuario.id %>"><%= usuario.nombre %></option>
+                        <% }); %>
+                    </select>
                     <input class="form-control mb-3" type="text" name="cargo" id="cargo" placeholder="Cargo"
                         required>
                     <select class="form-control mb-3" name="horario_id" id="horario" required>

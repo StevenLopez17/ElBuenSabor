@@ -92,10 +92,6 @@ app.use('/', indexRoutes);
 
 app.use('/', distribuidorRoutes);
 
-app.get('/distAgregar', (req, res) => {
-    res.render('distribuidores/distribuidoresAgregar', { layout: 'layouts/layout' });
-});
-
 app.get('/distEditar/:id', (req, res) => {
     res.render('distribuidores/distribuidoresEditar', { layout: 'layouts/layout' });
 });
