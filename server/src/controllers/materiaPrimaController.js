@@ -16,7 +16,7 @@ export const insertMateriaPrima = async (req, res) => {
     });
 
     console.log("Materia prima creada con éxito");
-    res.redirect("/materiaPrima");
+    res.redirect('/materiaPrima?materiaPrimaAgregada=true');
   } catch (error) {
     console.error("Error al crear la materia prima:", error);
     res
@@ -33,7 +33,13 @@ export const getMateriaPrima = async (req, res) => {
     const materiasPrimas = await MateriaPrima.findAll({
       attributes: ['id', 'nombre', 'precio', 'stock'] // Remove createdAt and updatedAt
     });
-    res.render('materiasPrimas/materiaPrima', { materiasPrimas, mensaje: null });
+    res.render('materiasPrimas/materiaPrima', {
+      materiasPrimas,
+      mensaje: null,
+      materiaPrimaAgregada: req.query.materiaPrimaAgregada === 'true',
+      materiaPrimaEditada: req.query.materiaPrimaEditada === 'true'
+    });
+    
   } catch (error) {
     console.error('Error al obtener las materias primas:', error);
     res.render('materiasPrimas/materiaPrima', { materiasPrimas: [], mensaje: 'Error al obtener las materias primas' });
@@ -62,7 +68,7 @@ export const updateMateriaPrima = async (req, res) => {
     });
 
     console.log("Materia prima actualizada con éxito");
-    res.redirect("/materiaPrima");
+    res.redirect('/materiaPrima?materiaPrimaEditada=true');
 
   } catch (error) {
     console.error("Error al actualizar la materia prima:", error);

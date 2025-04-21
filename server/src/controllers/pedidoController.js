@@ -21,7 +21,7 @@ const insertPedido = async (req, res) => {
   try {
     console.log("Datos recibidos para crear pedido:", req.body);
 
-    // Se espera que req.body contenga: fecha, distribuidorId e items (arreglo de { productoId, cantidad })
+    
     const { fecha, distribuidorId, items } = req.body;
 
     if (!fecha || !distribuidorId || !items || !Array.isArray(items) || items.length === 0) {
@@ -40,11 +40,11 @@ const insertPedido = async (req, res) => {
     let precioTotal = 0;
     let validItems = 0;
 
-    // Procesar cada ítem del pedido
+    
     for (const item of items) {
       const { productoId, cantidad } = item;
 
-      // Buscar el producto para obtener el precio unitario
+      
       const producto = await Productos.findByPk(productoId);
       if (!producto) {
         console.warn(`Producto con id ${productoId} no encontrado. Se omitirá este ítem.`);
@@ -80,7 +80,7 @@ const insertPedido = async (req, res) => {
     await t.commit();
 
     console.log("Pedido creado con éxito");
-    res.redirect("/pedido"); // Ajusta la ruta según tu vista
+    res.redirect('/pedido?pedidoAgregado=true'); 
   } catch (error) {
     if (t) await t.rollback();
     console.error("Error al crear el pedido:", error);
@@ -92,20 +92,17 @@ const insertPedido = async (req, res) => {
 const getPedido = async (req, res) => {
   try {
     const notificacionPagoPendiente = req.query.notificacionPagoPendiente === 'true';
-    const { id, rol } = req.usuario
+    const pedidoAgregado = req.query.pedidoAgregado === 'true';
+    const pedidoEditado = req.query.pedidoEditado === 'true';
+    const { id, rol } = req.usuario;
+
     if (rol == 3) {
-      const distribuidor = await Distribuidores.findOne({
-        where: {
-          usuario_id: id
-        }
-      });
-      if (!distribuidor) {
-        return res.redirect('/');
-      }
-      const distribuidorId = distribuidor.id
+      const distribuidor = await Distribuidores.findOne({ where: { usuario_id: id } });
+      if (!distribuidor) return res.redirect('/');
+
       const pedidos = await Pedidos.findAll({
         where: {
-          distribuidorId: distribuidorId,
+          distribuidorId: distribuidor.id,
           estadoDeEntrega: "no entregado",
           estadoDePago: "pendiente"
         },
@@ -113,9 +110,7 @@ const getPedido = async (req, res) => {
           {
             model: PedidoDetalle,
             as: 'detalles',
-            include: [
-              { model: Productos, as: 'producto' }
-            ]
+            include: [{ model: Productos, as: 'producto' }]
           },
           {
             model: Distribuidores,
@@ -124,32 +119,29 @@ const getPedido = async (req, res) => {
           }
         ]
       });
+
       const pedidosWithProductos = pedidos.map(pedido => {
         const pedidoJSON = pedido.toJSON();
-        // Calcular el precio total sumando los subtotales de todos los detalles
-        const precioTotal = pedidoJSON.detalles.reduce((total, detalle) =>
-          total + parseFloat(detalle.subtotal || 0), 0);
-
+        const precioTotal = pedidoJSON.detalles.reduce((total, d) => total + parseFloat(d.subtotal || 0), 0);
         return {
           ...pedidoJSON,
-          precioTotal: precioTotal, // Asegurar que precioTotal se establece correctamente
-          empresa: pedido.Distribuidor ? pedido.Distribuidor.empresa : 'No disponible',
-          productos: pedidoJSON.detalles.map(detalle => ({
-            nombre: detalle.producto.nombre,
-            cantidad: detalle.cantidad
-          }))
+          precioTotal,
+          empresa: pedido.Distribuidor?.empresa || 'No disponible',
+          productos: pedidoJSON.detalles.map(d => ({ nombre: d.producto.nombre, cantidad: d.cantidad }))
         };
       });
 
-      if (pedidos.length > 0) {
-        // console.log(`Se encontraron ${pedidos.length} pedidos.`);
-        res.render("pedidos/pedidos", { pedidos: pedidosWithProductos, mensaje: null, rol, notificacionPagoPendiente });
-      } else {
-        console.log("No se encontraron pedidos.");
-        res.render("pedidos/pedidos", { pedidos: [], mensaje: "No hay pedidos registrados." });
-      }
+      return res.render("pedidos/pedidos", {
+        pedidos: pedidosWithProductos,
+        mensaje: pedidos.length ? null : "No hay pedidos registrados.",
+        rol,
+        notificacionPagoPendiente,
+        pedidoAgregado,
+        pedidoEditado
+      });
     }
-    else if (rol == 1) {
+
+    if (rol == 1 || rol == 2) {
       const pedidos = await Pedidos.findAll({
         where: {
           estadoDeEntrega: "no entregado",
@@ -159,9 +151,7 @@ const getPedido = async (req, res) => {
           {
             model: PedidoDetalle,
             as: 'detalles',
-            include: [
-              { model: Productos, as: 'producto' }
-            ]
+            include: [{ model: Productos, as: 'producto' }]
           },
           {
             model: Distribuidores,
@@ -170,85 +160,43 @@ const getPedido = async (req, res) => {
           }
         ]
       });
+
       const pedidosWithProductos = pedidos.map(pedido => {
         const pedidoJSON = pedido.toJSON();
-        // Calcular el precio total sumando los subtotales de todos los detalles
-        const precioTotal = pedidoJSON.detalles.reduce((total, detalle) =>
-          total + parseFloat(detalle.subtotal || 0), 0);
-
+        const precioTotal = pedidoJSON.detalles.reduce((total, d) => total + parseFloat(d.subtotal || 0), 0);
         return {
           ...pedidoJSON,
-          precioTotal: precioTotal, // Asegurar que precioTotal se establece correctamente
-          empresa: pedido.Distribuidor ? pedido.Distribuidor.empresa : 'No disponible',
-          productos: pedidoJSON.detalles.map(detalle => ({
-            nombre: detalle.producto.nombre,
-            cantidad: detalle.cantidad
-          }))
+          precioTotal,
+          empresa: pedido.Distribuidor?.empresa || 'No disponible',
+          productos: pedidoJSON.detalles.map(d => ({ nombre: d.producto.nombre, cantidad: d.cantidad }))
         };
       });
 
-      if (pedidos.length > 0) {
-        // console.log(`Se encontraron ${pedidos.length} pedidos.`);
-        res.render("pedidos/pedidos", { pedidos: pedidosWithProductos, mensaje: null, rol, notificacionPagoPendiente });
-      } else {
-        console.log("No se encontraron pedidos.");
-        res.render("pedidos/pedidos", { pedidos: [], mensaje: "No hay pedidos registrados." });
-      }
-    }
-    else if (rol == 2) {
-      const pedidos = await Pedidos.findAll({
-        where: {
-          estadoDeEntrega: "no entregado",
-          estadoDePago: "pendiente"
-        },
-        include: [
-          {
-            model: PedidoDetalle,
-            as: 'detalles',
-            include: [
-              { model: Productos, as: 'producto' }
-            ]
-          },
-          {
-            model: Distribuidores,
-            as: 'Distribuidor',
-            attributes: ['id', 'empresa']
-          }
-        ]
+      return res.render("pedidos/pedidos", {
+        pedidos: pedidosWithProductos,
+        mensaje: pedidos.length ? null : "No hay pedidos registrados.",
+        rol,
+        notificacionPagoPendiente,
+        pedidoAgregado,
+        pedidoEditado
       });
-      const pedidosWithProductos = pedidos.map(pedido => {
-        const pedidoJSON = pedido.toJSON();
-        // Calcular el precio total sumando los subtotales de todos los detalles
-        const precioTotal = pedidoJSON.detalles.reduce((total, detalle) =>
-          total + parseFloat(detalle.subtotal || 0), 0);
-
-        return {
-          ...pedidoJSON,
-          precioTotal: precioTotal, // Asegurar que precioTotal se establece correctamente
-          empresa: pedido.Distribuidor ? pedido.Distribuidor.empresa : 'No disponible',
-          productos: pedidoJSON.detalles.map(detalle => ({
-            nombre: detalle.producto.nombre,
-            cantidad: detalle.cantidad
-          }))
-        };
-      });
-
-      if (pedidos.length > 0) {
-        // console.log(`Se encontraron ${pedidos.length} pedidos.`);
-        res.render("pedidos/pedidos", { pedidos: pedidosWithProductos, mensaje: null, rol, notificacionPagoPendiente });
-      } else {
-        console.log("No se encontraron pedidos.");
-        res.render("pedidos/pedidos", { pedidos: [], mensaje: "No hay pedidos registrados." });
-      }
     }
-    else {
-      res.redirect('/')
-    }
+
+    return res.redirect('/');
   } catch (error) {
     console.error("Error al obtener los pedidos:", error);
-    res.render("pedidos/pedidos", { pedidos: [], mensaje: "Error al cargar los pedidos." });
+    res.render("pedidos/pedidos", {
+      pedidos: [],
+      mensaje: "Error al cargar los pedidos.",
+      rol: req.usuario?.rol || null,
+      notificacionPagoPendiente: false,
+      pedidoAgregado: false,
+      pedidoEditado: false
+    });
   }
 };
+
+
 
 // Función para obtener y renderizar todos los pedidos
 const getTodosPedidos = async (req, res) => {
@@ -463,7 +411,7 @@ const updatePedido = async (req, res) => {
     await t.commit();
 
     console.log("Pedido actualizado exitosamente");
-    res.redirect("/pedido");
+    res.redirect("/pedido?pedidoEditado=true");
   } catch (error) {
     if (t) await t.rollback();
     console.error("Error al actualizar pedido:", error);
@@ -597,9 +545,7 @@ const exportarPDFPedido = async (req, res) => {
           margin: [0, 0, 0, 10]
         },
         { text: 'CALBARR S.R.L.\nRELLENOS EL BUEN SABOR', fontSize: 14, bold: true, margin: [0, 0, 0, 10] },
-        { text: 'Ident. Jurídica:  3-102-873151' },
         { text: 'Correo: rellenoselbuensabor@gmail.com\nTeléfono: +(506) 2102-0518' },
-        { text: `\nFactura Electrónica N° 0010000101000000${id.toString().padStart(4, '0')}` },
         { text: `Fecha de emisión: ${pedido.fecha}` },
         { text: `Condición de Venta: Contado\nMedio de Pago: Efectivo\nDistribuidor: ${pedido.Distribuidor?.empresa || 'Desconocido'}` },
         {

@@ -24,6 +24,54 @@
 
 </head>
 
+<header class="navbar sticky-top flex-md-nowrap">
+  <div class="col-md-3 col-lg-3 me-0 px-3 fs-6 d-flex align-items-center">
+      <a class="navbar-brand d-flex align-items-center" href="/">
+          <img src="/images/LogoEBS.webp" alt="EL BUEN SABOR" class="img-fluid" style="max-height: 70px;">
+          <span class="ms-2 fw-bold">El Buen Sabor</span>
+      </a>
+  </div>
+
+  <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
+      data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="navbar-nav me-lg-2">
+      <div class="dropdown px-3">
+          <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <img src="<%= typeof usuario !== 'undefined' && usuario && usuario.imagen_url ? usuario.imagen_url : '/images/3135768.png' %>"
+                  class="profile-image img-fluid" alt="">
+          </a>
+          <ul class="dropdown-menu bg-white shadow">
+              <li>
+                  <div class="dropdown-menu-profile-thumb d-flex">
+                      <img src="<%= typeof usuario !== 'undefined' && usuario && usuario.imagen_url ? usuario.imagen_url : '/images/3135768.png' %>"
+                          class="profile-image img-fluid me-3" alt="">
+                      <div class="d-flex flex-column">
+                          <small>
+                              <%= typeof usuario !=='undefined' && usuario ? usuario.nombre : 'Usuario' %>
+                          </small>
+                          <a href="#">
+                              <%= typeof usuario !=='undefined' && usuario ? usuario.correo : 'correo@ejemplo.com' %>
+                          </a>
+                          <small><strong>
+                                  <%= typeof rol_name !=='undefined' ? rol_name : 'Usuario' %>
+                              </strong></small>
+                      </div>
+                  </div>
+              </li>
+              <li><a class="dropdown-item" href="/profile"><i class="bi-person me-2"></i>Mi Perfil</a></li>
+              
+              <li class="border-top mt-3 pt-2 mx-4">
+                  <a class="dropdown-item ms-0 me-0" href="/logout">LOGOUT</a>
+              </li>
+          </ul>
+      </div>
+  </div>
+</header>
+
+
 <body>
     <!-- Contenedor de toda la aplicación -->
     <div class="container-fluid">
@@ -41,13 +89,19 @@
     </div>
   
     <%- include('../partials/modals') %>
-    <script src="/js/jquery.min.js"></script>
-    <!-- Esta línea es la del CDN -->
+    
+
+  </body>
+
+  <script src="/js/jquery.min.js"></script>
+  <!-- Esta línea es la del CDN -->
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script src="/js/apexcharts.min.js"></script>
-    <script src="/js/custom.js"></script>
-    <!-- jQuery (ya lo tenés) -->
+
+  <script src="/js/apexcharts.min.js"></script>
+  <script src="/js/custom.js"></script>
+  <!-- jQuery (ya lo tenés) -->
 <!-- DataTables JS -->
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
@@ -55,5 +109,6 @@
 <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
 <script src="/js/initAOS.js"></script>
 
-  </body>
 </html>
+
+

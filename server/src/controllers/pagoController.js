@@ -26,7 +26,7 @@ const insertPago = async (req, res) => {
     });
 
     console.log("Pago registrado con éxito");
-    res.redirect("/pagos"); // Ajusta la ruta según tu vista
+    res.redirect("/pagos?pagoAgregado=true"); // Ajusta la ruta según tu vista
   } catch (error) {
     console.error("Error al registrar el pago:", error);
     res.status(500).json({ message: "Error al registrar pago", error: error.message });
@@ -94,6 +94,8 @@ const getPagos = async (req, res) => {
 
     // Obtener todos los proveedores para el filtro del formulario
     const proveedores = await Proveedores.findAll({ attributes: ['id', 'nombre'] });
+    const pagoAgregado = req.query.pagoAgregado === 'true';
+    const pagoEditado = req.query.pagoEditado === 'true';
 
     const pagos = await Pagos.findAll({
       where: whereClause,
@@ -114,12 +116,14 @@ const getPagos = async (req, res) => {
 
     if (pagosFormateados.length > 0) {
       console.log(`Se encontraron ${pagosFormateados.length} pagos.`);
-      res.render("pagos/pagos", { 
-        pagos: pagosFormateados, 
-        proveedores, 
+      res.render("pagos/pagos", {
+        pagos: pagosFormateados,
+        proveedores,
         filtros: { proveedor_id, fecha_desde, fecha_hasta, monto_min, monto_max },
-        mensaje: null, 
-        layout: 'layouts/layout' 
+        mensaje: null,
+        layout: 'layouts/layout',
+        pagoAgregado,          
+        pagoEditado           
       });
     } else {
       console.log("No se encontraron pagos.");
@@ -172,7 +176,7 @@ const updatePago = async (req, res) => {
     });
 
     console.log("Pago actualizado con éxito");
-    res.redirect("/pagos");
+    res.redirect("/pagos?pagoEditado=true");
   } catch (error) {
     console.error("Error al actualizar el pago:", error);
     res.status(500).json({ message: "Error al actualizar pago", error: error.message });

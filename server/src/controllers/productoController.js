@@ -13,16 +13,33 @@ const insertProducto = async (req, res) => {
     const { nombre, precio, stock, formulaciones_id } = req.body;
 
     if (!nombre || !formulaciones_id) {
-      return res.status(400).json({ message: "Nombre y Formulación son obligatorios" });
+      return res.redirect(`/producto/agregar?error=camposObligatorios`);
     }
 
-    // Obtener la formulación correspondiente
+    // Verificar si la formulación existe
     const formulacion = await Formulaciones.findByPk(formulaciones_id);
     if (!formulacion) {
-      return res.status(404).json({ message: "La formulación seleccionada no existe" });
+      return res.redirect(`/producto/agregar?error=formulacionInvalida`);
     }
 
-    // Crear el producto en la base de datos
+    // Obtener ingredientes
+    const ingredientes = await GestionFormulaciones.findAll({
+      where: { formulacion_id: formulaciones_id }
+    });
+
+    // Verificar stock suficiente antes de crear el producto
+    for (const ingrediente of ingredientes) {
+      const materiaPrima = await MateriaPrima.findByPk(ingrediente.materia_prima_id);
+      if (materiaPrima) {
+        const cantidadNecesaria = ingrediente.cantidad * formulacion.total_producir;
+        if (materiaPrima.stock < cantidadNecesaria) {
+          console.warn(`Stock insuficiente para ${materiaPrima.nombre}`);
+          return res.redirect(`/producto/agregar?stockInsuficiente=${materiaPrima.nombre}`);
+        }
+      }
+    }
+
+    // Crear producto solo si todo el stock está disponible
     const nuevoProducto = await Productos.create({
       nombre,
       precio,
@@ -30,28 +47,17 @@ const insertProducto = async (req, res) => {
       formulaciones_id
     });
 
-    // Obtener los ingredientes de la formulación
-    const ingredientes = await GestionFormulaciones.findAll({
-      where: { formulacion_id: formulaciones_id }
-    });
-
-    // Actualizar stock de materias primas basado en total_producir de la formulación
+    // Descontar el stock de materias primas
     for (const ingrediente of ingredientes) {
       const materiaPrima = await MateriaPrima.findByPk(ingrediente.materia_prima_id);
-      if (materiaPrima) {
-        const cantidadNecesaria = ingrediente.cantidad * formulacion.total_producir;
-        if (materiaPrima.stock >= cantidadNecesaria) {
-          materiaPrima.stock -= cantidadNecesaria;
-          await materiaPrima.save();
-        } else {
-          console.warn(`No hay suficiente stock de ${materiaPrima.nombre}. Se intentó restar ${cantidadNecesaria}, pero solo hay ${materiaPrima.stock}.`);
-          return res.status(400).json({ message: `Stock insuficiente para ${materiaPrima.nombre}` });
-        }
-      }
+      const cantidadNecesaria = ingrediente.cantidad * formulacion.total_producir;
+      materiaPrima.stock -= cantidadNecesaria;
+      await materiaPrima.save();
     }
 
     console.log("Producto creado con éxito y stock actualizado");
-    res.redirect("/producto");
+    res.redirect('/producto?productoAgregado=true');
+
   } catch (error) {
     console.error("Error al crear el producto:", error);
     res.status(500).json({ message: "Error al agregar producto", error: error.message });
@@ -70,9 +76,12 @@ const getProducto = async (req, res) => {
     if (productos.length > 0) {
       console.log(`Se encontraron ${productos.length} productos.`);
       res.render("productos/producto", {
-        productos: productos,
+        productos,
         mensaje: null,
-      });
+        productoAgregado: req.query.productoAgregado === 'true',
+        productoEditado: req.query.productoEditado === 'true',
+        stockInsuficiente: req.query.stockInsuficiente || null
+      });      
     } else {
       console.log(`No se encontraron productos.`);
       res.render("productos/producto", {
@@ -111,7 +120,7 @@ const updateProducto = async (req, res) => {
     });
 
     console.log("Producto actualizado con éxito");
-    res.redirect("/producto");
+    res.redirect('/producto?productoEditado=true');
 
   } catch (error) {
     console.error("Error al actualizar el producto:", error);
@@ -172,10 +181,17 @@ const rendUpdateProducto = async (req, res) => {
 const rendAgregarProducto = async (req, res) => {
   try {
     const formulaciones = await Formulaciones.findAll();
-    res.render("productos/productoAgregar", { formulaciones });
+    res.render("productos/productoAgregar", {
+      formulaciones,
+      error: req.query.error || null,
+      stockInsuficiente: req.query.stockInsuficiente || null
+    });
   } catch (error) {
     console.error("Error al obtener las formulaciones:", error);
-    res.render("productos/productoAgregar", { formulaciones: [], mensaje: "Error al cargar las formulaciones." });
+    res.render("productos/productoAgregar", {
+      formulaciones: [],
+      error: "Error al cargar las formulaciones."
+    });
   }
 };
 

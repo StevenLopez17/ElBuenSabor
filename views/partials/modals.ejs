@@ -79,13 +79,14 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body text-center">
-          <i class="bi bi-check-circle-fill text-success fs-1"></i>
+          <i class="bi bi-check-circle-fill text-warning fs-1"></i>
           <p class="mt-3">Se ha enviado una notificación de pago pendiente al cliente.</p>
         </div>
       </div>
     </div>
   </div>
 <% } %>
+
 
 <% if (typeof notificacionVacacionesAprobadas !=='undefined' && notificacionVacacionesAprobadas) { %>
   <div class="modal fade" id="modalNotificacionVacaciones" tabindex="-1" aria-labelledby="modalNotificacionVacacionesLabel" aria-hidden="true">
@@ -144,6 +145,370 @@
 
 
 
+<% if (typeof pedidoAgregado !== 'undefined' && pedidoAgregado) { %>
+  <div class="modal fade" id="modalPedidoAgregado" tabindex="-1" aria-labelledby="modalPedidoAgregadoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalPedidoAgregadoLabel">Pedido agregado</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body text-center">
+          <i class="bi bi-check-circle-fill text-success fs-1"></i>
+          <p class="mt-3">El pedido ha sido agregado correctamente.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+<% } %>
+
+
+<% if (typeof pedidoEditado !== 'undefined' && pedidoEditado) { %>
+  <div class="modal fade" id="modalPedidoEditado" tabindex="-1" aria-labelledby="modalPedidoEditadoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalPedidoEditadoLabel">Pedido actualizado</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body text-center">
+          <i class="bi bi-pencil-square text-warning fs-1"></i>
+          <p class="mt-3">El pedido se ha actualizado correctamente.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+<% } %>
+
+<!-- Modal: Confirmación de descarga de PDF -->
+<div class="modal fade" id="modalPDFDescargado" tabindex="-1" aria-labelledby="modalPDFDescargadoLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalPDFDescargadoLabel">Descarga iniciada</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body text-center">
+        <i class="bi bi-download text-warning fs-1"></i>
+        <p class="mt-3">La descarga del PDF ha comenzado.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modals de Colaboradores-->
+
+<% if (typeof colaboradorAgregado !== 'undefined' && colaboradorAgregado) { %>
+  <div class="modal fade" id="modalColaboradorAgregado" tabindex="-1" aria-labelledby="modalColaboradorAgregadoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content text-center">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalColaboradorAgregadoLabel">Colaborador agregado</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <i class="bi bi-person-plus-fill text-success fs-1"></i>
+          <p class="mt-3">El colaborador ha sido registrado correctamente.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+<% } %>
+
+<% if (typeof colaboradorEditado !== 'undefined' && colaboradorEditado) { %>
+  <div class="modal fade" id="modalColaboradorEditado" tabindex="-1" aria-labelledby="modalColaboradorEditadoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content text-center">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalColaboradorEditadoLabel">Colaborador actualizado</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <i class="bi bi-pencil-square text-warning fs-1"></i>
+          <p class="mt-3">Los datos del colaborador han sido actualizados correctamente.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+<% } %>
+
+<% if (typeof modalEstadoColaborador !== 'undefined' && modalEstadoColaborador) { %>
+  <div class="modal fade" id="modalCambioEstadoColaborador" tabindex="-1" aria-labelledby="modalCambioEstadoColaboradorLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content text-center">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalCambioEstadoColaboradorLabel">Estado actualizado</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <i class="bi bi-info-circle-fill text-warning fs-1"></i>
+          <p class="mt-3">El estado del colaborador ha sido modificado correctamente.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+<% } %>
+
+
+
+<!-- Modal: Cliente Agregado -->
+<% if (typeof clienteAgregado !== 'undefined' && clienteAgregado) { %>
+  <div class="modal fade" id="modalClienteAgregado" tabindex="-1" aria-labelledby="modalClienteAgregadoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content text-center">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalClienteAgregadoLabel">Cliente agregado</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <i class="bi bi-check-circle-fill text-warning fs-1"></i>
+          <p class="mt-3">El cliente ha sido registrado correctamente.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+<% } %>
+
+<!-- Modal: Cliente Editado -->
+<% if (typeof clienteEditado !== 'undefined' && clienteEditado) { %>
+  <div class="modal fade" id="modalClienteEditado" tabindex="-1" aria-labelledby="modalClienteEditadoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content text-center">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalClienteEditadoLabel">Cliente actualizado</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <i class="bi bi-pencil-square text-warning fs-1"></i>
+          <p class="mt-3">Los datos del cliente han sido actualizados correctamente.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+<% } %>
+
+<!-- Modal: Cambio de Estado Cliente -->
+<% if (typeof modalEstadoCliente !== 'undefined' && modalEstadoCliente) { %>
+  <div class="modal fade" id="modalCambioEstadoCliente" tabindex="-1" aria-labelledby="modalCambioEstadoClienteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content text-center">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalCambioEstadoClienteLabel">Estado actualizado</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <i class="bi bi-info-circle-fill text-warning fs-1"></i>
+          <p class="mt-3">El estado del cliente ha sido modificado correctamente.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+<% } %>
+
+
+
+
+<!-- Modal: Proveedor Agregado -->
+<% if (typeof proveedorAgregado !== 'undefined' && proveedorAgregado) { %>
+  <div class="modal fade" id="modalProveedorAgregado" tabindex="-1" aria-labelledby="modalProveedorAgregadoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content text-center">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalProveedorAgregadoLabel">Proveedor agregado</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <i class="bi bi-check-circle-fill text-warning fs-1"></i>
+          <p class="mt-3">El proveedor ha sido registrado correctamente.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+<% } %>
+
+<!-- Modal: Proveedor Editado -->
+<% if (typeof proveedorEditado !== 'undefined' && proveedorEditado) { %>
+  <div class="modal fade" id="modalProveedorEditado" tabindex="-1" aria-labelledby="modalProveedorEditadoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content text-center">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalProveedorEditadoLabel">Proveedor actualizado</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <i class="bi bi-pencil-square text-warning fs-1"></i>
+          <p class="mt-3">Los datos del proveedor han sido actualizados correctamente.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+<% } %>
+
+<!-- Modal: Cambio de Estado Proveedor -->
+<% if (typeof modalEstadoProveedor !== 'undefined' && modalEstadoProveedor) { %>
+  <div class="modal fade" id="modalCambioEstadoProveedor" tabindex="-1" aria-labelledby="modalCambioEstadoProveedorLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content text-center">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalCambioEstadoProveedorLabel">Estado actualizado</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <i class="bi bi-info-circle-fill text-warning fs-1"></i>
+          <p class="mt-3">El estado del proveedor ha sido modificado correctamente.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+<% } %>
+
+
+
+<% if (typeof pagoAgregado !== 'undefined' && pagoAgregado) { %>
+  <div class="modal fade" id="modalPagoAgregado" tabindex="-1" aria-labelledby="modalPagoAgregadoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content text-center">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalPagoAgregadoLabel">Pago registrado</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <i class="bi bi-check-circle-fill text-warning fs-1"></i>
+          <p class="mt-3">El pago ha sido registrado correctamente.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+<% } %>
+
+<% if (typeof pagoEditado !== 'undefined' && pagoEditado) { %>
+  <div class="modal fade" id="modalPagoEditado" tabindex="-1" aria-labelledby="modalPagoEditadoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content text-center">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalPagoEditadoLabel">Pago actualizado</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <i class="bi bi-pencil-square text-warning fs-1"></i>
+          <p class="mt-3">Los datos del pago han sido actualizados correctamente.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+<% } %>
+
+
+<% if (typeof productoAgregado !== 'undefined' && productoAgregado) { %>
+  <div class="modal fade" id="modalProductoAgregado" tabindex="-1" aria-labelledby="modalProductoAgregadoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content text-center">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalProductoAgregadoLabel">Producto agregado</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <i class="bi bi-check-circle-fill text-warning fs-1"></i>
+          <p class="mt-3">El producto ha sido registrado correctamente.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+<% } %>
+
+
+<% if (typeof productoEditado !== 'undefined' && productoEditado) { %>
+  <div class="modal fade" id="modalProductoEditado" tabindex="-1" aria-labelledby="modalProductoEditadoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content text-center">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalProductoEditadoLabel">Producto actualizado</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <i class="bi bi-pencil-square text-warning fs-1"></i>
+          <p class="mt-3">Los datos del producto han sido actualizados correctamente.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+<% } %>
+
+<% if (typeof stockInsuficiente !== 'undefined' && stockInsuficiente) { %>
+  <div class="modal fade" id="modalStockInsuficiente" tabindex="-1" aria-labelledby="modalStockInsuficienteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content text-center">
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title" id="modalStockInsuficienteLabel">Error de Stock</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <i class="bi bi-x-circle-fill text-danger fs-1"></i>
+          <p class="mt-3">Stock insuficiente para <strong><%= stockInsuficiente %></strong>. No se puede registrar el producto.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+<% } %>
+
+
+<!-- Modal: Materia Prima Agregada -->
+<% if (typeof materiaPrimaAgregada !== 'undefined' && materiaPrimaAgregada) { %>
+  <div class="modal fade" id="modalMateriaPrimaAgregada" tabindex="-1" aria-labelledby="modalMateriaPrimaAgregadaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content text-center">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalMateriaPrimaAgregadaLabel">Materia Prima agregada</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <i class="bi bi-check-circle-fill text-warning fs-1"></i>
+          <p class="mt-3">La materia prima ha sido registrada correctamente.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+<% } %>
+
+<!-- Modal: Materia Prima Editada -->
+<% if (typeof materiaPrimaEditada !== 'undefined' && materiaPrimaEditada) { %>
+  <div class="modal fade" id="modalMateriaPrimaEditada" tabindex="-1" aria-labelledby="modalMateriaPrimaEditadaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content text-center">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalMateriaPrimaEditadaLabel">Materia Prima actualizada</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <i class="bi bi-pencil-square text-warning fs-1"></i>
+          <p class="mt-3">La materia prima ha sido actualizada correctamente.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+<% } %>
+
+<!-- Modal: Formulación Agregada -->
+<% if (typeof formulacionAgregada !== 'undefined' && formulacionAgregada) { %>
+  <div class="modal fade" id="modalFormulacionAgregada" tabindex="-1" aria-labelledby="modalFormulacionAgregadaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content text-center">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalFormulacionAgregadaLabel">Formulación registrada</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <i class="bi bi-check-circle-fill text-warning fs-1"></i>
+          <p class="mt-3">La formulación se ha registrado exitosamente.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+<% } %>
+
+
+
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const formImagenPerfil = document.getElementById('formImagenPerfil');
@@ -151,31 +516,46 @@
     const modalImagenPerfil = document.getElementById('modalImagenPerfil');
     const btnSubirImagen = document.getElementById('btnSubirImagen');
 
-
     const modales = [
       'modalDistribuidorAgregado',
       'modalCambioEstadoExito',
       'modalDistribuidorEditado',
       'modalNotificacionPago',
       'modalNotificacionVacaciones',
-      'modalNotificacionVacacionesDenegadas'
+      'modalNotificacionVacacionesDenegadas',
+      'modalPedidoAgregado',
+      'modalPedidoEditado',
+      'modalColaboradorAgregado',
+      'modalColaboradorEditado',
+      'modalCambioEstadoColaborador',
+      'modalClienteAgregado',
+      'modalClienteEditado',
+      'modalCambioEstadoCliente',
+      'modalProveedorAgregado',
+      'modalProveedorEditado',
+      'modalCambioEstadoProveedor',
+      'modalPagoAgregado',
+      'modalPagoEditado',
+      'modalProductoAgregado',
+      'modalProductoEditado',
+      'modalStockInsuficiente',
+      'modalMateriaPrimaAgregada',
+      'modalMateriaPrimaEditada',
+      'modalFormulacionAgregada'
     ];
 
- 
     modales.forEach(id => {
       const modalEl = document.getElementById(id);
       if (modalEl) {
         const modal = new bootstrap.Modal(modalEl);
         modal.show();
 
-        // Auto cerrar a los 4 segundos
         setTimeout(() => {
           const instance = bootstrap.Modal.getInstance(modalEl);
           if (instance) instance.hide();
         }, 4000);
       }
     });
-
 
     if (formImagenPerfil) {
       formImagenPerfil.addEventListener('submit', function (e) {
@@ -193,31 +573,26 @@
         })
           .then(response => response.json())
           .then(data => {
-  if (data.error) {
-    errorImagenPerfil.textContent = data.error;
-    errorImagenPerfil.classList.remove('d-none');
-  } else if (data.url) {
-    const profileImages = document.querySelectorAll('.custom-block-profile-image, .profile-image');
-    profileImages.forEach(img => {
-      img.src = data.url;
-    });
+            if (data.error) {
+              errorImagenPerfil.textContent = data.error;
+              errorImagenPerfil.classList.remove('d-none');
+            } else if (data.url) {
+              const profileImages = document.querySelectorAll('.custom-block-profile-image, .profile-image');
+              profileImages.forEach(img => {
+                img.src = data.url;
+              });
 
-    const modalInstance = bootstrap.Modal.getInstance(modalImagenPerfil);
-    if (modalInstance) modalInstance.hide();
+              const modalInstance = bootstrap.Modal.getInstance(modalImagenPerfil);
+              if (modalInstance) modalInstance.hide();
 
-    // ✅ Mostrar solo en éxito
-    const confirmModal = document.getElementById('modalImagenConfirmacion');
-    if (confirmModal) {
-      const modalConfirmacion = new bootstrap.Modal(confirmModal);
-      modalConfirmacion.show();
-
-      // Auto cerrar solo si fue llamado
-      setTimeout(() => {
-        modalConfirmacion.hide();
-      }, 4000);
-    }
-  }
-})
+              const confirmModal = document.getElementById('modalImagenConfirmacion');
+              if (confirmModal) {
+                const modalConfirmacion = new bootstrap.Modal(confirmModal);
+                modalConfirmacion.show();
+                setTimeout(() => modalConfirmacion.hide(), 4000);
+              }
+            }
+          })
           .catch(error => {
             console.error('Error:', error);
             errorImagenPerfil.textContent = 'Error al subir la imagen. Inténtalo de nuevo.';
@@ -231,4 +606,5 @@
     }
   });
 </script>
+
 

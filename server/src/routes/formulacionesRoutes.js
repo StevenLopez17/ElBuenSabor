@@ -3,8 +3,9 @@ import { renderizaForm, guardarFormulacion, getVistaFormulaciones } from '../con
 
 const router = express.Router();
 
-router.get('/getformulaciones',getVistaFormulaciones);
+router.get('/formulaciones',getVistaFormulaciones);
 router.get('/agregarForms', renderizaForm);
 router.post('/guardar-formulacion', guardarFormulacion);
+
 
 export default router;

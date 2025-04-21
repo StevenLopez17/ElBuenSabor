@@ -19,7 +19,7 @@ const insertProveedor = async (req, res) => {
     });
 
     console.log("Proveedor creado con éxito");
-    res.redirect("/proveedores"); // Ajusta la ruta según tu vista
+    res.redirect("/proveedores?proveedorAgregado=true"); // Ajusta la ruta según tu vista
   } catch (error) {
     console.error("Error al crear el proveedor:", error);
     res.status(500).json({ message: "Error al agregar proveedor", error: error.message });
@@ -45,7 +45,14 @@ const getProveedores = async (req, res) => {
 
     if (proveedores.length > 0) {
       console.log(`Se encontraron ${proveedores.length} proveedores.`);
-      res.render("proveedores/proveedores", { proveedores, mensaje: null, layout: 'layouts/layout' });
+      res.render("proveedores/proveedores", {
+        proveedores,
+        mensaje: null,
+        layout: 'layouts/layout',
+        proveedorAgregado: req.query.proveedorAgregado === 'true',
+        proveedorEditado: req.query.proveedorEditado === 'true',
+        modalEstadoProveedor: req.query.modalEstadoProveedor === 'true'
+      });
     } else {
       console.log("No se encontraron proveedores.");
       res.render("proveedores/proveedores", { proveedores: [], mensaje: "No hay proveedores registrados.", layout: 'layouts/layout' });
@@ -80,7 +87,7 @@ const updateProveedor = async (req, res) => {
     });
 
     console.log("Proveedor actualizado con éxito");
-    res.redirect("/proveedores");
+    res.redirect("/proveedores?proveedorEditado=true");
   } catch (error) {
     console.error("Error al actualizar el proveedor:", error);
     res.status(500).json({ message: "Error al actualizar proveedor", error: error.message });
@@ -123,7 +130,7 @@ const cambiarProveedorEstado = async (req, res) => {
     await proveedor.save();
 
     console.log(`El proveedor de ID ${id} está ${proveedor.estado ? 'Activo' : 'Inactivo'}`);
-    res.redirect("/proveedores");
+    res.redirect("/proveedores?modalEstadoProveedor=true");
   } catch (error) {
     console.error("Error al cambiar el estado del proveedor:", error);
     res.status(500).json({ message: "Error al cambiar el estado del proveedor", error: error.message });

@@ -21,7 +21,7 @@ const insertCliente = async (req, res) => {
     });
 
     console.log("Cliente creado con éxito");
-    res.redirect("/cliente");
+    res.redirect('/cliente?clienteAgregado=true');
   } catch (error) {
     console.error("Error al crear el cliente:", error);
     res
@@ -65,9 +65,13 @@ const getCliente = async (req, res) => {
     if (clientes.length > 0) {
       console.log(`Se encontraron ${clientes.length} clientes.`);
       res.render("clientes/clientes", {
-        clientes: clientes,
+        clientes,
         mensaje: null,
+        clienteAgregado: req.query.clienteAgregado === 'true',
+        clienteEditado: req.query.clienteEditado === 'true',
+        modalEstadoCliente: req.query.modalEstadoCliente === 'true'
       });
+      
     } else {
       console.log(`No se encontraron clientes.`);
       res.render("clientes/clientes", {
@@ -108,7 +112,7 @@ const updateCliente = async (req, res) => {
     });
 
     console.log("Cliente actualizado con éxito");
-    res.redirect("/cliente");
+    res.redirect('/cliente?clienteEditado=true');
 
   } catch (error) {
     console.error("Error al actualizar el cliente:", error);
@@ -164,7 +168,7 @@ const cambiarClienteEstado = async (req, res) => {
 
     console.log(`El cliente de ID ${id} está ${cliente.estado ? 'Activo' : 'Inactivo'}`);
 
-    res.redirect('/cliente');
+    res.redirect('/cliente?modalEstadoCliente=true');
   } catch (error) {
     console.error("Error al cambiar el estado del cliente:", error);
     res.status(500).json({ message: "Error al cambiar el estado del cliente", error: error.message });

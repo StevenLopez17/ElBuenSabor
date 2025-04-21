@@ -16,7 +16,8 @@ const insertColaborador = async (req, res) => {
             horario_id,
         });
 
-        res.redirect('colaboradores')
+        res.redirect('/colaboradores?colaboradorAgregado=true');
+
     } catch (error) {
         console.error('Error al crear el registro de colaborador:', error);
         res.status(500).json({ message: "Error al agregar colaborador", error: error.message });
@@ -42,17 +43,26 @@ const getColaboradores = async (req, res) => {
             // console.log(`Se encontraron ${colaboradores.length} Colaboradores.`);
             res.render('gestionColaboradores/colaboradores', {
                 layout: 'layouts/layout',
-                colaboradores: colaboradores,
-                horarios: horarios,
-                mensaje: null
-            });
+                colaboradores,
+                horarios,
+                mensaje: null,
+                colaboradorAgregado: req.query.colaboradorAgregado === 'true',
+                colaboradorEditado: req.query.colaboradorEditado === 'true',
+                modalEstadoColaborador: req.query.modalEstadoColaborador === 'true'
+              });                         
         } else {
             // console.log(`No se encontraron Colaboradores.`);
             res.render('gestionColaboradores/colaboradores', {
+                layout: 'layouts/layout',
                 colaboradores: [],
                 horarios: [],
-                mensaje: "No hay Colaboradores registrados."
-            });
+                mensaje: "No hay colaboradores registrados.",
+                colaboradorAgregado: false,
+                colaboradorEditado: false,
+                modalEstadoColaborador: false
+              });
+              
+            
         }
     } catch (error) {
         console.error('Error al obtener los Colaboradores:', error);
@@ -114,7 +124,8 @@ const updateColaborador = async (req, res) => {
         });
 
         console.log('Colaborador actualizado con éxito');
-        res.redirect('/colaboradores');
+        res.redirect('/colaboradores?colaboradorEditado=true');
+
 
     } catch (error) {
         console.error('Error al actualizar el colaborador:', error);
@@ -126,6 +137,18 @@ const updateColaborador = async (req, res) => {
 const rendUpdateColaborador = async (req, res) => {
     try {
         console.log("ID recibido:", req.params.id);
+
+        const usuarios = await Usuario.findAll({
+            attributes: ['id', 'nombre'],
+            where: { estado: true },
+            include: {
+              model: Rol,
+              as: 'rol',
+              where: { nombre: 'Colaborador de Planta' },
+              attributes: []
+            }
+          });          
+
 
         const colaborador = await Colaboradores.findByPk(req.params.id, {
             include: {
@@ -150,8 +173,10 @@ const rendUpdateColaborador = async (req, res) => {
         res.render('gestionColaboradores/colaboradoresEditar', {
             colaborador,
             formatDate,
-            horarios
-        });
+            horarios,
+            usuarios 
+          });
+          
 
     } catch (error) {
         console.error("Error al obtener el distribuidor:", error);
@@ -175,7 +200,7 @@ const cambiarColaboradorEstado = async (req, res) => {
 
         console.log(`El colaborador de ID ${id} está ${colaborador.estado ? 'Activo' : 'Inactivo'}`);
 
-        res.redirect('/colaboradores');
+        res.redirect('/colaboradores?modalEstadoColaborador=true');
 
     } catch (error) {
         console.error("Error al cambiar el estado del colaborador:", error);
