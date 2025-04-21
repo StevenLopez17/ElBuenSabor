@@ -1,7 +1,12 @@
 import nodemailer from 'nodemailer'
 import { fileURLToPath } from 'url';
 import path from 'path';
+import fs from 'fs';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const logoPath = path.join(__dirname, '..', '..', '..', 'ElBuenSabor', 'public', 'images', 'Logo-Rellenos-El-Buen-Sabor-Version-Naranja.png');
+// const logoBase64 = fs.readFileSync(logoPath).toString('base64');
 
 export const emailAprobacionVacaciones = async (datos) => {
     const transport = nodemailer.createTransport({
@@ -23,6 +28,8 @@ export const emailAprobacionVacaciones = async (datos) => {
             <html>
                 <body style="font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 20px;">
                     <div style="max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 8px; padding: 30px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+                    <img src="cid:logo" alt="Logo El Buen Sabor" style="max-width: 200px; display: block; margin: 0 auto 20px auto;" />
+
                     <h2 style="text-align: center; color: #2c3e50; margin-top: 0;">El Buen Sabor</h2>
                     <p style="font-size: 16px; color: #333;">Hola <strong>${nombre}</strong>,</p>
 
@@ -43,7 +50,14 @@ export const emailAprobacionVacaciones = async (datos) => {
                     </div>
                 </body>
                 </html>
-        `
+        `,
+        attachments: [
+            {
+                filename: 'logo.png',
+                path: logoPath,
+                cid: 'logo'
+            }
+        ]
     });
 }
 
@@ -68,7 +82,8 @@ export const emailRechazoVacaciones = async (datos) => {
             <html>
                 <body style="font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 20px;">
                     <div style="max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 8px; padding: 30px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-                    
+                    <img src="cid:logo" alt="Logo El Buen Sabor" style="max-width: 200px; display: block; margin: 0 auto 20px auto;" />
+
                     <p style="font-size: 16px; color: #333;">Hola <strong>${nombre}</strong>,</p>
 
                     <p style="font-size: 16px; color: #333;">
@@ -88,7 +103,14 @@ export const emailRechazoVacaciones = async (datos) => {
                     </div>
                 </body>
                 </html>
-        `
+        `,
+        attachments: [
+            {
+                filename: 'logo.png',
+                path: logoPath,
+                cid: 'logo'
+            }
+        ]
     });
 }
 
@@ -114,7 +136,8 @@ export const emailPagoPendiente = async (datos) => {
             <html>
                 <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
                     <div style="max-width: 600px; margin: auto; background-color: #fff; border-radius: 8px; padding: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                        
+                        <img src="cid:logo" alt="Logo El Buen Sabor" style="max-width: 200px; display: block; margin: 0 auto 20px auto;" />
+
                         <h2 style="color: #d9534f;">⚠️ Pago Pendiente</h2>
 
                         <p style="font-size: 16px; color: #333;">Hola <strong>${nombre}</strong>,</p>
@@ -143,6 +166,13 @@ export const emailPagoPendiente = async (datos) => {
                     </div>
                 </body>
             </html>
-        `
+        `,
+        attachments: [
+            {
+                filename: 'logo.png',
+                path: logoPath,
+                cid: 'logo'
+            }
+        ]
     });
 }
