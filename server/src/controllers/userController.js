@@ -215,17 +215,16 @@ export const subirImagenPerfil = async (req, res) => {
   
       
       const { data: publicData } = supabase.storage
-        .from('perfiles')
-        .getPublicUrl(nuevoPath);
-  
-      let nuevaUrl = publicData?.publicUrl || '';
-  
+      .from('perfiles')
+      .getPublicUrl(nuevoPath);
     
-      nuevaUrl = nuevaUrl.trim().replace(/\s/g, '');
-  
+    let nuevaUrl = '';
+    if (publicData?.publicUrl) {
+      nuevaUrl = decodeURIComponent(publicData.publicUrl)
+        .replace(/[\s\r\n%0A]+/g, '') 
+        .trim();
+    }
     
-      usuario.imagen_url = nuevaUrl;
-      await usuario.save();
   
    
       const token = generarJWT({
