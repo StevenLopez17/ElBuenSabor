@@ -39,7 +39,6 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <% if (clientes.length > 0) { %>
                         <% clientes.forEach((cliente, index) => { %>
                           <tr data-aos="fade-up" data-aos-delay="<%= index * 100 %>">
                             <td><%= cliente.nombre %></td>
@@ -66,11 +65,6 @@
                             </td>
                           </tr>
                         <% }) %>
-                      <% } else { %>
-                        <tr>
-                          <td colspan="8" class="text-center">No hay clientes registrados.</td>
-                        </tr>
-                      <% } %>
                     </tbody>
                   </table>
                 </div>
@@ -84,11 +78,7 @@
     </div>
   </div>
   
-  
-  
-  
-  
-  
+
 
 <!-- JAVASCRIPT FILES -->
 <script src="js/jquery.min.js"></script>

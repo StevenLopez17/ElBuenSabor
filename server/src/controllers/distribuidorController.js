@@ -273,7 +273,7 @@ const filtroDireccionDistribuidores = async (req, res) => {
       distribuidorAgregado: false,
       distribuidorEditado: false,
       modalEstado: false,
-      pedidosPendientesMap: {} // ✅ también aquí para evitar errores si falla
+      pedidosPendientesMap: {} 
     });
   }
 };
@@ -303,10 +303,10 @@ const exportarPDFDist = async (req, res) => {
       d.id ? String(d.id) : 'Sin ID',
       d.empresa || 'Sin empresa',
       d.telefono || 'No registrado',
+      pedidosPendientesMap[d.id] || 0 ,
       d.direccion || 'No registrada',
       d.zona_cobertura || 'No registrada',
-      d.estado ? 'Activo' : 'Inactivo',
-
+      d.estado ? 'Activo' : 'Inactivo' 
     ]);
 
     if (tableBody.length === 0) {
@@ -326,10 +326,10 @@ const exportarPDFDist = async (req, res) => {
         {
           table: {
             headerRows: 1,
-            widths: ['auto', '*', 'auto', '*', 'auto', '*'],
+            widths: ['auto', '*', 'auto', '*', 'auto', '*', 'auto'], // Añadimos una más
             body: [
-              ['ID', 'Empresa', 'Teléfono', 'Dirección', 'Zona de Cobertura', 'Estado'],
-              ...tableBody // Aca nada mas se asigna el cuerpo de la tabla que se creo antes
+              ['ID', 'Empresa', 'Teléfono', 'Pedidos Pendientes' , 'Dirección', 'Zona de Cobertura', 'Estado'],
+              ...tableBody
             ]
           }
         }
@@ -371,6 +371,7 @@ const exportarExcelDist = async (req, res) => {
       { header: 'ID', key: 'id', width: 10 },
       { header: 'Empresa', key: 'empresa', width: 25 },
       { header: 'Telefono', key: 'telefono', width: 15 },
+      { header: 'Pedidos Pendientes', key: 'pedidos_pendientes', width: 20 },
       { header: 'Direccion', key: 'direccion', width: 30 },
       { header: 'Zona de Cobertura', key: 'zona_cobertura', width: 20 },
       { header: 'Estado', key: 'estado', width: 15 }
@@ -381,6 +382,7 @@ const exportarExcelDist = async (req, res) => {
         id: distribuidor.id,
         empresa: distribuidor.empresa,
         telefono: distribuidor.telefono,
+        pedidos_pendientes: pedidosPendientesMap[distribuidor.id] || 0 ,
         direccion: distribuidor.direccion,
         zona_cobertura: distribuidor.zona_cobertura,
         estado: distribuidor.estado ? 'Activo' : 'Inactivo'

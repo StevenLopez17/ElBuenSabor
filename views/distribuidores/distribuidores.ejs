@@ -66,7 +66,7 @@
                             <td>
                               <div class="d-flex align-items-center gap-2">
                                 
-                                <!-- Formulario oculto para editar sin exponer el ID en la URL -->
+                                
                                 <form action="/distEditar" method="POST" class="m-0 p-0">
                                   <input type="hidden" name="id" value="<%= distribuidor.id %>">
                                   <button type="submit" class="btn p-0 border-0 bg-transparent">
@@ -74,7 +74,7 @@
                                   </button>
                                 </form>
                             
-                                <!-- Switch para cambiar estado -->
+                               
                                 <form action="/eliminar/<%= distribuidor.id %>" method="POST" class="m-0 p-0">
                                   <div class="form-check form-switch m-0">
                                     <input 

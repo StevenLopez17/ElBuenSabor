@@ -38,7 +38,6 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <% if (proveedores.length > 0) { %>
                         <% proveedores.forEach((proveedor, index) => { %>
                           <tr data-aos="fade-up" data-aos-delay="<%= index * 100 %>">
                             <td><%= proveedor.nombre %></td>
@@ -64,11 +63,6 @@
                             </td>
                           </tr>
                         <% }) %>
-                      <% } else { %>
-                        <tr>
-                          <td colspan="7" class="text-center">No hay proveedores registrados.</td>
-                        </tr>
-                      <% } %>
                     </tbody>
                   </table>
                 </div>

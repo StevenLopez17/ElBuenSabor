@@ -35,7 +35,6 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <% if (materiasPrimas.length > 0) { %>
                         <% materiasPrimas.forEach((materiaPrima, index) => { %>
                           <tr data-aos="fade-up" data-aos-delay="<%= index * 100 %>">
                             <td><%= materiaPrima.nombre %></td>
@@ -46,11 +45,6 @@
                             </td>
                           </tr>
                         <% }) %>
-                      <% } else { %>
-                        <tr>
-                          <td colspan="4" class="text-center">No hay materias primas registradas.</td>
-                        </tr>
-                      <% } %>
                     </tbody>
                   </table>
                 </div>

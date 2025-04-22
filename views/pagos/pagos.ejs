@@ -92,7 +92,6 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <% if (pagos.length > 0) { %>
                       <% pagos.forEach((pago, index) => { %>
                         <tr data-aos="fade-up" data-aos-delay="<%= index * 100 %>">
                           <td><%= index + 1 %></td>
@@ -108,15 +107,9 @@
                           </td>
                         </tr>
                       <% }); %>
-                    <% } else { %>
-                      <tr>
-                        <td colspan="9" class="text-center">No hay pagos registrados.</td>
-                      </tr>
-                    <% } %>
                   </tbody>
                 </table>
               </div>
-
             </div>
           </div>
         </div>

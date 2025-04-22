@@ -216,15 +216,12 @@ export const subirImagenPerfil = async (req, res) => {
       }
   
       // 5. Obtener nueva URL pública
-      const { data } = supabaseAdmin.storage
-        .from('perfiles')
-        .getPublicUrl(nuevoPath);
-  
-      const nuevaUrl = data.publicUrl;
-  
-      // 6. Actualizar la ruta en la base de datos
-      usuario.imagen_url = nuevaUrl;
-      await usuario.save();
+      const cdnPath = nuevoPath.replace('avatars/', '');
+     const nuevaUrl = `https://uerxbwntfwyvkspdtlaq.supabase.co/storage/v1/public/perfiles/${cdnPath}`;
+
+// 6. Actualizar la ruta en la base de datos
+usuario.imagen_url = nuevaUrl;
+await usuario.save();
   
       // 7. Actualizar token en cookie (opcional si lo usás)
       const token = generarJWT({ 

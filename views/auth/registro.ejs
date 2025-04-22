@@ -15,6 +15,9 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/bootstrap-icons.css" rel="stylesheet">
     <link href="css/tooplate-mini-finance.css" rel="stylesheet">
+
+    <!-- AOS CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
 </head>
 
 <body>
@@ -23,71 +26,66 @@
 
             <div class="col-md-6 d-none d-md-block p-0">
                 <div class="h-100"
-                    style="background-image: url('images/Logo-Rellenos-El-Buen-Sabor-Version-Naranja.png'); background-size: cover; background-position: center;">
+                    style="background-image: url('images/Logo-Rellenos-El-Buen-Sabor-Version-Naranja.png'); background-size: cover; background-position: center;"
+                    data-aos="fade-right">
                     <div class="d-flex justify-content-center align-items-start h-100">
                     </div>
                 </div>
             </div>
 
             <div class="col-md-6 d-flex justify-content-center align-items-center">
-                <div class="card shadow-lg" style="width: 500px;">
+                <div class="card shadow-lg" style="width: 500px;" data-aos="zoom-in">
                     <div class="card-body">
-                        <h3 class="text-center mb-4">Registrar Usuario</h3>
+                        <h3 class="text-center mb-4" data-aos="fade-down">Registrar Usuario</h3>
                         <% if (errores && errores.length> 0) { %>
-                            <div class="alert alert-danger" role="alert">
+                            <div class="alert alert-danger" role="alert" data-aos="fade-down">
                                 <ul class="mb-0">
                                     <% errores.forEach(error=> { %>
-                                        <li>
-                                            <%= error.msg %>
-                                        </li>
-                                        <% }) %>
+                                        <li><%= error.msg %></li>
+                                    <% }) %>
                                 </ul>
                             </div>
-                            <% } %>
+                        <% } %>
 
-                                <% if (success && success.length> 0) { %>
-                                    <div class="alert alert-success" role="alert">
-                                        <ul class="mb-0">
-                                            <% success.forEach(mensaje=> { %>
-                                                <li>
-                                                    <%= mensaje.msg %>
-                                                </li>
-                                                <% }) %>
-                                        </ul>
-                                    </div>
-                                    <% } %>
-                                        <form action="/registro" method="POST">
-                                            <div class="mb-3">
-                                                <label for="nombre" class="form-label">Nombre</label>
-                                                <input type="text" class="form-control" id="nombre" name="nombre"
-                                                    placeholder="Ingrese el Nombre ">
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="correo" class="form-label">Correo Electronico</label>
-                                                <input type="email" class="form-control" id="correo" name="correo"
-                                                    placeholder="Ingrese el Correo Electronico">
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="contrasena" class="form-label">Contraseña</label>
-                                                <input type="password" class="form-control" id="contrasena"
-                                                    name="contrasena" placeholder="Ingrese una Contraseña">
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="rol_id" class="form-label">Roles</label>
-                                                <select class="form-control" id="rol_id" name="rol_id">
-                                                    <option value="" disabled selected>Seleccione un rol
-                                                    </option>
-                                                    <% roles.forEach(rol=> { %>
-                                                        <option value="<%= rol.id %>">
-                                                            <%= rol.nombre %>
-                                                        </option>
-                                                        <% }); %>
-                                                </select>
-                                            </div>
-                                            <div class="d-grid">
-                                                <button type="submit" class="btn custom-btn">Registrarse</button>
-                                            </div>
-                                        </form>
+                        <% if (success && success.length> 0) { %>
+                            <div class="alert alert-success" role="alert" data-aos="fade-down">
+                                <ul class="mb-0">
+                                    <% success.forEach(mensaje=> { %>
+                                        <li><%= mensaje.msg %></li>
+                                    <% }) %>
+                                </ul>
+                            </div>
+                        <% } %>
+
+                        <form action="/registro" method="POST" data-aos="fade-up">
+                            <div class="mb-3">
+                                <label for="nombre" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" id="nombre" name="nombre"
+                                    placeholder="Ingrese el Nombre ">
+                            </div>
+                            <div class="mb-3">
+                                <label for="correo" class="form-label">Correo Electronico</label>
+                                <input type="email" class="form-control" id="correo" name="correo"
+                                    placeholder="Ingrese el Correo Electronico">
+                            </div>
+                            <div class="mb-3">
+                                <label for="contrasena" class="form-label">Contraseña</label>
+                                <input type="password" class="form-control" id="contrasena"
+                                    name="contrasena" placeholder="Ingrese una Contraseña">
+                            </div>
+                            <div class="mb-3">
+                                <label for="rol_id" class="form-label">Roles</label>
+                                <select class="form-control" id="rol_id" name="rol_id">
+                                    <option value="" disabled selected>Seleccione un rol</option>
+                                    <% roles.forEach(rol=> { %>
+                                        <option value="<%= rol.id %>"><%= rol.nombre %></option>
+                                    <% }); %>
+                                </select>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn custom-btn">Registrarse</button>
+                            </div>
+                        </form>
                     </div>
                     <div class="card-footer text-center">
                         <small class="text-muted">Regresar <a href="/profile">Mi perfil</a></small>
@@ -100,6 +98,10 @@
     <!-- JAVASCRIPT FILES -->
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
+
+    <!-- AOS JS -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script src="/js/initAOS.js"></script>
 </body>
 
 </html>

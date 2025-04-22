@@ -33,7 +33,6 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <% if (productos.length > 0) { %>
                         <% productos.forEach((producto, index) => { %>
                           <tr data-aos="fade-up" data-aos-delay="<%= index * 100 %>">
                             <td><%= producto.nombre %></td>
@@ -44,11 +43,6 @@
                             </td>
                           </tr>
                         <% }) %>
-                      <% } else { %>
-                        <tr>
-                          <td colspan="4" class="text-center">No hay productos registrados.</td>
-                        </tr>
-                      <% } %>
                     </tbody>
                   </table>
                 </div>
