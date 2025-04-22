@@ -182,10 +182,11 @@ export const subirImagenPerfil = async (req, res) => {
     const nuevoPath = `avatars/${id}/${fileName}`;
   
     try {
+      // 1. Buscar usuario
       const usuario = await Usuario.findByPk(id);
       if (!usuario) return res.status(404).json({ error: 'Usuario no encontrado' });
   
-     
+      // 2. Eliminar imagen anterior
       const rutaAnterior = usuario.imagen_url || '';
       const basePath = `https://uerxbwntfwyvkspdtlaq.supabase.co/storage/v1/object/public/perfiles/`;
       const imagenAntigua = rutaAnterior.startsWith(basePath)
@@ -200,7 +201,7 @@ export const subirImagenPerfil = async (req, res) => {
         if (deleteError) console.warn("No se pudo eliminar imagen anterior:", deleteError.message);
       }
   
-      
+      // 3. Subir nueva imagen
       const { error: uploadError } = await supabaseAdmin.storage
         .from('perfiles')
         .upload(nuevoPath, file.buffer, {
@@ -213,20 +214,21 @@ export const subirImagenPerfil = async (req, res) => {
         return res.status(500).json({ error: 'Error al subir la imagen' });
       }
   
-      
+      // 4. Obtener URL pública y limpiarla
       const { data: publicData } = supabase.storage
-      .from('perfiles')
-      .getPublicUrl(nuevoPath);
-    
-    let nuevaUrl = '';
-    if (publicData?.publicUrl) {
-      nuevaUrl = decodeURIComponent(publicData.publicUrl)
-        .replace(/[\s\r\n%0A]+/g, '') 
-        .trim();
-    }
-    
+        .from('perfiles')
+        .getPublicUrl(nuevoPath);
   
-   
+      let nuevaUrl = publicData?.publicUrl || '';
+      nuevaUrl = nuevaUrl.trim().replace(/\s/g, '').replace(/%0A/g, '');
+  
+      console.log("URL final guardada:", nuevaUrl); // 🔍 Confirmación
+  
+      // 5. Guardar en DB
+      usuario.imagen_url = nuevaUrl;
+      await usuario.save();
+  
+      // 6. Actualizar cookie con nueva imagen
       const token = generarJWT({
         id: usuario.id,
         nombre: usuario.nombre,
@@ -243,6 +245,8 @@ export const subirImagenPerfil = async (req, res) => {
       return res.status(500).json({ error: 'Error interno del servidor', detalles: error.message });
     }
   };
+  
+  
   
 
 
