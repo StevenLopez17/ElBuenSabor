@@ -182,18 +182,16 @@ export const subirImagenPerfil = async (req, res) => {
     const nuevoPath = `avatars/${id}/${fileName}`;
   
     try {
-      // 1. Obtener usuario actual
       const usuario = await Usuario.findByPk(id);
       if (!usuario) return res.status(404).json({ error: 'Usuario no encontrado' });
   
-      // 2. Extraer nombre del archivo anterior (si existe)
+     
       const rutaAnterior = usuario.imagen_url || '';
       const basePath = `https://uerxbwntfwyvkspdtlaq.supabase.co/storage/v1/object/public/perfiles/`;
       const imagenAntigua = rutaAnterior.startsWith(basePath)
         ? rutaAnterior.replace(basePath, '')
         : null;
   
-      // 3. Eliminar imagen anterior
       if (imagenAntigua) {
         const { error: deleteError } = await supabaseAdmin.storage
           .from('perfiles')
@@ -202,7 +200,7 @@ export const subirImagenPerfil = async (req, res) => {
         if (deleteError) console.warn("No se pudo eliminar imagen anterior:", deleteError.message);
       }
   
-      // 4. Subir nueva imagen
+      
       const { error: uploadError } = await supabaseAdmin.storage
         .from('perfiles')
         .upload(nuevoPath, file.buffer, {
@@ -215,16 +213,22 @@ export const subirImagenPerfil = async (req, res) => {
         return res.status(500).json({ error: 'Error al subir la imagen' });
       }
   
-      // 5. Obtener nueva URL pública
-      const cdnPath = nuevoPath.replace('avatars/', '');
-     const nuevaUrl = `https://uerxbwntfwyvkspdtlaq.supabase.co/storage/v1/public/perfiles/${cdnPath}`;
-
-// 6. Actualizar la ruta en la base de datos
-usuario.imagen_url = nuevaUrl;
-await usuario.save();
+      
+      const { data: publicData } = supabase.storage
+        .from('perfiles')
+        .getPublicUrl(nuevoPath);
   
-      // 7. Actualizar token en cookie (opcional si lo usás)
-      const token = generarJWT({ 
+      let nuevaUrl = publicData?.publicUrl || '';
+  
+    
+      nuevaUrl = nuevaUrl.trim().replace(/\s/g, '');
+  
+    
+      usuario.imagen_url = nuevaUrl;
+      await usuario.save();
+  
+   
+      const token = generarJWT({
         id: usuario.id,
         nombre: usuario.nombre,
         rol: usuario.rol_id,
@@ -240,6 +244,7 @@ await usuario.save();
       return res.status(500).json({ error: 'Error interno del servidor', detalles: error.message });
     }
   };
+  
 
 
 export { insertUsuario, getUsuario, profileView, updatePassword, cerrarSesion};

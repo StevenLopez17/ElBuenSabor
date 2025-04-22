@@ -290,6 +290,18 @@ const exportarPDFDist = async (req, res) => {
       return res.status(404).send("No existen distribuidores para exportar");
     }
 
+    const pedidos = await Pedidos.findAll({
+      where: { estadodeentrega: 'no entregado' },
+      raw: true
+    });
+    
+    const pedidosPendientesMap = {};
+    pedidos.forEach(p => {
+      const id = p.distribuidorId;
+      pedidosPendientesMap[id] = (pedidosPendientesMap[id] || 0) + 1;
+    });
+    
+
     const pdfDir = path.join(__dirname, '..', 'client', 'pdf');
 
     if (!fs.existsSync(pdfDir)) {
@@ -298,7 +310,6 @@ const exportarPDFDist = async (req, res) => {
 
     const filepath = path.join(pdfDir, 'ReporteDistribuidores.pdf');
 
-    //Se carga el cuerpo de la tabla con los valores desde antes
     const tableBody = distribuidores.map(d => [
       d.id ? String(d.id) : 'Sin ID',
       d.empresa || 'Sin empresa',
@@ -363,6 +374,18 @@ const exportarExcelDist = async (req, res) => {
     if (distribuidores.length === 0) {
       return res.status(404).send("No existen distribuidores para exportar");
     }
+
+    const pedidos = await Pedidos.findAll({
+      where: { estadodeentrega: 'no entregado' },
+      raw: true
+    });
+    
+    const pedidosPendientesMap = {};
+    pedidos.forEach(p => {
+      const id = p.distribuidorId;
+      pedidosPendientesMap[id] = (pedidosPendientesMap[id] || 0) + 1;
+    });
+    
 
     const workbook = new exceljs.Workbook();
     const worksheet = workbook.addWorksheet('Distribuidores');
