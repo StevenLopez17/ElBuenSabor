@@ -5,7 +5,7 @@ import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const logoPath = path.join(__dirname, '..', '..', '..', 'ElBuenSabor', 'public', 'images', 'Logo-Rellenos-El-Buen-Sabor-Version-Naranja.png');
+const logoPath = path.join(__dirname, '..', '..', 'public', 'images', 'Logo-Rellenos-El-Buen-Sabor-Version-Naranja.png');
 // const logoBase64 = fs.readFileSync(logoPath).toString('base64');
 
 export const emailAprobacionVacaciones = async (datos) => {
