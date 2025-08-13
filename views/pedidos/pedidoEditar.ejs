@@ -16,6 +16,7 @@
                         </div>
                     </div>
 
+                    <% if (rol === 1) { %>
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="estadoDePago" class="form-label">Estado de Pago</label>
@@ -34,6 +35,19 @@
                             </select>
                         </div>
                     </div>
+                    <% } else { %>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Estado de Pago</label>
+                            <input type="text" class="form-control" value="<%= pedido.estadoDePago %>" readonly>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Estado de Entrega</label>
+                            <input type="text" class="form-control" value="<%= pedido.estadoDeEntrega %>" readonly>
+                        </div>
+                    </div>
+                    <% } %>
 
                     <div class="mb-4">
                         <label for="comprobanteDePago" class="form-label">Comprobante de Pago</label>
@@ -110,6 +124,19 @@
 <script>
     // Script para actualizar los subtotales y el total cuando cambian las cantidades
     document.addEventListener('DOMContentLoaded', function() {
+        // Debug: Log form values before submission
+        const form = document.getElementById('formPedido');
+        form.addEventListener('submit', function(e) {
+            console.log('Form submitted');
+            console.log('Estado de Pago:', document.getElementById('estadoDePago')?.value);
+            console.log('Estado de Entrega:', document.getElementById('estadoDeEntrega')?.value);
+            
+            // Log all form data
+            const formData = new FormData(form);
+            for (let [key, value] of formData.entries()) {
+                console.log(`${key}: ${value}`);
+            }
+        });
         const cantidadInputs = document.querySelectorAll('.cantidad-producto');
         
         cantidadInputs.forEach(input => {

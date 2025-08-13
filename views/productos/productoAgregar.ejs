@@ -9,22 +9,30 @@
         <div class="custom-block bg-white p-4">
           <h6 class="mb-4">Formulario de Registro</h6>
   
-          <!-- Alertas de error -->
+                    <!-- Alertas de error -->
           <% if (error === 'camposObligatorios') { %>
             <div class="alert alert-warning text-center">
               Por favor complete todos los campos obligatorios.
             </div>
           <% } %>
-  
+
           <% if (error === 'formulacionInvalida') { %>
             <div class="alert alert-danger text-center">
               La formulación seleccionada no es válida.
             </div>
           <% } %>
-  
+
           <% if (stockInsuficiente) { %>
             <div class="alert alert-danger text-center">
               No hay suficiente stock para la materia prima: <strong><%= stockInsuficiente %></strong>.
+            </div>
+          <% } %>
+
+          <% if (error && error.includes('No hay formulaciones disponibles')) { %>
+            <div class="alert alert-warning text-center">
+              <strong>Advertencia:</strong> <%= error %>
+              <br>
+              <a href="/formulaciones" class="btn btn-primary mt-2">Ir a Formulaciones</a>
             </div>
           <% } %>
   

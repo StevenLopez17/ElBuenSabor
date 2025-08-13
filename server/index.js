@@ -24,9 +24,11 @@ import reportesRoutes from './src/routes/reportesRoutes.js';
 import proveedorRoutes from './src/routes/proveedorRoutes.js';
 import pagoRoutes from './src/routes/pagoRoutes.js'; // Importa las rutas de pagos
 import indexRoutes from './src/routes/indexRoutes.js';
+import distribuidorVerificacionRoutes from './src/routes/distribuidorVerificacionRoutes.js';
 import Rol from './src/models/rol.js';
 
 import identificarUsuario from './middleware/identificarUsuario.js';
+import { verificarAdmin, verificarAccesoModulo } from './middleware/verificarPermisos.js';
 import errorLogger from './middleware/errorLogger.js';
 
 const app = express();
@@ -88,47 +90,50 @@ app.use(async (req, res, next) => {
 
 app.use('/', indexRoutes);
 
-//Rutas Distribuidores
+//Rutas Pedidos (accesible para todos los usuarios autenticados) - MOVER ANTES DE LAS RUTAS PROTEGIDAS
+app.use('/', pedidosRoutes);
 
-app.use('/', distribuidorRoutes);
+//Rutas Distribuidores (solo administradores)
+app.use('/', verificarAdmin, distribuidorRoutes);
 
-app.get('/distEditar/:id', (req, res) => {
-    res.render('distribuidores/distribuidoresEditar', { layout: 'layouts/layout' });
-});
+// Esta ruta está manejada por distribuidorRoutes.js
+// app.get('/distEditar/:id', (req, res) => {
+//     res.render('distribuidores/distribuidoresEditar', { layout: 'layouts/layout' });
+// });
 
 
 
-//Rutas Materia Prima
-app.use('/', materiaPrimaRoutes);
+//Rutas Materia Prima (solo administradores)
+app.use('/', verificarAdmin, materiaPrimaRoutes);
 
-app.get('/materiaPrimaAgregar', (req, res) => {
+app.get('/materiaPrimaAgregar', verificarAdmin, (req, res) => {
     res.render('materiaPrimaAgregar', { layout: 'layouts/layout' });
 });
 
-app.get('/materiaPrima/editar/:id', (req, res) => {
+app.get('/materiaPrima/editar/:id', verificarAdmin, (req, res) => {
     res.render('materiaPrimaEditar', { layout: 'layouts/layout' });
 });
 
-app.get('/insertar_materia_prima/:id', async (req, res) => {
+app.get('/insertar_materia_prima/:id', verificarAdmin, async (req, res) => {
     res.render('insertar_materia_prima', { layout: 'layouts/layout' });
 });
 
 
-//Rutas Colaboradores
-app.use('/', colaboradorRoutes);
+//Rutas Colaboradores (solo administradores)
+app.use('/', verificarAdmin, colaboradorRoutes);
 
-app.get('/colabEditar/:id', (req, res) => {
+app.get('/colabEditar/:id', verificarAdmin, (req, res) => {
     res.render('colaboradoresEditar');
 });
 
-//Rutas Clientes
-app.use('/', clienteRoutes);
+//Rutas Clientes (solo administradores)
+app.use('/', verificarAdmin, clienteRoutes);
 
-app.get('/clienteAgregar', (req, res) => {
+app.get('/clienteAgregar', verificarAdmin, (req, res) => {
     res.render('clientes/clientesAgregar', { layout: 'layouts/layout' });
 });
 
-app.get('/clienteEditar/:id', async (req, res) => {
+app.get('/clienteEditar/:id', verificarAdmin, async (req, res) => {
     try {
         const cliente = await Clientes.findByPk(req.params.id);
         if (cliente) {
@@ -142,34 +147,32 @@ app.get('/clienteEditar/:id', async (req, res) => {
     }
 });
 
-//Rutas Producto
-app.use('/', productoRoutes);
+//Rutas Producto (solo administradores)
+app.use('/', verificarAdmin, productoRoutes);
 
-app.get('/producto/agregar', (req, res) => {
+app.get('/producto/agregar', verificarAdmin, (req, res) => {
     res.render('productoAgregar', { layout: 'layouts/layout' });
 });
 
-app.get('/producto/editar/:id', (req, res) => {
+app.get('/producto/editar/:id', verificarAdmin, (req, res) => {
     res.render('productoEditar', { layout: 'layouts/layout' });
 });
 
-// Rutas Horarios
-app.use('/', horarioRoutes);
+// Rutas Horarios (solo administradores)
+app.use('/', verificarAdmin, horarioRoutes);
 
-//Rutas Formulaciones
-app.use('/', formulacionRoutes);
+//Rutas Formulaciones (solo administradores)
+app.use('/', verificarAdmin, formulacionRoutes);
 
-//Rutas Pedidos
-app.use('/', pedidosRoutes); // Ensure the correct path is used
+// Rutas Solicitudes Vacaciones (solo administradores)
+app.use('/', verificarAdmin, vacacionesRoutes);
 
-// Rutas Solicitudes Vacaciones
-app.use('/', vacacionesRoutes);
-
-//Rutas Proveedores
-app.use('/proveedores', proveedorRoutes); // Add routes for proveedores
-app.use('/pagos', pagoRoutes);
-//Rutas de Reportes
-app.use('/', reportesRoutes);
+//Rutas Proveedores (solo administradores)
+app.use('/proveedores', verificarAdmin, proveedorRoutes); // Add routes for proveedores
+app.use('/pagos', verificarAdmin, pagoRoutes);
+app.use('/admin/distribuidores', distribuidorVerificacionRoutes);
+//Rutas de Reportes (solo administradores)
+app.use('/', verificarAdmin, reportesRoutes);
 
 //Middleware global para el manejo de errores
 app.use(errorLogger);

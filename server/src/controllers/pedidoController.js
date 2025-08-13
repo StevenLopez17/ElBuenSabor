@@ -19,21 +19,82 @@ const __dirname = path.dirname(__filename);
 const insertPedido = async (req, res) => {
   let t;
   try {
-    console.log("Datos recibidos para crear pedido:", req.body);
-
-    
     const { fecha, distribuidorId, items } = req.body;
+    let finalDistribuidorId = distribuidorId;
 
-    if (!fecha || !distribuidorId || !items || !Array.isArray(items) || items.length === 0) {
-      return res.status(400).json({ message: "Faltan datos para crear el pedido" });
+    // Si es un distribuidor (rol = 3), obtener su distribuidorId automáticamente
+    if (req.usuario.rol === 3) {
+      console.log("=== DEBUG: Buscando distribuidor ===");
+      console.log("Usuario ID:", req.usuario.id);
+      console.log("Usuario rol:", req.usuario.rol);
+      
+      let distribuidor = await Distribuidores.findOne({
+        where: { usuario_id: req.usuario.id }
+      });
+      
+      console.log("Distribuidor encontrado:", distribuidor);
+      
+      // Si no existe el distribuidor, crearlo automáticamente
+      if (!distribuidor) {
+        console.log("Creando distribuidor automáticamente para usuario_id:", req.usuario.id);
+        
+        try {
+          distribuidor = await Distribuidores.create({
+            usuario_id: req.usuario.id,
+            empresa: `Empresa de ${req.usuario.nombre}`,
+            telefono: '000000000',
+            direccion: 'Dirección por defecto',
+            zona_cobertura: 'Zona por defecto',
+            fecha_registro: new Date(),
+            estado: true
+          });
+          
+          console.log("Distribuidor creado automáticamente:", distribuidor.id);
+        } catch (error) {
+          console.error("Error al crear distribuidor:", error);
+          return res.status(400).json({ message: "Error al crear información del distribuidor" });
+        }
+      }
+      
+      finalDistribuidorId = distribuidor.id;
+      console.log("Distribuidor ID asignado:", finalDistribuidorId);
+    }
+
+    if (!fecha || !finalDistribuidorId) {
+      return res.status(400).json({ message: "Fecha y distribuidor son obligatorios" });
+    }
+
+    if (!items || typeof items !== 'object') {
+      return res.redirect('/pedido/agregar?error=seleccioneProductos');
+    }
+
+    // Convertir el objeto items a un array de items válidos
+    const itemsArray = Object.values(items).filter(item => 
+      item && item.productoId && item.cantidad && parseFloat(item.cantidad) > 0
+    );
+
+    if (itemsArray.length === 0) {
+      return res.redirect('/pedido/agregar?error=seleccioneProductos');
+    }
+
+    // Verificar que el distribuidor existe
+    const distribuidor = await Distribuidores.findByPk(finalDistribuidorId);
+    if (!distribuidor) {
+      return res.status(400).json({ message: "Distribuidor no encontrado" });
     }
 
     // Inicia una transacción
     t = await sequelize.transaction();
 
-    // Crear el pedido con precioTotal inicialmente en 0
+    // Crear el pedido con precioTotal inicialmente en 0 y estado de entrega por defecto
     const nuevoPedido = await Pedidos.create(
-      { fecha, distribuidorId, precioTotal: 0 },
+      { 
+        fecha, 
+        distribuidorId: finalDistribuidorId, 
+        precioTotal: 0,
+        estadoDeEntrega: 'no entregado',
+        estadoDePago: 'pendiente'
+      },
       { transaction: t }
     );
 
@@ -41,7 +102,7 @@ const insertPedido = async (req, res) => {
     let validItems = 0;
 
     
-    for (const item of items) {
+    for (const item of itemsArray) {
       const { productoId, cantidad } = item;
 
       
@@ -94,15 +155,141 @@ const getPedido = async (req, res) => {
     const notificacionPagoPendiente = req.query.notificacionPagoPendiente === 'true';
     const pedidoAgregado = req.query.pedidoAgregado === 'true';
     const pedidoEditado = req.query.pedidoEditado === 'true';
+    const pedidoAprobado = req.query.pedidoAprobado === 'true';
+    const accesoDenegado = req.query.error === 'accesoDenegado';
+    
+    if (!req.usuario) {
+      return res.redirect('/login');
+    }
+    
     const { id, rol } = req.usuario;
 
-    if (rol == 3) {
-      const distribuidor = await Distribuidores.findOne({ where: { usuario_id: id } });
-      if (!distribuidor) return res.redirect('/');
+    // Si no es administrador, solo puede ver sus propios pedidos
+    if (rol !== 1) {
+      // Para distribuidores (rol = 3)
+      if (rol === 3) {
+        const distribuidor = await Distribuidores.findOne({ where: { usuario_id: id } });
+        if (!distribuidor) {
+          console.error(`Distribuidor no encontrado para usuario_id: ${id}`);
+          return res.render("pedidos/pedidos", {
+            pedidos: [],
+            mensaje: "Error: No se encontró información del distribuidor. Contacte al administrador.",
+            rol,
+            notificacionPagoPendiente: false,
+            pedidoAgregado: false,
+            pedidoEditado: false,
+            pedidoAprobado: false,
+            accesoDenegado: false
+          });
+        }
 
+        const pedidos = await Pedidos.findAll({
+          where: {
+            distribuidorId: distribuidor.id,
+            estadoDeEntrega: "no entregado",
+            estadoDePago: "pendiente"
+          },
+          include: [
+            {
+              model: PedidoDetalle,
+              as: 'detalles',
+              include: [{ model: Productos, as: 'producto' }]
+            },
+            {
+              model: Distribuidores,
+              as: 'Distribuidor',
+              attributes: ['id', 'empresa']
+            }
+          ]
+        });
+
+        const pedidosWithProductos = pedidos.map(pedido => {
+          const pedidoJSON = pedido.toJSON();
+          const precioTotal = pedidoJSON.detalles.reduce((total, d) => total + parseFloat(d.subtotal || 0), 0);
+          return {
+            ...pedidoJSON,
+            precioTotal,
+            empresa: pedido.Distribuidor?.empresa || 'No disponible',
+            productos: pedidoJSON.detalles.map(d => ({ nombre: d.producto.nombre, cantidad: d.cantidad }))
+          };
+        });
+
+        return res.render("pedidos/pedidos", {
+          pedidos: pedidosWithProductos,
+          mensaje: pedidos.length ? null : "No hay pedidos registrados.",
+          rol,
+          notificacionPagoPendiente,
+          pedidoAgregado,
+          pedidoEditado,
+          pedidoAprobado,
+          accesoDenegado
+        });
+      } 
+      // Para otros roles no administradores (rol = 2)
+      else {
+        // Buscar si el usuario está asociado a algún distribuidor
+        const distribuidor = await Distribuidores.findOne({ where: { usuario_id: id } });
+        if (distribuidor) {
+          const pedidos = await Pedidos.findAll({
+            where: {
+              distribuidorId: distribuidor.id,
+              estadoDeEntrega: "no entregado",
+              estadoDePago: "pendiente"
+            },
+            include: [
+              {
+                model: PedidoDetalle,
+                as: 'detalles',
+                include: [{ model: Productos, as: 'producto' }]
+              },
+              {
+                model: Distribuidores,
+                as: 'Distribuidor',
+                attributes: ['id', 'empresa']
+              }
+            ]
+          });
+
+          const pedidosWithProductos = pedidos.map(pedido => {
+            const pedidoJSON = pedido.toJSON();
+            const precioTotal = pedidoJSON.detalles.reduce((total, d) => total + parseFloat(d.subtotal || 0), 0);
+            return {
+              ...pedidoJSON,
+              precioTotal,
+              empresa: pedido.Distribuidor?.empresa || 'No disponible',
+              productos: pedidoJSON.detalles.map(d => ({ nombre: d.producto.nombre, cantidad: d.cantidad }))
+            };
+          });
+
+          return res.render("pedidos/pedidos", {
+            pedidos: pedidosWithProductos,
+            mensaje: pedidos.length ? null : "No hay pedidos registrados.",
+            rol,
+            notificacionPagoPendiente,
+            pedidoAgregado,
+            pedidoEditado,
+            pedidoAprobado,
+            accesoDenegado
+          });
+        } else {
+          // Si no está asociado a ningún distribuidor, mostrar mensaje
+          return res.render("pedidos/pedidos", {
+            pedidos: [],
+            mensaje: "No tiene pedidos asociados.",
+            rol,
+            notificacionPagoPendiente: false,
+            pedidoAgregado: false,
+            pedidoEditado: false,
+            pedidoAprobado: false,
+            accesoDenegado: false
+          });
+        }
+      }
+    } 
+    // Para administradores (rol = 1), mostrar todos los pedidos
+    else {
       const pedidos = await Pedidos.findAll({
         where: {
-          distribuidorId: distribuidor.id,
           estadoDeEntrega: "no entregado",
           estadoDePago: "pendiente"
         },
@@ -137,52 +324,11 @@ const getPedido = async (req, res) => {
         rol,
         notificacionPagoPendiente,
         pedidoAgregado,
-        pedidoEditado
+        pedidoEditado,
+        pedidoAprobado,
+        accesoDenegado
       });
     }
-
-    if (rol == 1 || rol == 2) {
-      const pedidos = await Pedidos.findAll({
-        where: {
-          estadoDeEntrega: "no entregado",
-          estadoDePago: "pendiente"
-        },
-        include: [
-          {
-            model: PedidoDetalle,
-            as: 'detalles',
-            include: [{ model: Productos, as: 'producto' }]
-          },
-          {
-            model: Distribuidores,
-            as: 'Distribuidor',
-            attributes: ['id', 'empresa']
-          }
-        ]
-      });
-
-      const pedidosWithProductos = pedidos.map(pedido => {
-        const pedidoJSON = pedido.toJSON();
-        const precioTotal = pedidoJSON.detalles.reduce((total, d) => total + parseFloat(d.subtotal || 0), 0);
-        return {
-          ...pedidoJSON,
-          precioTotal,
-          empresa: pedido.Distribuidor?.empresa || 'No disponible',
-          productos: pedidoJSON.detalles.map(d => ({ nombre: d.producto.nombre, cantidad: d.cantidad }))
-        };
-      });
-
-      return res.render("pedidos/pedidos", {
-        pedidos: pedidosWithProductos,
-        mensaje: pedidos.length ? null : "No hay pedidos registrados.",
-        rol,
-        notificacionPagoPendiente,
-        pedidoAgregado,
-        pedidoEditado
-      });
-    }
-
-    return res.redirect('/');
   } catch (error) {
     console.error("Error al obtener los pedidos:", error);
     res.render("pedidos/pedidos", {
@@ -191,7 +337,9 @@ const getPedido = async (req, res) => {
       rol: req.usuario?.rol || null,
       notificacionPagoPendiente: false,
       pedidoAgregado: false,
-      pedidoEditado: false
+      pedidoEditado: false,
+      pedidoAprobado: false,
+      accesoDenegado: false
     });
   }
 };
@@ -208,16 +356,22 @@ const getTodosPedidos = async (req, res) => {
     const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
     const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
 
-    if (rol == 3) {
+    // Si no es administrador, solo puede ver sus propios pedidos
+    if (rol !== 1) {
       const distribuidor = await Distribuidores.findOne({
         where: {
           usuario_id: id
         }
       });
+      
       if (!distribuidor) {
-        return res.redirect('/');
+        return res.render("pedidos/pedidostodos", { 
+          pedidos: [], 
+          mensaje: "No tiene pedidos asociados.", 
+          mes: today.toLocaleString('es-ES', { month: 'long' }) 
+        });
       }
-      const distribuidorId = distribuidor.id
+
       const pedidos = await Pedidos.findAll({
         where: {
           distribuidorId: distribuidor.id,
@@ -258,9 +412,15 @@ const getTodosPedidos = async (req, res) => {
           }))
         };
       });
-      res.render("pedidos/pedidostodos", { pedidos: pedidosWithProductos, mes: today.toLocaleString('es-ES', { month: 'long' }) });
+      
+      res.render("pedidos/pedidostodos", { 
+        pedidos: pedidosWithProductos, 
+        mensaje: pedidos.length ? null : "No hay pedidos registrados.",
+        mes: today.toLocaleString('es-ES', { month: 'long' }) 
+      });
     }
-    else if (rol == 1) {
+    // Para administradores (rol = 1), mostrar todos los pedidos
+    else {
       const pedidos = await Pedidos.findAll({
         where: {
           // Add date filter for current month
@@ -308,9 +468,6 @@ const getTodosPedidos = async (req, res) => {
         res.render("pedidos/pedidostodos", { pedidos: [], mensaje: "No hay pedidos registrados.", mes: today.toLocaleString('es-ES', { month: 'long' }) });
       }
     }
-    else {
-      res.redirect('/')
-    }
 
   } catch (error) {
     console.error("Error al obtener todos los pedidos:", error);
@@ -323,8 +480,15 @@ const updatePedido = async (req, res) => {
   let t;
   try {
     console.log("Datos recibidos para actualizar pedido:", req.body);
+    console.log("Headers:", req.headers);
     const { id } = req.params; // id del pedido (idPedido)
     const { fecha, distribuidorId, estadoDePago, estadoDeEntrega, comprobanteDePago, productos } = req.body;
+    console.log("Tipo de estadoDePago:", typeof estadoDePago);
+    console.log("Tipo de estadoDeEntrega:", typeof estadoDeEntrega);
+    
+    console.log("Estado de Pago recibido:", estadoDePago);
+    console.log("Estado de Entrega recibido:", estadoDeEntrega);
+    console.log("Usuario:", req.usuario);
 
     // Buscar el pedido a actualizar
     const pedido = await Pedidos.findByPk(id);
@@ -339,7 +503,7 @@ const updatePedido = async (req, res) => {
     pedido.distribuidorId = distribuidorId || pedido.distribuidorId;
 
     // Usar los valores exactos permitidos por el enum estado_pago
-    if (estadoDePago) {
+    if (estadoDePago !== undefined && estadoDePago !== null) {
       // Asignamos el valor exacto conforme a los valores permitidos en el enum
       switch (estadoDePago.toLowerCase()) {
         case 'pendiente':
@@ -362,7 +526,7 @@ const updatePedido = async (req, res) => {
     }
 
     // Valores para estado de entrega (asumimos que son "entregado" y "no entregado")
-    if (estadoDeEntrega) {
+    if (estadoDeEntrega !== undefined && estadoDeEntrega !== null) {
       if (estadoDeEntrega.toLowerCase().includes('no')) {
         pedido.estadoDeEntrega = 'no entregado';
       } else {
@@ -411,6 +575,8 @@ const updatePedido = async (req, res) => {
     await t.commit();
 
     console.log("Pedido actualizado exitosamente");
+    console.log("Nuevo estado de pago:", pedido.estadoDePago);
+    console.log("Nuevo estado de entrega:", pedido.estadoDeEntrega);
     res.redirect("/pedido?pedidoEditado=true");
   } catch (error) {
     if (t) await t.rollback();
@@ -442,8 +608,16 @@ const deletePedido = async (req, res) => {
 const rendUpdatePedido = async (req, res) => {
   try {
     const { id } = req.params;
+    const { rol } = req.usuario;
+    
     const pedido = await Pedidos.findByPk(id, {
-      include: [{ model: PedidoDetalle, as: 'detalles' }]
+      include: [
+        { 
+          model: PedidoDetalle, 
+          as: 'detalles',
+          include: [{ model: Productos, as: 'producto' }]
+        }
+      ]
     });
 
     if (!pedido) {
@@ -451,7 +625,11 @@ const rendUpdatePedido = async (req, res) => {
       return res.status(404).send("Pedido no encontrado");
     }
 
-    res.render("pedidos/pedidoEditar", { pedido, layout: 'layouts/layout' });
+    res.render("pedidos/pedidoEditar", { 
+      pedido, 
+      rol,
+      layout: 'layouts/layout' 
+    });
   } catch (error) {
     console.error("Error al obtener el pedido:", error);
     res.status(500).send("Error interno del servidor");
@@ -462,26 +640,37 @@ const rendUpdatePedido = async (req, res) => {
 const rendAgregarPedido = async (req, res) => {
   try {
     const { id, rol } = req.usuario
+    
     if (rol == 3) {
       const productos = await Productos.findAll();
-      const distribuidor = await Distribuidores.findOne({
-        where: {
-          usuario_id: id
-        }
+      console.log("Productos encontrados:", productos.length);
+      
+      // Para distribuidores, no necesitamos validar que exista el distribuidor aquí
+      // porque se validará en el momento de crear el pedido
+      res.render("pedidos/pedidoAgregarDistribuidor", { 
+        productos, 
+        distribuidorId: null, // Se asignará automáticamente al crear el pedido
+        error: req.query.error || null
       });
-      const distribuidorId = distribuidor.id
-      res.render("pedidos/pedidoAgregarDistribuidor", { productos, distribuidorId /*, distribuidores*/ });
     }
     else if (rol == 1) {
       const productos = await Productos.findAll();
       const distribuidores = await Distribuidores.findAll();
-      res.render("pedidos/pedidoAgregarAdmin", { productos, distribuidores /*, admin*/ });
+      res.render("pedidos/pedidoAgregarAdmin", { 
+        productos, 
+        distribuidores,
+        error: req.query.error || null
+      });
     } else {
-      res.redirect('/')
+      res.redirect('/pedido?error=accesoDenegado')
     }
   } catch (error) {
     console.error("Error al renderizar vista de agregar pedido:", error);
-    res.render("pedidos/pedidoAgregar", { productos: [], mensaje: "Error al cargar datos para el pedido.", layout: 'layouts/layout' });
+    res.render("pedidos/pedidoAgregarDistribuidor", { 
+      productos: [], 
+      distribuidorId: null,
+      error: "Error al cargar datos para el pedido. Contacte al administrador."
+    });
   }
 };
 
@@ -640,6 +829,12 @@ const subirComprobantePago = async (req, res) => {
 
   if (!file) return res.status(400).json({ error: 'No se recibió ningún archivo' });
 
+  // Validar formato de archivo
+  const allowedMimeTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
+  if (!allowedMimeTypes.includes(file.mimetype)) {
+    return res.status(400).json({ error: 'Formato no permitido. Use PDF, JPG o PNG' });
+  }
+
   const fileName = `${Date.now()}-${file.originalname}`;
   const bucketName = 'Comprobantes Pedidos';
 
@@ -708,21 +903,65 @@ const subirComprobantePago = async (req, res) => {
   }
 };
 
+// Función para aprobar un pedido
+const aprobarPedido = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { id: userId, rol } = req.usuario;
+
+    // Solo administradores pueden aprobar pedidos
+    if (rol !== 1) {
+      return res.status(403).json({ error: 'No tiene permisos para aprobar pedidos' });
+    }
+
+    const pedido = await Pedidos.findByPk(id, {
+      include: [
+        {
+          model: Distribuidores,
+          as: 'Distribuidor',
+          attributes: ['empresa', 'telefono']
+        }
+      ]
+    });
+
+    if (!pedido) {
+      return res.status(404).json({ error: 'Pedido no encontrado' });
+    }
+
+    // Cambiar estado a aprobado
+    pedido.estadoDePago = 'aprobado';
+    await pedido.save();
+
+    // Aquí se podría enviar una notificación al distribuidor
+    console.log(`Pedido ${id} aprobado. Notificar a distribuidor: ${pedido.Distribuidor?.empresa}`);
+
+    res.redirect('/pedido?pedidoAprobado=true');
+  } catch (error) {
+    console.error('Error al aprobar pedido:', error);
+    res.status(500).json({ error: 'Error al aprobar pedido' });
+  }
+};
+
 // Función para obtener y renderizar historial de pedidos
 const getHistorialPedidos = async (req, res) => {
   try {
     const { id, rol } = req.usuario
 
-    if (rol == 3) {
+    // Si no es administrador, solo puede ver sus propios pedidos
+    if (rol !== 1) {
       const distribuidor = await Distribuidores.findOne({
         where: {
           usuario_id: id
         }
       });
+      
       if (!distribuidor) {
-        return res.redirect('/');
+        return res.render("pedidos/historialPedidos", { 
+          pedidos: [], 
+          mensaje: "No tiene pedidos asociados." 
+        });
       }
-      const distribuidorId = distribuidor.id
+
       const pedidos = await Pedidos.findAll({
         where: {
           distribuidorId: distribuidor.id
@@ -760,9 +999,14 @@ const getHistorialPedidos = async (req, res) => {
           }))
         };
       });
-      res.render("pedidos/historialPedidos", { pedidos: pedidosWithProductos, mensaje: null });
+      
+      res.render("pedidos/historialPedidos", { 
+        pedidos: pedidosWithProductos, 
+        mensaje: pedidos.length ? null : "No hay pedidos registrados." 
+      });
     }
-    else if (rol == 1) {
+    // Para administradores (rol = 1), mostrar todos los pedidos
+    else {
       const pedidos = await Pedidos.findAll({
         include: [
           {
@@ -803,9 +1047,6 @@ const getHistorialPedidos = async (req, res) => {
         res.render("pedidos/historialPedidos", { pedidos: [], mensaje: "No hay pedidos registrados." });
       }
     }
-    else {
-      res.redirect('/')
-    }
 
   } catch (error) {
     console.error("Error al obtener el historial de pedidos:", error);
@@ -824,5 +1065,6 @@ export {
   exportarPDFPedido,
   notificarPagoPendiente,
   subirComprobantePago,
-  getHistorialPedidos
+  getHistorialPedidos,
+  aprobarPedido
 };

@@ -16,6 +16,40 @@
     <link href="/css/tooplate-mini-finance.css" rel="stylesheet">
     <link href="/css/custom-styles.css" rel="stylesheet">
 
+    <style>
+    /* Estilos para el dropdown personalizado */
+    #profileButton {
+        cursor: pointer !important;
+        border: none !important;
+        background: none !important;
+        padding: 0 !important;
+    }
+    
+    #profileButton:focus {
+        outline: none !important;
+        box-shadow: none !important;
+    }
+    
+    .profile-image {
+        max-width: 40px;
+        max-height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #ffc107;
+    }
+    
+    #profileMenu {
+        position: absolute !important;
+        right: 0 !important;
+        top: 100% !important;
+        z-index: 1050 !important;
+        min-width: 250px !important;
+        border: 1px solid #dee2e6 !important;
+        border-radius: 8px !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+    }
+    </style>
+
     <!-- DataTables CSS -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
 <!-- AOS CSS -->
@@ -38,12 +72,12 @@
   </button>
 
   <div class="navbar-nav me-lg-2">
-      <div class="dropdown px-3">
-          <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+      <div class="dropdown px-3" id="profileDropdown">
+          <button class="btn btn-link nav-link p-0" type="button" id="profileButton" onclick="toggleDropdown()">
               <img src="<%= typeof usuario !== 'undefined' && usuario && usuario.imagen_url ? usuario.imagen_url : '/images/3135768.png' %>"
                   class="profile-image img-fluid" alt="">
-          </a>
-          <ul class="dropdown-menu bg-white shadow">
+          </button>
+          <ul class="dropdown-menu bg-white shadow" id="profileMenu" style="display: none;">
               <li>
                   <div class="dropdown-menu-profile-thumb d-flex">
                       <img src="<%= typeof usuario !== 'undefined' && usuario && usuario.imagen_url ? usuario.imagen_url : '/images/3135768.png' %>"
@@ -64,7 +98,13 @@
               <li><a class="dropdown-item" href="/profile"><i class="bi-person me-2"></i>Mi Perfil</a></li>
               
               <li class="border-top mt-3 pt-2 mx-4">
-                  <a class="dropdown-item ms-0 me-0" href="/logout">LOGOUT</a>
+                  <a class="dropdown-item ms-0 me-0" href="/logout" onclick="console.log('Logout clicked'); return true;">LOGOUT</a>
+              </li>
+              <!-- Botón de logout alternativo -->
+              <li class="border-top mt-2 pt-2 mx-4">
+                  <button class="dropdown-item ms-0 me-0 btn btn-link text-danger" onclick="window.location.href='/logout'; console.log('Logout alternativo clicked');">
+                      <i class="bi-box-arrow-right me-2"></i>CERRAR SESIÓN
+                  </button>
               </li>
           </ul>
       </div>
@@ -108,6 +148,58 @@
 <!-- AOS JS -->
 <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
 <script src="/js/initAOS.js"></script>
+
+<script>
+// Función para alternar el dropdown del perfil
+function toggleDropdown() {
+    console.log('toggleDropdown() ejecutada');
+    const menu = document.getElementById('profileMenu');
+    const button = document.getElementById('profileButton');
+    
+    if (menu.style.display === 'none' || menu.style.display === '') {
+        menu.style.display = 'block';
+        console.log('Dropdown abierto');
+    } else {
+        menu.style.display = 'none';
+        console.log('Dropdown cerrado');
+    }
+}
+
+// Cerrar dropdown cuando se hace clic fuera
+document.addEventListener('click', function(event) {
+    const dropdown = document.getElementById('profileDropdown');
+    const menu = document.getElementById('profileMenu');
+    
+    if (!dropdown.contains(event.target)) {
+        menu.style.display = 'none';
+    }
+});
+
+// Debug para el botón de logout
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('=== DEBUG: Layout cargado ===');
+    
+    const profileButton = document.getElementById('profileButton');
+    const profileMenu = document.getElementById('profileMenu');
+    const logoutLink = document.querySelector('a[href="/logout"]');
+    
+    console.log('Profile button encontrado:', !!profileButton);
+    console.log('Profile menu encontrado:', !!profileMenu);
+    console.log('Logout link encontrado:', !!logoutLink);
+    
+    if (profileButton) {
+        profileButton.addEventListener('click', function(e) {
+            console.log('Profile button clicked via event listener');
+        });
+    }
+    
+    if (logoutLink) {
+        logoutLink.addEventListener('click', function(e) {
+            console.log('Logout link clicked via event listener');
+        });
+    }
+});
+</script>
 
 </html>
 

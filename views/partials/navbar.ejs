@@ -29,9 +29,9 @@
             </style>
             <ul class="nav flex-column h-100 mt-3">
                 <li class="nav-item">
-                    <a class="nav-link text-nowrap" href="/">
+                    <a class="nav-link text-nowrap" href="<%= usuario.rol == 1 ? '/' : '/pedido' %>">
                         <i class="bi-house-door-fill me-3"></i>
-                        <strong>Pagina Principal</strong>
+                        <strong><%= usuario.rol == 1 ? 'Pagina Principal' : 'Pedidos' %></strong>
                     </a>
                 </li>
 
@@ -42,58 +42,58 @@
                             <strong>Pedidos</strong>
                         </a>
                     </li>
-                    <% } %>
+                <% } %>
 
-                        <% if (usuario.rol==1) { %>
-                            <li class="nav-item">
-                                <a class="nav-link text-nowrap" href="/colaboradores">
-                                    <i class="bi-people-fill me-3"></i>
-                                    <strong>Colaboradores</strong>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-nowrap" href="/cliente">
-                                    <i class="bi-person-circle me-3"></i>
-                                    <strong>Clientes</strong>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-nowrap" href="/proveedores">
-                                    <i class="bi-truck me-3"></i>
-                                    <strong>Proveedores</strong>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-nowrap" href="/pagos">
-                                    <i class="bi-credit-card me-3"></i>
-                                    <strong>Pagos</strong>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-nowrap" aria-current="page" href="/distribuidor">
-                                    <i class="bi-box-seam me-3"></i>
-                                    <strong>Distribuidores</strong>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-nowrap" href="/producto">
-                                    <i class="bi-basket-fill me-3"></i>
-                                    <strong>Productos</strong>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-nowrap" href="/materiaPrima">
-                                    <i class="bi-tools me-3"></i>
-                                    <strong>Materias Primas</strong>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-nowrap" href="/reportes">
-                                    <i class="bi-bar-chart-fill me-3"></i>
-                                    <strong>Reportes</strong>
-                                </a>
-                            </li>
-                            <% } %>
+                <% if (usuario.rol==1) { %>
+                    <li class="nav-item">
+                        <a class="nav-link text-nowrap" href="/colaboradores">
+                            <i class="bi-people-fill me-3"></i>
+                            <strong>Colaboradores</strong>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-nowrap" href="/cliente">
+                            <i class="bi-person-circle me-3"></i>
+                            <strong>Clientes</strong>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-nowrap" href="/proveedores">
+                            <i class="bi-truck me-3"></i>
+                            <strong>Proveedores</strong>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-nowrap" href="/pagos">
+                            <i class="bi-credit-card me-3"></i>
+                            <strong>Pagos</strong>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-nowrap" aria-current="page" href="/distribuidor">
+                            <i class="bi-box-seam me-3"></i>
+                            <strong>Distribuidores</strong>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-nowrap" href="/producto">
+                            <i class="bi-basket-fill me-3"></i>
+                            <strong>Productos</strong>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-nowrap" href="/materiaPrima">
+                            <i class="bi-tools me-3"></i>
+                            <strong>Materias Primas</strong>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-nowrap" href="/reportes">
+                            <i class="bi-bar-chart-fill me-3"></i>
+                            <strong>Reportes</strong>
+                        </a>
+                    </li>
+                <% } %>
             </ul>
         </div>
     </nav>

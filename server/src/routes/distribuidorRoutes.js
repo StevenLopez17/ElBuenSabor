@@ -18,6 +18,7 @@ router.get('/distribuidor', identificarUsuario, getDistribuidor);
 router.get('/distAgregar', identificarUsuario, rendInsertDistribuidor);
 router.post('/agregar', insertDistribuidor);
 router.post('/distEditar', rendUpdateDistribuidor);
+router.get('/distEditar/:id', rendUpdateDistribuidor);
 router.post('/actualizar/:id', updateDistribuidor);
 router.post('/eliminar/:id', cambiarDistribuidorEstado);
 router.get('/filtrarDireccion', filtroDireccionDistribuidores);

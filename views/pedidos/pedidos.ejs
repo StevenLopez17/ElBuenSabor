@@ -8,6 +8,35 @@
           <a href="/pedidos/todos" class="btn btn-secondary">Ver Todos los Pedidos</a>
         </div>
       </div>
+
+      <!-- Mensajes de confirmación -->
+      <% if (accesoDenegado) { %>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <strong>¡Acceso Denegado!</strong> Solo los administradores pueden acceder a otros módulos. Usted solo puede ver el módulo de pedidos.
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      <% } %>
+
+      <% if (pedidoAgregado) { %>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <strong>¡Éxito!</strong> Pedido creado con éxito.
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      <% } %>
+
+      <% if (pedidoEditado) { %>
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+          <strong>¡Actualizado!</strong> Pedido modificado correctamente.
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      <% } %>
+
+      <% if (pedidoAprobado) { %>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <strong>¡Aprobado!</strong> El pedido ha sido aprobado y se ha enviado notificación al distribuidor.
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      <% } %>
   
       <div class="row row-cols-1 row-cols-md-3 g-4">
         <% pedidos.filter(pedido=> pedido.estadoDeEntrega === 'no entregado').forEach((pedido, index) => { %>
@@ -67,6 +96,15 @@
                 <a href="/pedido/notificar/<%= pedido.idpedido %>" class="btn btn-warning w-100">
                   <i class="bi bi-envelope"></i> Notificar Pago Pendiente
                 </a>
+                
+                <% if (rol === 1 && pedido.estadoDePago === 'en revision') { %>
+                  <form action="/pedido/<%= pedido.idpedido %>/aprobar" method="POST" class="w-100">
+                    <button type="submit" class="btn btn-success w-100">
+                      <i class="bi bi-check-circle"></i> Aprobar Pedido
+                    </button>
+                  </form>
+                <% } %>
+                
                 <div class="d-flex justify-content-between gap-2">
                   <a href="/pedido/editar/<%= pedido.idpedido %>" class="btn btn-primary flex-grow-1">
                     <i class="bi bi-pencil"></i> Editar

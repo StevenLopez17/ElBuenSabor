@@ -9,6 +9,11 @@ export const mostrarInicio = async (req, res) => {
       if (!req.usuario) {
         return res.redirect('/login');
       }
+
+      // Si no es administrador, redirigir a pedidos
+      if (req.usuario.rol !== 1) {
+        return res.redirect('/pedido');
+      }
   
       const clientes = await Clientes.findAll();
       const distribuidores = await Distribuidores.findAll({

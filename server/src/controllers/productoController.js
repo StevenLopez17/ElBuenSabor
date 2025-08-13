@@ -181,6 +181,15 @@ const rendUpdateProducto = async (req, res) => {
 const rendAgregarProducto = async (req, res) => {
   try {
     const formulaciones = await Formulaciones.findAll();
+    
+    if (formulaciones.length === 0) {
+      return res.render("productos/productoAgregar", {
+        formulaciones: [],
+        error: "No hay formulaciones disponibles. Debe crear formulaciones antes de agregar productos.",
+        stockInsuficiente: null
+      });
+    }
+    
     res.render("productos/productoAgregar", {
       formulaciones,
       error: req.query.error || null,

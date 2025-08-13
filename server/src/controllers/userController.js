@@ -104,7 +104,25 @@ const getUsuario = async (req, res) => {
 
 
 const cerrarSesion = (req, res) => {
-    return res.clearCookie('_token').status(200).redirect('/login');
+    console.log('=== DEBUG: Función cerrarSesion ejecutada ===');
+    console.log('Usuario actual:', req.usuario ? req.usuario.correo : 'No autenticado');
+    
+    try {
+        // Limpiar la cookie del token
+        res.clearCookie('_token', {
+            httpOnly: true,
+            secure: false, // Cambiar a true en producción con HTTPS
+            sameSite: 'lax'
+        });
+        
+        console.log('Cookie _token limpiada exitosamente');
+        
+        // Redirigir al login
+        return res.redirect('/login');
+    } catch (error) {
+        console.error('Error en cerrarSesion:', error);
+        return res.redirect('/login');
+    }
 }
 
 

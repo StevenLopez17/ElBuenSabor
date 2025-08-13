@@ -171,7 +171,8 @@ const updateDistribuidor = async (req, res) => {
 //Metodo para renderizar la vista de actualizar los distribuidores y que carga los datos del distribuidor a actualizar
 const rendUpdateDistribuidor = async (req, res) => {
   try {
-    const { id } = req.body;
+    // Obtener el ID desde el body (POST) o desde los parámetros (GET)
+    const id = req.body.id || req.params.id;
     console.log("ID recibido:", id);
 
     if (!id) {
