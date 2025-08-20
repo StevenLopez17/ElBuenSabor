@@ -39,20 +39,20 @@
                 <div class="card shadow-lg" style="width: 400px;" data-aos="fade-up">
                     <div class="card-body">
                         <h3 class="text-center mb-4">Inicio Sesión</h3>
-                        <% if (errores && errores.length> 0) { %>
+                        <% if (errores && errores.length > 0) { %>
                             <div class="alert alert-danger" role="alert" data-aos="fade-down">
                                 <ul class="mb-0">
-                                    <% errores.forEach(error=> { %>
+                                    <% errores.forEach(error => { %>
                                         <li><%= error.msg %></li>
                                     <% }) %>
                                 </ul>
                             </div>
                         <% } %>
 
-                        <% if (success && success.length> 0) { %>
+                        <% if (success && success.length > 0) { %>
                             <div class="alert alert-success" role="alert" data-aos="fade-down">
                                 <ul class="mb-0">
-                                    <% success.forEach(mensaje=> { %>
+                                    <% success.forEach(mensaje => { %>
                                         <li><%= mensaje.msg %></li>
                                     <% }) %>
                                 </ul>

@@ -1,0 +1,119 @@
+<div class="container-fluid">
+    <div class="title-group mb-3" data-aos="fade-down">
+        <h1 class="h2 mb-0">Detalles de Fórmula</h1>
+        <small class="text-muted">Información completa de la fórmula</small>
+    </div>
+
+    <!-- Información de la fórmula -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="custom-block bg-white" data-aos="fade-up">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5><%= formula.name %></h5>
+                        <p class="text-muted mb-2">
+                            <strong>Producto:</strong> 
+                            <%= formula.product ? formula.product.name : 'N/A' %>
+                            <% if (formula.product && formula.product.sku) { %>
+                                (<%= formula.product.sku %>)
+                            <% } %>
+                        </p>
+                        <p class="text-muted mb-2">
+                            <strong>Fecha de Creación:</strong> 
+                            <%= new Date(formula.createdAt).toLocaleString('es-ES') %>
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex gap-2 justify-content-md-end">
+                            <a href="/formulas/<%= formula.id %>/edit" class="btn btn-warning">
+                                <i class="bi-pencil"></i> Editar
+                            </a>
+                            <a href="/formulas" class="btn btn-secondary">
+                                <i class="bi-arrow-left"></i> Volver
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <% if (formula.notes) { %>
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <h6>Notas:</h6>
+                            <p class="text-muted"><%= formula.notes %></p>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ingredientes -->
+    <div class="row">
+        <div class="col-12">
+            <div class="custom-block bg-white" data-aos="fade-up">
+                <h5 class="mb-3">Ingredientes</h5>
+                
+                <% if (formula.items && formula.items.length > 0) { %>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Ingrediente</th>
+                                    <th>SKU</th>
+                                    <th>Cantidad por Unidad</th>
+                                    <th>Unidad</th>
+                                    <th>Costo Unitario</th>
+                                    <th>Costo Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% let totalCost = 0; %>
+                                <% formula.items.forEach(item => { %>
+                                    <% 
+                                        const inventoryItem = item.inventoryItem;
+                                        const quantity = item.quantityPerUnit;
+                                        const unitCost = inventoryItem ? inventoryItem.unitCost : 0;
+                                        const itemTotal = quantity * unitCost;
+                                        totalCost += itemTotal;
+                                    %>
+                                    <tr>
+                                        <td>
+                                            <strong><%= inventoryItem ? inventoryItem.name : 'N/A' %></strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-light text-dark">
+                                                <%= inventoryItem ? inventoryItem.sku : 'N/A' %>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <%= quantity.toFixed(2) %>
+                                        </td>
+                                        <td>
+                                            <%= inventoryItem ? inventoryItem.unit : 'N/A' %>
+                                        </td>
+                                        <td>
+                                            ₡<%= unitCost.toLocaleString('es-CR') %>
+                                        </td>
+                                        <td>
+                                            <strong>₡<%= itemTotal.toLocaleString('es-CR') %></strong>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                            <tfoot>
+                                <tr class="table-success">
+                                    <td colspan="5"><strong>Costo Total por Unidad de Producto:</strong></td>
+                                    <td><strong>₡<%= totalCost.toLocaleString('es-CR') %></strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                <% } else { %>
+                    <div class="text-center text-muted py-4">
+                        <i class="bi-inbox me-2"></i>No hay ingredientes definidos para esta fórmula
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="El Buen Sabor - Empresa líder en productos de panadería y repostería">
+    <meta name="author" content="El Buen Sabor">
+    
+    <title>El Buen Sabor - Inicio</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/bootstrap-icons.css" rel="stylesheet">
+    <link href="/css/custom-styles.css" rel="stylesheet">
+    
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, #96C700 0%, #74a001 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+        
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .hero-subtitle {
+            font-size: 1.4rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+        
+        .btn-hero {
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            border-radius: 30px;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-hero:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+        
+        .section {
+            padding: 80px 0;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #333;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            color: #96C700;
+            margin-bottom: 1rem;
+        }
+        
+        .about-section {
+            background: #f8f9fa;
+        }
+        
+        .navbar-brand img {
+            max-height: 60px;
+        }
+        
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .navbar-nav .nav-link {
+            color: #333 !important;
+            font-weight: 500;
+            margin: 0 10px;
+        }
+        
+        .navbar-nav .nav-link:hover {
+            color: #96C700 !important;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <img src="/images/LogoEBS.webp" alt="EL BUEN SABOR" class="img-fluid me-2">
+                <span class="fw-bold">El Buen Sabor</span>
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#inicio">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#nosotros">Nosotros</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#portafolio">Portafolio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contacto">Contacto</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-success rounded-pill px-3" href="/login">
+                            <i class="bi-box-arrow-in-right me-1"></i>Acceder
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">Bienvenido a El Buen Sabor</h1>
+                <p class="hero-subtitle">
+                    Creamos experiencias gastronómicas excepcionales con productos frescos y de la más alta calidad. 
+                    Desde 1985, somos sinónimo de tradición, sabor y excelencia en cada bocado.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#portafolio" class="btn btn-light btn-hero">
+                        <i class="bi-grid-3x3-gap me-2"></i>Ver Portafolio
+                    </a>
+                    <a href="#contacto" class="btn btn-outline-light btn-hero">
+                        <i class="bi-envelope me-2"></i>Contacto
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="nosotros" class="section about-section">
+        <div class="container">
+            <h2 class="section-title">¿Por qué elegirnos?</h2>
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card text-center">
+                        <i class="bi-award feature-icon"></i>
+                        <h4>Calidad Garantizada</h4>
+                        <p>Más de 35 años de experiencia nos respaldan. Utilizamos solo ingredientes premium y procesos certificados para garantizar la mejor calidad en cada producto.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card text-center">
+                        <i class="bi-clock feature-icon"></i>
+                        <h4>Entregas Puntuales</h4>
+                        <p>Cumplimos con nuestros compromisos de entrega. Sistema de logística optimizado para que recibas tus productos frescos en el momento exacto.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card text-center">
+                        <i class="bi-people feature-icon"></i>
+                        <h4>Servicio Personalizado</h4>
+                        <p>Atención especializada para cada cliente. Nuestro equipo te acompaña desde la consulta inicial hasta la entrega final de tu pedido.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card text-center">
+                        <i class="bi-leaf feature-icon"></i>
+                        <h4>Ingredientes Naturales</h4>
+                        <p>Priorizamos ingredientes frescos y naturales de proveedores locales. Sin conservantes artificiales, solo sabor auténtico y saludable.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card text-center">
+                        <i class="bi-gear feature-icon"></i>
+                        <h4>Tecnología Avanzada</h4>
+                        <p>Equipos de última generación y procesos automatizados que aseguran consistencia y eficiencia en cada lote de producción.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card text-center">
+                        <i class="bi-shield-check feature-icon"></i>
+                        <h4>Certificaciones</h4>
+                        <p>Cumplimos con todas las normativas de seguridad alimentaria. Certificados HACCP, ISO 22000 y otros estándares internacionales.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section id="portafolio" class="section">
+        <div class="container">
+            <h2 class="section-title">Nuestro Portafolio</h2>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="feature-card">
+                        <h4><i class="bi-basket3 me-2 text-success"></i>Panadería Artesanal</h4>
+                        <p>Pan fresco diario elaborado con técnicas tradicionales y recetas familiares. Desde pan de molde hasta especialidades gourmet.</p>
+                        <ul class="list-unstyled">
+                            <li><i class="bi-check-circle-fill text-success me-2"></i>Pan integral y multicereales</li>
+                            <li><i class="bi-check-circle-fill text-success me-2"></i>Baguettes y panes franceses</li>
+                            <li><i class="bi-check-circle-fill text-success me-2"></i>Panes especiales sin gluten</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="feature-card">
+                        <h4><i class="bi-cake2 me-2 text-success"></i>Repostería Fina</h4>
+                        <p>Postres y dulces elaborados por maestros reposteros. Perfectos para celebraciones especiales y eventos corporativos.</p>
+                        <ul class="list-unstyled">
+                            <li><i class="bi-check-circle-fill text-success me-2"></i>Tortas personalizadas</li>
+                            <li><i class="bi-check-circle-fill text-success me-2"></i>Pasteles y cupcakes</li>
+                            <li><i class="bi-check-circle-fill text-success me-2"></i>Galletas y macarons</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="feature-card">
+                        <h4><i class="bi-egg-fried me-2 text-success"></i>Productos Salados</h4>
+                        <p>Línea completa de productos salados para desayunos, almuerzos y cenas. Ideales para cafeterías y restaurantes.</p>
+                        <ul class="list-unstyled">
+                            <li><i class="bi-check-circle-fill text-success me-2"></i>Empanadas y pastelitos</li>
+                            <li><i class="bi-check-circle-fill text-success me-2"></i>Quiches y tartas saladas</li>
+                            <li><i class="bi-check-circle-fill text-success me-2"></i>Sandwiches gourmet</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="feature-card">
+                        <h4><i class="bi-cup-hot me-2 text-success"></i>Productos de Cafetería</h4>
+                        <p>Acompañamientos perfectos para café y bebidas. Productos diseñados especialmente para el canal HORECA.</p>
+                        <ul class="list-unstyled">
+                            <li><i class="bi-check-circle-fill text-success me-2"></i>Croissants y danish</li>
+                            <li><i class="bi-check-circle-fill text-success me-2"></i>Muffins y brownies</li>
+                            <li><i class="bi-check-circle-fill text-success me-2"></i>Cookies y barras energéticas</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contacto" class="section about-section">
+        <div class="container">
+            <h2 class="section-title">Contáctanos</h2>
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="feature-card">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5><i class="bi-geo-alt-fill me-2 text-success"></i>Ubicación</h5>
+                                <p>San José, Costa Rica<br>
+                                   Zona Industrial La Uruca<br>
+                                   Edificio El Buen Sabor</p>
+                                
+                                <h5 class="mt-4"><i class="bi-telephone-fill me-2 text-success"></i>Teléfono</h5>
+                                <p>+506 2234-5678<br>
+                                   +506 2234-5679</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h5><i class="bi-envelope-fill me-2 text-success"></i>Correo Electrónico</h5>
+                                <p>ventas@elbuensabor.com<br>
+                                   info@elbuensabor.com</p>
+                                
+                                <h5 class="mt-4"><i class="bi-clock-fill me-2 text-success"></i>Horario de Atención</h5>
+                                <p>Lunes a Viernes: 6:00 AM - 6:00 PM<br>
+                                   Sábados: 6:00 AM - 2:00 PM<br>
+                                   Domingos: Cerrado</p>
+                            </div>
+                        </div>
+                        <div class="text-center mt-4">
+                            <a href="/login" class="btn btn-success btn-lg">
+                                <i class="bi-box-arrow-in-right me-2"></i>Acceder al Sistema
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="d-flex align-items-center">
+                        <img src="/images/LogoEBS.webp" alt="EL BUEN SABOR" style="max-height: 40px;" class="me-2">
+                        <span>&copy; 2025 El Buen Sabor. Todos los derechos reservados.</span>
+                    </div>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="#inicio" class="text-white me-3">Inicio</a>
+                    <a href="#nosotros" class="text-white me-3">Nosotros</a>
+                    <a href="#portafolio" class="text-white me-3">Portafolio</a>
+                    <a href="#contacto" class="text-white">Contacto</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Change navbar background on scroll
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 100) {
+                navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+            } else {
+                navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+            }
+        });
+    </script>
+</body>
+</html>

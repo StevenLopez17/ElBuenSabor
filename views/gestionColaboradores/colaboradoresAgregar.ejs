@@ -20,11 +20,11 @@
                         required>
                     <select class="form-control mb-3" name="horario_id" id="horario" required>
                         <option value="" disabled selected>Seleccione un horario</option>
-                        <% horarios.forEach(horario=> { %>
+                        <% horarios.forEach(horario => { %>
                             <option value="<%= horario.id %>">
                                 <%= horario.descripcion %>
                             </option>
-                            <% }); %>
+                        <% }); %>
                     </select>
                     <input class="form-control mb-3" type="date" name="fecha_ingreso" id="fecha_ingreso"
                         required>

@@ -12,27 +12,27 @@
                             aria-controls="add-employee-tab-pane" aria-selected="true">Agregar Horario</button>
                     </li>
                 </ul>
-                <% if (errores && errores.length> 0) { %>
+                <% if (errores && errores.length > 0) { %>
                     <div class="alert alert-danger" role="alert">
                         <ul class="mb-0">
-                            <% errores.forEach(error=> { %>
+                            <% errores.forEach(error => { %>
                                 <li>
                                     <%= error.msg %>
                                 </li>
-                                <% }) %>
+                            <% }) %>
                         </ul>
                     </div>
-                    <% } %>
+                <% } %>
 
-                        <% if (success && success.length> 0) { %>
-                            <div class="alert alert-success" role="alert">
-                                <ul class="mb-0">
-                                    <% success.forEach(mensaje=> { %>
-                                        <li>
-                                            <%= mensaje.msg %>
-                                        </li>
-                                        <% }) %>
-                                </ul>
+                <% if (success && success.length > 0) { %>
+                    <div class="alert alert-success" role="alert">
+                        <ul class="mb-0">
+                            <% success.forEach(mensaje => { %>
+                                <li>
+                                    <%= mensaje.msg %>
+                                </li>
+                            <% }) %>
+                        </ul>
                             </div>
                             <% } %>
                                 <div class="tab-content" id="employeeTabContent">

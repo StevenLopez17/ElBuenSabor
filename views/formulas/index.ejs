@@ -1,0 +1,132 @@
+<div class="container-fluid">
+    <div class="title-group mb-3" data-aos="fade-down">
+        <h1 class="h2 mb-0">Gestión de Fórmulas</h1>
+        <small class="text-muted">Administrar fórmulas de productos terminados</small>
+    </div>
+
+    <!-- Botón Agregar Nueva Fórmula -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <a href="/formulas/create" class="btn btn-success" data-aos="fade-right">
+                <i class="bi-plus-circle me-2"></i>Nueva Fórmula
+            </a>
+        </div>
+    </div>
+
+    <!-- Tabla de Fórmulas -->
+    <div class="row">
+        <div class="col-12">
+            <div class="custom-block bg-white" data-aos="fade-up">
+                <div class="table-responsive">
+                    <table class="table table-striped" id="formulasTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Producto</th>
+                                <th>Ingredientes</th>
+                                <th>Fecha Creación</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (formulas && formulas.length > 0) { %>
+                                <% formulas.forEach(formula => { %>
+                                    <tr>
+                                        <td><%= formula.id %></td>
+                                        <td><%= formula.name %></td>
+                                        <td>
+                                            <span class="badge bg-info">
+                                                <%= formula.product ? formula.product.name : 'N/A' %>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <small>
+                                                <%= formula.items ? formula.items.length : 0 %> ingrediente(s)
+                                            </small>
+                                        </td>
+                                        <td>
+                                            <small>
+                                                <%= new Date(formula.createdAt).toLocaleDateString('es-ES') %>
+                                            </small>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <a href="/formulas/<%= formula.id %>" 
+                                                   class="btn btn-sm btn-outline-info" 
+                                                   title="Ver Detalles">
+                                                    <i class="bi-eye"></i>
+                                                </a>
+                                                <a href="/formulas/<%= formula.id %>/edit" 
+                                                   class="btn btn-sm btn-outline-warning" 
+                                                   title="Editar">
+                                                    <i class="bi-pencil"></i>
+                                                </a>
+                                                <button type="button" 
+                                                        class="btn btn-sm btn-outline-danger" 
+                                                        title="Eliminar"
+                                                        data-formula-id="<%= formula.id %>"
+                                                        data-formula-name="<%= formula.name %>"
+                                                        onclick="confirmarEliminacion(this.dataset.formulaId, this.dataset.formulaName)">
+                                                    <i class="bi-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted">
+                                        <i class="bi-inbox me-2"></i>No hay fórmulas registradas
+                                    </td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmación para eliminar -->
+<div class="modal fade" id="deleteFormulaModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Está seguro que desea eliminar la fórmula <strong id="formulaName"></strong>?</p>
+                <p class="text-muted">Esta acción no se puede deshacer.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form id="deleteFormulaForm" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    $('#formulasTable').DataTable({
+        language: {
+            url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
+        },
+        responsive: true,
+        order: [[0, 'desc']]
+    });
+});
+
+function confirmarEliminacion(id, name) {
+    document.getElementById('formulaName').textContent = name;
+    document.getElementById('deleteFormulaForm').action = `/formulas/${id}/delete`;
+    
+    const modal = new bootstrap.Modal(document.getElementById('deleteFormulaModal'));
+    modal.show();
+}
+</script>

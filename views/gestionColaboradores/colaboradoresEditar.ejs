@@ -25,11 +25,11 @@
                         value="<%= formatDate(colaborador.fecha_ingreso) %>" required>
                     <select class="form-control mb-3" name="horario" id="horario" required>
                         <option value="" disabled>Seleccione un horario</option>
-                        <% horarios.forEach(horario=> { %>
+                        <% horarios.forEach(horario => { %>
                             <option value="<%= horario.id %>" <%= colaborador.horario_id == horario.id ? 'selected' : '' %>>
                                 <%= horario.descripcion %>
                             </option>
-                            <% }); %>
+                        <% }); %>
                     </select>
 
                     <div class="mt-3">

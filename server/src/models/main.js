@@ -13,6 +13,11 @@ import Pedidos from './pedidoModel.js';
 import PedidoDetalle from './pedidoDetalle.js';
 import Proveedores from './proveedorModel.js';
 import Pagos from './pagoModel.js';
+// New formula models
+import Product from './productModel.js';
+import InventoryItem from './inventoryItemModel.js';
+import Formula from './formulaModel.js';
+import FormulaItem from './formulaItemModel.js';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -26,6 +31,11 @@ db.Formulaciones = Formulaciones;
 db.MateriaPrima = MateriaPrima;
 db.GestionFormulaciones = GestionFormulaciones;
 db.Productos = Productos;
+// New formula models
+db.Product = Product;
+db.InventoryItem = InventoryItem;
+db.Formula = Formula;
+db.FormulaItem = FormulaItem;
 
 
 //Relación Many-to-Many entre Formulaciones y Materias Primas
@@ -74,6 +84,16 @@ Proveedores.hasMany(Pagos, { foreignKey: 'proveedor_id', as: 'pagos' });
 
 // Cada pago pertenece a un proveedor
 Pagos.belongsTo(Proveedores, { foreignKey: 'proveedor_id', as: 'proveedor' });
+
+// New formula relationships
+Product.hasMany(Formula, { foreignKey: 'productId', as: 'formulas' });
+Formula.belongsTo(Product, { foreignKey: 'productId', as: 'product' });
+
+Formula.hasMany(FormulaItem, { foreignKey: 'formulaId', as: 'items', onDelete: 'CASCADE' });
+FormulaItem.belongsTo(Formula, { foreignKey: 'formulaId', as: 'formula' });
+
+InventoryItem.hasMany(FormulaItem, { foreignKey: 'inventoryItemId', as: 'formulaItems' });
+FormulaItem.belongsTo(InventoryItem, { foreignKey: 'inventoryItemId', as: 'inventoryItem' });
 
 
 

@@ -15,17 +15,17 @@
             <label for="distribuidorId" class="form-label">Distribuidor</label>
             <select class="form-control" id="distribuidorId" name="distribuidorId" required>
                 <option value="" disabled selected>Seleccione un distribuidor</option>
-                <% distribuidores.forEach(distribuidor=> { %>
+                <% distribuidores.forEach(distribuidor => { %>
                     <option value="<%= distribuidor.id %>">
                         <%= distribuidor.empresa %>
                     </option>
-                    <% }); %>
+                <% }); %>
             </select>
         </div>
         <div class="mb-3">
             <label for="productos" class="form-label">Productos</label>
             <div id="productos">
-                <% productos.forEach(producto=> { %>
+                <% productos.forEach(producto => { %>
                     <div class="row mb-2">
                         <div class="col-md-6">
                             <input type="checkbox" id="producto-<%= producto.id %>"

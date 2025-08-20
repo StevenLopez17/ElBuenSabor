@@ -1,0 +1,242 @@
+<div class="container-fluid">
+    <div class="title-group mb-3" data-aos="fade-down">
+        <h1 class="h2 mb-0">Nueva Fórmula</h1>
+        <small class="text-muted">Crear fórmula para producto terminado</small>
+    </div>
+
+    <!-- Mostrar errores -->
+    <% if (errores && errores.length > 0) { %>
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="alert alert-danger" role="alert">
+                    <ul class="mb-0">
+                        <% errores.forEach(error => { %>
+                            <li><%= error.msg %></li>
+                        <% }) %>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    <% } %>
+
+    <!-- Mostrar éxitos -->
+    <% if (success && success.length > 0) { %>
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="alert alert-success" role="alert">
+                    <ul class="mb-0">
+                        <% success.forEach(msg => { %>
+                            <li><%= msg.msg %></li>
+                        <% }) %>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    <% } %>
+
+    <!-- Formulario -->
+    <div class="row">
+        <div class="col-12">
+            <div class="custom-block bg-white" data-aos="fade-up">
+                <form method="POST" action="/formulas" id="formulaForm">
+                    <div class="row">
+                        <!-- Información básica -->
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="productId" class="form-label">Producto Terminado *</label>
+                                <select class="form-select" id="productId" name="productId" required>
+                                    <option value="">Seleccione un producto...</option>
+                                    <% products.forEach(product => { %>
+                                        <option value="<%= product.id %>" 
+                                                <%= formData && formData.productId == product.id ? 'selected' : '' %>>
+                                            <%= product.name %> (<%= product.sku %>)
+                                        </option>
+                                    <% }) %>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Nombre de la Fórmula *</label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="name" 
+                                       name="name" 
+                                       value="<%= formData && formData.name ? formData.name : '' %>"
+                                       required
+                                       placeholder="Ej: Fórmula Pan Integral v1.0">
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="mb-3">
+                                <label for="notes" class="form-label">Notas</label>
+                                <textarea class="form-control" 
+                                          id="notes" 
+                                          name="notes" 
+                                          rows="3"
+                                          placeholder="Instrucciones especiales, observaciones, etc."><%= formData && formData.notes ? formData.notes : '' %></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ingredientes -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5>Ingredientes *</h5>
+                                <button type="button" class="btn btn-sm btn-success" onclick="agregarIngrediente()">
+                                    <i class="bi-plus"></i> Agregar Ingrediente
+                                </button>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="ingredientesTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Ingrediente</th>
+                                            <th>Cantidad por Unidad</th>
+                                            <th>Unidad</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="ingredientesBody">
+                                        <!-- Los ingredientes se agregarán dinámicamente aquí -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botones -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi-check2"></i> Guardar Fórmula
+                                </button>
+                                <a href="/formulas" class="btn btn-secondary">
+                                    <i class="bi-arrow-left"></i> Volver
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Template para fila de ingrediente -->
+<template id="ingredienteRowTemplate">
+    <tr>
+        <td>
+            <select class="form-select ingredient-select" name="items[INDEX][inventoryItemId]" required>
+                <option value="">Seleccione ingrediente...</option>
+                <% inventoryItems.forEach(item => { %>
+                    <option value="<%= item.id %>" data-unit="<%= item.unit %>">
+                        <%= item.name %> (<%= item.sku %>)
+                    </option>
+                <% }) %>
+            </select>
+        </td>
+        <td>
+            <input type="number" 
+                   class="form-control" 
+                   name="items[INDEX][quantityPerUnit]" 
+                   step="0.01" 
+                   min="0.01" 
+                   required
+                   placeholder="0.00">
+        </td>
+        <td>
+            <span class="ingredient-unit text-muted">-</span>
+        </td>
+        <td>
+            <button type="button" 
+                    class="btn btn-sm btn-outline-danger" 
+                    onclick="eliminarIngrediente(this)"
+                    title="Eliminar ingrediente">
+                <i class="bi-trash"></i>
+            </button>
+        </td>
+    </tr>
+</template>
+
+<script>
+let ingredienteIndex = 0;
+
+$(document).ready(function() {
+    // Agregar al menos una fila inicial
+    agregarIngrediente();
+});
+
+function agregarIngrediente() {
+    const template = document.getElementById('ingredienteRowTemplate');
+    const clone = template.content.cloneNode(true);
+    
+    // Actualizar los nombres de los campos con el índice actual
+    const selects = clone.querySelectorAll('select');
+    const inputs = clone.querySelectorAll('input');
+    
+    selects.forEach(select => {
+        const name = select.getAttribute('name');
+        if (name) {
+            select.setAttribute('name', name.replace('[INDEX]', `[${ingredienteIndex}]`));
+        }
+    });
+    
+    inputs.forEach(input => {
+        const name = input.getAttribute('name');
+        if (name) {
+            input.setAttribute('name', name.replace('[INDEX]', `[${ingredienteIndex}]`));
+        }
+    });
+    
+    document.getElementById('ingredientesBody').appendChild(clone);
+    ingredienteIndex++;
+}
+
+function eliminarIngrediente(button) {
+    const row = button.closest('tr');
+    if (document.getElementById('ingredientesBody').children.length > 1) {
+        row.remove();
+    } else {
+        alert('Debe mantener al menos un ingrediente');
+    }
+}
+
+// Actualizar unidad cuando se selecciona un ingrediente
+$(document).on('change', '.ingredient-select', function() {
+    const selectedOption = this.options[this.selectedIndex];
+    const unitSpan = $(this).closest('tr').find('.ingredient-unit');
+    
+    if (selectedOption.value && selectedOption.dataset.unit) {
+        unitSpan.text(selectedOption.dataset.unit);
+    } else {
+        unitSpan.text('-');
+    }
+});
+
+// Validación del formulario
+document.getElementById('formulaForm').addEventListener('submit', function(e) {
+    const filas = document.getElementById('ingredientesBody').children;
+    let tieneIngredientes = false;
+    
+    for (let fila of filas) {
+        const select = fila.querySelector('select[name*="inventoryItemId"]');
+        const input = fila.querySelector('input[name*="quantityPerUnit"]');
+        
+        if (select && input && select.value && parseFloat(input.value) > 0) {
+            tieneIngredientes = true;
+            break;
+        }
+    }
+    
+    if (!tieneIngredientes) {
+        e.preventDefault();
+        alert('Debe agregar al menos un ingrediente con cantidad válida');
+    }
+});
+</script>

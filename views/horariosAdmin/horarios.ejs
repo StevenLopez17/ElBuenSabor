@@ -30,9 +30,9 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <% if (horarios.length> 0) {
-                                    let contador = 1; %>
-                                    <% horarios.forEach(horario=> { %>
+                                <% if (horarios.length > 0) { %>
+                                    <% let contador = 1; %>
+                                    <% horarios.forEach(horario => { %>
                                         <tr>
                                             <td>
                                                 <%= contador %>
@@ -46,8 +46,9 @@
                                                 </a>
                                             </td>
                                         </tr>
-                                        <% contador++; }) %>
-                                            <% } else { %>
+                                        <% contador++; %>
+                                    <% }) %>
+                                <% } else { %>
                                                 <tr>
                                                     <td colspan="3" class="text-center">No hay horarios registrados.
                                                     </td>

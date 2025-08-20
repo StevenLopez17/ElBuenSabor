@@ -31,9 +31,42 @@
                 <li class="nav-item">
                     <a class="nav-link text-nowrap" href="<%= usuario.rol == 1 ? '/' : '/pedido' %>">
                         <i class="bi-house-door-fill me-3"></i>
-                        <strong><%= usuario.rol == 1 ? 'Pagina Principal' : 'Pedidos' %></strong>
+                        <strong>Home</strong>
                     </a>
                 </li>
+
+                <% if (usuario.rol==1) { %>
+                    <li class="nav-item">
+                        <a class="nav-link text-nowrap" href="/cliente">
+                            <i class="bi-person-circle me-3"></i>
+                            <strong>Clientes</strong>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-nowrap" href="/producto">
+                            <i class="bi-basket-fill me-3"></i>
+                            <strong>Proyectos</strong>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-nowrap" href="/colaboradores">
+                            <i class="bi-people-fill me-3"></i>
+                            <strong>Empleados</strong>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-nowrap" href="/materiaPrima">
+                            <i class="bi-tools me-3"></i>
+                            <strong>Inventario</strong>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-nowrap" href="/formulas">
+                            <i class="bi-clipboard-data me-3"></i>
+                            <strong>Fórmulas</strong>
+                        </a>
+                    </li>
+                <% } %>
 
                 <% if (usuario.rol==1 || usuario.rol==2 || usuario.rol==3) { %>
                     <li class="nav-item">
@@ -46,51 +79,21 @@
 
                 <% if (usuario.rol==1) { %>
                     <li class="nav-item">
-                        <a class="nav-link text-nowrap" href="/colaboradores">
-                            <i class="bi-people-fill me-3"></i>
-                            <strong>Colaboradores</strong>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-nowrap" href="/cliente">
-                            <i class="bi-person-circle me-3"></i>
-                            <strong>Clientes</strong>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-nowrap" href="/proveedores">
-                            <i class="bi-truck me-3"></i>
-                            <strong>Proveedores</strong>
-                        </a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link text-nowrap" href="/pagos">
                             <i class="bi-credit-card me-3"></i>
                             <strong>Pagos</strong>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-nowrap" aria-current="page" href="/distribuidor">
-                            <i class="bi-box-seam me-3"></i>
-                            <strong>Distribuidores</strong>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-nowrap" href="/producto">
-                            <i class="bi-basket-fill me-3"></i>
-                            <strong>Productos</strong>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-nowrap" href="/materiaPrima">
-                            <i class="bi-tools me-3"></i>
-                            <strong>Materias Primas</strong>
-                        </a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link text-nowrap" href="/reportes">
                             <i class="bi-bar-chart-fill me-3"></i>
                             <strong>Reportes</strong>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-nowrap" href="/proveedores">
+                            <i class="bi-truck me-3"></i>
+                            <strong>Portafolio</strong>
                         </a>
                     </li>
                 <% } %>

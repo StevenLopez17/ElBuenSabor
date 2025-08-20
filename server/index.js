@@ -25,9 +25,12 @@ import proveedorRoutes from './src/routes/proveedorRoutes.js';
 import pagoRoutes from './src/routes/pagoRoutes.js'; // Importa las rutas de pagos
 import indexRoutes from './src/routes/indexRoutes.js';
 import distribuidorVerificacionRoutes from './src/routes/distribuidorVerificacionRoutes.js';
+import formulasRoutes from './src/routes/formulasRoutes.js'; // Import formulas routes
+import homeRoutes from './src/routes/homeRoutes.js'; // Import home routes
 import Rol from './src/models/rol.js';
 
 import identificarUsuario from './middleware/identificarUsuario.js';
+import identificarUsuarioOptional from './middleware/identificarUsuarioOptional.js';
 import { verificarAdmin, verificarAccesoModulo } from './middleware/verificarPermisos.js';
 import errorLogger from './middleware/errorLogger.js';
 
@@ -60,10 +63,16 @@ db.sequelize.authenticate()
     .then(() => console.log('Conexión exitosa con PostgreSQL'))
     .catch(err => console.error('Error de conexión a la BD:', err));
 
-//Home
-app.use('/', loginRoutes); 
+// CONFIGURACIÓN DE RUTAS
 
-app.use(identificarUsuario); // Aplica después para proteger el resto
+// Middleware de identificación opcional (para rutas públicas y privadas)
+app.use(identificarUsuarioOptional);
+
+// Rutas públicas (sin autenticación) - DEBEN IR PRIMERO
+app.use('/', homeRoutes);
+
+// Rutas de login/registro (sin autenticación)
+app.use('/', loginRoutes);
 
 // Middleware global que pasa el objeto usuario a todas las vistas
 app.use(async (req, res, next) => {
@@ -88,10 +97,16 @@ app.use(async (req, res, next) => {
     next();
 });
 
-app.use('/', indexRoutes);
+// Rutas principales (requieren autenticación)
+app.use('/', identificarUsuario, indexRoutes);
 
-//Rutas Pedidos (accesible para todos los usuarios autenticados) - MOVER ANTES DE LAS RUTAS PROTEGIDAS
-app.use('/', pedidosRoutes);
+// Ruta de dashboard para usuarios autenticados
+app.get('/dashboard', identificarUsuario, (req, res) => {
+    res.redirect('/');
+});
+
+//Rutas Pedidos (accesible para todos los usuarios autenticados)
+app.use('/', identificarUsuario, pedidosRoutes);
 
 //Rutas Distribuidores (solo administradores)
 app.use('/', verificarAdmin, distribuidorRoutes);
@@ -163,6 +178,9 @@ app.use('/', verificarAdmin, horarioRoutes);
 
 //Rutas Formulaciones (solo administradores)
 app.use('/', verificarAdmin, formulacionRoutes);
+
+//Rutas Fórmulas nuevas (solo administradores)
+app.use('/', verificarAdmin, formulasRoutes);
 
 // Rutas Solicitudes Vacaciones (solo administradores)
 app.use('/', verificarAdmin, vacacionesRoutes);
